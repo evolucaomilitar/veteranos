@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" width="100%" height="100%">
+  <defs>
+    <!-- Gradientes Táticos -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff2a3" />
+      <stop offset="30%" stop-color="#d4af37" />
+      <stop offset="70%" stop-color="#aa820a" />
+      <stop offset="100%" stop-color="#694f03" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3422" />
+      <stop offset="40%" stop-color="#142417" />
+      <stop offset="100%" stop-color="#0a130c" />
+    </linearGradient>
+    <linearGradient id="castleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff4444" />
+      <stop offset="40%" stop-color="#b91c1c" />
+      <stop offset="100%" stop-color="#7f1d1d" />
+    </linearGradient>
+    <linearGradient id="steelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0" />
+      <stop offset="50%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+    <filter id="tacticalGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.8"/>
+    </filter>
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#d4af37" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Escudo Principal com Sombra -->
+  <g filter="url(#tacticalGlow)">
+    <!-- Borda Externa Dourada -->
+    <path d="M 50,50 L 450,50 Q 450,280 250,520 Q 50,280 50,50 Z" 
+          fill="url(#goldGrad)" stroke="#4a3703" stroke-width="4"/>
+    
+    <!-- Camada Interna Escura (Textura de Aço/Militar) -->
+    <path d="M 62,62 L 438,62 Q 438,274 250,502 Q 62,274 62,62 Z" 
+          fill="#0c160e" stroke="#1f3b24" stroke-width="3"/>
+    
+    <!-- Campo Central Verde Oliva Blindado -->
+    <path d="M 72,72 L 428,72 Q 428,268 250,488 Q 72,268 72,72 Z" 
+          fill="url(#shieldGrad)"/>
+
+    <!-- Linhas Táticas / Mira / Brasão -->
+    <line x1="250" y1="80" x2="250" y2="470" stroke="#d4af37" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.3"/>
+    <line x1="90" y1="210" x2="410" y2="210" stroke="#d4af37" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.3"/>
+    <circle cx="250" cy="210" r="140" fill="none" stroke="#d4af37" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.25"/>
+
+    <!-- Castelo da Engenharia Militar (Símbolo Oficial da Arma de Engenharia) -->
+    <!-- Base e Torres Vermelho e Ouro -->
+    <g transform="translate(145, 140)" filter="url(#goldGlow)">
+      <!-- Sombra do Castelo -->
+      <path d="M 10,135 L 200,135 L 200,60 L 175,60 L 175,20 L 145,20 L 145,45 L 125,45 L 125,10 L 85,10 L 85,45 L 65,45 L 65,20 L 35,20 L 35,60 L 10,60 Z"
+            fill="#450a0a" transform="translate(4, 4)"/>
+      
+      <!-- Corpo do Castelo -->
+      <path d="M 10,135 L 200,135 L 200,60 L 175,60 L 175,20 L 145,20 L 145,45 L 125,45 L 125,10 L 85,10 L 85,45 L 65,45 L 65,20 L 35,20 L 35,60 L 10,60 Z"
+            fill="url(#castleGrad)" stroke="url(#goldGrad)" stroke-width="4" stroke-linejoin="bevel"/>
+
+      <!-- Ameias / Detalhes das Torres -->
+      <!-- Torre Esquerda -->
+      <rect x="35" y="20" width="10" height="15" fill="#581c1c" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <rect x="55" y="20" width="10" height="15" fill="#581c1c" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <rect x="47" y="48" width="6" height="16" rx="3" fill="#111" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      
+      <!-- Torre Direita -->
+      <rect x="145" y="20" width="10" height="15" fill="#581c1c" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <rect x="165" y="20" width="10" height="15" fill="#581c1c" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <rect x="157" y="48" width="6" height="16" rx="3" fill="#111" stroke="url(#goldGrad)" stroke-width="1.5"/>
+
+      <!-- Torre Central (Mais Alta) -->
+      <rect x="85" y="10" width="12" height="16" fill="#581c1c" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <rect x="113" y="10" width="12" height="16" fill="#581c1c" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <rect x="99" y="40" width="12" height="24" rx="4" fill="#111" stroke="url(#goldGrad)" stroke-width="2"/>
+
+      <!-- Portão Principal de Armas (Arco Pleno) -->
+      <path d="M 85,135 L 85,95 Q 105,75 125,95 L 125,135 Z" fill="#0f1711" stroke="url(#goldGrad)" stroke-width="3"/>
+      <!-- Grade do Portão -->
+      <line x1="95" y1="88" x2="95" y2="135" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <line x1="105" y1="82" x2="105" y2="135" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <line x1="115" y1="88" x2="115" y2="135" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <line x1="85" y1="100" x2="125" y2="100" stroke="url(#goldGrad)" stroke-width="1.5"/>
+      <line x1="85" y1="115" x2="125" y2="115" stroke="url(#goldGrad)" stroke-width="1.5"/>
+    </g>
+
+    <!-- Número 5 Blindado em Aço/Ouro no Peito do Castelo -->
+    <g transform="translate(250, 310)" text-anchor="middle" filter="url(#goldGlow)">
+      <circle cx="0" cy="0" r="32" fill="#0c160e" stroke="url(#goldGrad)" stroke-width="3"/>
+      <!-- Símbolo de Combate Blindado (Lagartas / Rodas de Blindado estilizadas) -->
+      <circle cx="0" cy="0" r="26" fill="none" stroke="#d4af37" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="0" y="14" font-family="'Impact', 'Arial Black', sans-serif" font-size="40" font-weight="900" fill="url(#goldGrad)" stroke="#523902" stroke-width="1.5">5º</text>
+    </g>
+
+    <!-- Faixa Superior: VETERANOS -->
+    <g transform="translate(250, 78)">
+      <path d="M -160,0 L 160,0 L 140,32 L -140,32 Z" fill="#09110b" stroke="url(#goldGrad)" stroke-width="2"/>
+      <text x="0" y="24" font-family="'Arial Black', sans-serif" font-size="20" font-weight="900" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="6">VETERANOS</text>
+    </g>
+
+    <!-- Ramos de Louro Dourados nas Laterais -->
+    <g stroke="url(#goldGrad)" stroke-width="2" fill="none" opacity="0.8">
+      <path d="M 90,320 Q 80,240 115,160 M 90,320 Q 95,250 120,180"/>
+      <path d="M 410,320 Q 420,240 385,160 M 410,320 Q 405,250 380,180"/>
+    </g>
+
+    <!-- Faixa Inferior: 5º BE CMB BLD -->
+    <g transform="translate(250, 395)">
+      <!-- Fita Curvada -->
+      <path d="M -170,0 L 170,0 L 150,44 L -150,44 Z" fill="#0a140d" stroke="url(#goldGrad)" stroke-width="2.5"/>
+      <text x="0" y="30" font-family="'Impact', 'Arial Black', sans-serif" font-size="28" font-weight="900" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="3">5º BE CMB BLD</text>
+    </g>
+
+    <!-- Sub-título Inferior: PORTO UNIÃO - SC -->
+    <g transform="translate(250, 455)">
+      <text x="0" y="0" font-family="'Arial', sans-serif" font-size="13" font-weight="bold" fill="#fef08a" text-anchor="middle" letter-spacing="2">BATALHÃO JUAREZ TÁVORA</text>
+      <text x="0" y="16" font-family="'Arial', sans-serif" font-size="11" font-weight="bold" fill="#d4af37" text-anchor="middle" letter-spacing="3">PORTO UNIÃO - SC</text>
+    </g>
+
+    <!-- Estrelas Militares no Topo -->
+    <g fill="url(#goldGrad)">
+      <polygon points="250,22 254,32 265,32 256,38 259,48 250,42 241,48 244,38 235,32 246,32" />
+      <polygon points="220,26 223,34 232,34 225,39 227,47 220,42 213,47 215,39 208,34 217,34" />
+      <polygon points="280,26 283,34 292,34 285,39 287,47 280,42 273,47 275,39 268,34 277,34" />
+    </g>
+  </g>
+</svg>

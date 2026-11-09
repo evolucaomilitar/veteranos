@@ -1,0 +1,65 @@
+{
+  "name": "Veteranos 5º BE - Batalhão Juarez Távora",
+  "short_name": "Veteranos 5º BE",
+  "description": "Aplicativo Oficial da Comissão dos Veteranos do 5º Batalhão de Engenharia de Combate Blindado (Batalhão Juarez Távora - Porto União/SC)",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0a130c",
+  "theme_color": "#0a130c",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["social", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo_veteranos.png",
+      "sizes": "792x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Almoço dos Veteranos",
+      "short_name": "Almoço 2026",
+      "description": "Adesão ao Almoço e Lista de Participantes",
+      "url": "./index.html",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Portal do Reencontro",
+      "short_name": "Reencontro",
+      "description": "Acesse a lista da sua Companhia e reencontre sua turma",
+      "url": "./reencontro.html",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Inscrição de Veterano",
+      "short_name": "Inscrição",
+      "description": "Ficha Cadastral Oficial da Comissão dos Veteranos",
+      "url": "./cadastro.html",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Painel do Efetivo",
+      "short_name": "Efetivo",
+      "description": "Painel Geral de Militares",
+      "url": "./index.html",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

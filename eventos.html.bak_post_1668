@@ -1,0 +1,832 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eventos Oficiais â€¢ AlmoÃ§o Anual & Desfile 7 de Setembro â€” Veteranos 5Âº BE</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a110b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="icon" type="image/png" href="logo_veteranos.png">
+  <script src="pwa.js" defer></script>
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="dados.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #070c08;
+      color: #e2e8f0;
+    }
+    .military-font {
+      font-family: 'Rajdhani', sans-serif;
+    }
+    .gold-gradient {
+      background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa7c11 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tactical-border {
+      border: 1px solid #1f3722;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+    .tactical-input {
+      background-color: #0a130c;
+      border: 1px solid #28442b;
+      color: #f1f5f9;
+      transition: all 0.2s;
+    }
+    .tactical-input:focus {
+      outline: none;
+      border-color: #d4af37;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #070e08; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #1e3a22; border-radius: 3px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #2f5c35; }
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.02); }
+    }
+    .pulse-btn {
+      animation: pulseSoft 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-black">
+
+  <div class="max-w-4xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- CABEÃ‡ALHO TÃTICO -->
+    <header class="bg-[#0e1710] rounded-2xl p-6 sm:p-8 tactical-border relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-600 via-amber-400 to-emerald-600"></div>
+
+      <!-- Barra Superior: Loja EvoluÃ§Ã£o Militar + Atalhos -->
+      <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+        <a href="https://www.evolucaomilitar.com.br" target="_blank" rel="noopener noreferrer"
+           title="Loja Oficial EvoluÃ§Ã£o Militar â€¢ Acesse: www.evolucaomilitar.com.br"
+           class="group inline-flex flex-col items-center justify-center bg-[#060c07] hover:bg-black border border-[#2b4c2f] hover:border-amber-400/80 rounded-lg px-1.5 py-0.5 sm:px-2 sm:py-1 transition-all shadow-sm text-center">
+          <video src="logo_evolucao_militar.mp4" poster="logo_evolucao_militar.jpg" autoplay loop muted playsinline class="h-11 sm:h-14 w-auto object-contain transition-transform group-hover:scale-105 rounded pointer-events-none">
+            <img src="logo_evolucao_militar.jpg" alt="Loja EvoluÃ§Ã£o Militar" class="h-11 sm:h-14 w-auto object-contain">
+          </video>
+          <span class="text-[9px] sm:text-[10px] font-black uppercase military-font text-amber-400 group-hover:text-amber-300 tracking-wider leading-none mt-0.5 flex items-center">
+            ACESSE A LOJA <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[7px] text-amber-500"></i>
+          </span>
+        </a>
+
+        <div class="flex items-center space-x-2">
+          <a href="reencontro.html" 
+             title="Ir para o Portal do Reencontro & Turmas por Companhia"
+             class="px-3 py-1.5 bg-[#122115] hover:bg-[#1a3320] text-emerald-300 border border-[#25462a] rounded-lg text-xs font-bold military-font uppercase flex items-center shadow transition-all">
+            <i class="fa-solid fa-users mr-1.5 text-amber-400"></i> Portal do Reencontro
+          </a>
+          <button onclick="acionarInstalacaoApp()" 
+                  title="Instalar Aplicativo no Celular ou Computador"
+                  class="btn-instalar-app px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-600 hover:from-emerald-500 hover:to-green-500 text-slate-950 font-extrabold rounded-lg text-xs military-font uppercase flex items-center shadow-lg transition-all transform active:scale-95">
+            <i class="fa-solid fa-mobile-screen-button mr-1.5 text-xs"></i>
+            <span>Instalar App</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Emblema Oficial dos Veteranos -->
+      <div class="text-center">
+        <div class="flex justify-center mb-4 drop-shadow-[0_4px_24px_rgba(212,175,55,0.4)]">
+          <img src="logo_veteranos.png" alt="Veteranos 5Âº BE Cmb Bld" class="h-36 sm:h-48 w-auto object-contain filter drop-shadow hover:scale-105 transition-transform duration-300">
+        </div>
+
+        <div class="inline-flex items-center space-x-2 px-3 py-1 bg-amber-950/60 border border-amber-600/50 rounded-full text-xs font-bold text-amber-400 military-font tracking-widest uppercase mb-2">
+          <i class="fa-solid fa-calendar-star"></i>
+          <span>Portal Oficial de InscriÃ§Ãµes em Eventos</span>
+        </div>
+
+        <h1 class="military-font leading-tight">
+          <span class="text-3xl sm:text-5xl font-black gold-gradient uppercase tracking-wider block">
+            VETERANOS
+          </span>
+          <span class="text-sm sm:text-lg text-emerald-400 font-extrabold uppercase tracking-wide military-font block mt-1">
+            DO 5Âº BATALHÃƒO DE ENGENHARIA DE COMBATE BLINDADO
+          </span>
+        </h1>
+        <p class="text-xs sm:text-sm text-amber-300 font-bold uppercase tracking-wider military-font mt-1">
+          BatalhÃ£o Juarez TÃ¡vora â€¢ Porto UniÃ£o - SC
+        </p>
+        
+        <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto mt-3 leading-relaxed">
+          InscriÃ§Ã£o e reserva oficial para os grandes eventos dos veteranos: 
+          <strong class="text-amber-300">AlmoÃ§o Anual de ConfraternizaÃ§Ã£o</strong> (com familiares) e o 
+          <strong class="text-emerald-400">Desfile CÃ­vico-Militar de 7 de Setembro</strong>.
+        </p>
+      </div>
+    </header>
+
+    <!-- FORMULÃRIO DE INSCRIÃ‡ÃƒO EM EVENTOS -->
+    <section class="bg-[#101b12] rounded-xl p-6 sm:p-8 tactical-border relative overflow-hidden space-y-6">
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-emerald-400 to-amber-500"></div>
+
+      <div class="pb-4 border-b border-[#243c27]">
+        <h2 class="text-xl sm:text-2xl font-bold military-font text-white flex items-center">
+          <i class="fa-solid fa-ticket text-amber-400 mr-2.5"></i>
+          1. Escolha os Eventos que Deseja Participar
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">
+          VocÃª pode se inscrever no AlmoÃ§o Anual, no Desfile de 7 de Setembro, ou em ambos!
+        </p>
+      </div>
+
+      <form id="formEventos" onsubmit="salvarInscricaoEvento(event)" class="space-y-6">
+
+        <!-- SELETORES DOS DOIS EVENTOS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Evento 1: AlmoÃ§o de ConfraternizaÃ§Ã£o -->
+          <label class="relative p-5 rounded-xl border-2 transition-all cursor-pointer flex flex-col justify-between" id="cardOptAlmoco">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                  <i class="fa-solid fa-utensils"></i>
+                </div>
+                <div>
+                  <span class="text-xs text-amber-400 font-bold uppercase military-font tracking-wide block">Evento GastronÃ´mico Anual</span>
+                  <h3 class="text-base sm:text-lg font-bold text-white military-font uppercase">AlmoÃ§o dos Veteranos</h3>
+                </div>
+              </div>
+              <input type="checkbox" id="checkAlmoco" checked onchange="toggleSecaoAlmoco()"
+                     class="w-5 h-5 rounded text-amber-500 bg-slate-900 border-[#2f5533] focus:ring-0">
+            </div>
+            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+              Tradicional churrasco e almoÃ§o festivo. <strong class="text-amber-300">Traga sua famÃ­lia!</strong> A reserva Ã© feita por quantidade de pessoas/refeiÃ§Ãµes.
+            </p>
+            <div class="mt-3 pt-2.5 border-t border-[#1d3620] flex items-center justify-between text-xs">
+              <span class="text-slate-400">Valor individual:</span>
+              <span class="font-mono font-black text-amber-300 text-sm" id="labelPrecoIndividual">R$ 50,00 / pessoa</span>
+            </div>
+          </label>
+
+          <!-- Evento 2: Desfile de 7 de Setembro -->
+          <label class="relative p-5 rounded-xl border-2 transition-all cursor-pointer flex flex-col justify-between" id="cardOptDesfile">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                  <i class="fa-solid fa-person-military-marching"></i>
+                </div>
+                <div>
+                  <span class="text-xs text-emerald-400 font-bold uppercase military-font tracking-wide block">Solenidade CÃ­vico-Militar</span>
+                  <h3 class="text-base sm:text-lg font-bold text-white military-font uppercase">Desfile de 7 de Setembro</h3>
+                </div>
+              </div>
+              <input type="checkbox" id="checkDesfile" checked onchange="toggleSecaoDesfile()"
+                     class="w-5 h-5 rounded text-emerald-500 bg-slate-900 border-[#2f5533] focus:ring-0">
+            </div>
+            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+              Marcha cÃ­vica no PelotÃ£o Oficial dos Veteranos do 5Âº BE. <strong class="text-emerald-300">Participe fardado ou com a camiseta da AssociaÃ§Ã£o!</strong>
+            </p>
+            <div class="mt-3 pt-2.5 border-t border-[#1d3620] flex items-center justify-between text-xs">
+              <span class="text-slate-400">ParticipaÃ§Ã£o:</span>
+              <span class="font-mono font-bold text-emerald-400 text-xs">Gratuita / Confirmar Tamanho</span>
+            </div>
+          </label>
+
+        </div>
+
+        <!-- DADOS PESSOAIS DO VETERANO -->
+        <div class="p-5 bg-[#09120a] rounded-xl border border-[#1e3822] space-y-4">
+          <div class="flex items-center space-x-2 text-xs font-bold text-amber-400 uppercase military-font tracking-wider border-b border-[#1b331f] pb-2">
+            <i class="fa-solid fa-user-shield"></i>
+            <span>2. IdentificaÃ§Ã£o do Veterano</span>
+          </div>
+
+          <!-- Nome Completo & Nome de Guerra -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Nome Completo <span class="text-red-400">*</span>
+              </label>
+              <input type="text" id="evNome" required placeholder="Ex: Carlos Alberto Silveira"
+                     oninput="autoPreencherDadosVeterano()"
+                     class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Nome de Guerra <span class="text-red-400">*</span>
+              </label>
+              <input type="text" id="evGuerra" required placeholder="Ex: SILVA"
+                     class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm uppercase">
+            </div>
+          </div>
+
+          <!-- GraduaÃ§Ã£o, Companhia & Ano que Serviu -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Posto / GraduaÃ§Ã£o <span class="text-red-400">*</span>
+              </label>
+              <select id="evGrad" required class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+                <option value="Sd" selected>Soldado (Sd)</option>
+                <option value="Cb">Cabo (Cb)</option>
+                <option value="3Âº Sgt">3Âº Sargento</option>
+                <option value="2Âº Sgt">2Âº Sargento</option>
+                <option value="1Âº Sgt">1Âº Sargento</option>
+                <option value="Sgt">Sargento (Sgt)</option>
+                <option value="Sub Ten">Subtenente</option>
+                <option value="Asp">Aspirante</option>
+                <option value="Ten">Tenente (Ten)</option>
+                <option value="Cap">CapitÃ£o (Cap)</option>
+                <option value="Maj">Major (Maj)</option>
+                <option value="Ten Cel">Tenente-Coronel</option>
+                <option value="Cel">Coronel (Cel)</option>
+                <option value="Gen">General (Gen)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Companhia que Serviu <span class="text-red-400">*</span>
+              </label>
+              <select id="evCia" required class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm font-bold text-amber-300">
+                <option value="1Âº Cia Eng Cmb Bld">1Âª Cia Eng Cmb Bld â€” ðŸ¦ LeÃ£o</option>
+                <option value="2Âº Cia Eng Cmb Bld">2Âª Cia Eng Cmb Bld â€” ðŸ† OnÃ§a</option>
+                <option value="Cia Cmdo e Ap - (CCAp)">Cia Cmdo e Apoio (CCAp) â€” ðŸ¾ Pantera</option>
+                <option value="Cia Eng Pnt (CEP)">Cia Eng Pontes (CEP) â€” ðŸ¦… Ãguia</option>
+                <option value="Estado Maior Geral e Especial">Estado-Maior Geral e Especial</option>
+                <option value="NPOR">NPOR</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Ano que Serviu <span class="text-red-400">*</span>
+              </label>
+              <input type="number" id="evAno" min="1940" max="2030" placeholder="Ex: 1988" required
+                     class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm font-mono">
+            </div>
+          </div>
+
+          <!-- WhatsApp, Cidade e UF -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                WhatsApp / Celular <span class="text-red-400">*</span>
+              </label>
+              <input type="tel" id="evWhatsApp" required placeholder="(42) 99999-9999" oninput="mascaraTelefone(this)"
+                     class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm font-mono text-emerald-400">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Cidade Onde Mora <span class="text-red-400">*</span>
+              </label>
+              <input type="text" id="evCidade" required placeholder="Ex: Porto UniÃ£o"
+                     class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Estado (UF) <span class="text-red-400">*</span>
+              </label>
+              <select id="evEstado" required class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+                <option value="Santa Catarina" selected>Santa Catarina (SC)</option>
+                <option value="ParanÃ¡">ParanÃ¡ (PR)</option>
+                <option value="Rio Grande do Sul">Rio Grande do Sul (RS)</option>
+                <option value="SÃ£o Paulo">SÃ£o Paulo (SP)</option>
+                <option value="Distrito Federal">Distrito Federal (DF)</option>
+                <option value="Rio de Janeiro">Rio de Janeiro (RJ)</option>
+                <option value="Minas Gerais">Minas Gerais (MG)</option>
+                <option value="Outro">Outro Estado</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEÃ‡ÃƒO ESPECÃFICA DO ALMOÃ‡O (QUANTIDADE POR PESSOA & PAGAMENTO PIX) -->
+        <div id="blocoDetalhesAlmoco" class="p-5 bg-gradient-to-b from-[#142316] to-[#0c160e] rounded-xl border-2 border-amber-500/60 space-y-4 shadow-lg">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#28482d] pb-3">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-utensils text-amber-400 text-lg"></i>
+              <h3 class="text-base font-bold text-white military-font uppercase">
+                3. Reserva do AlmoÃ§o Anual & Pagamento
+              </h3>
+            </div>
+            <span class="px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded text-xs font-bold font-mono">
+              Controle Familiar
+            </span>
+          </div>
+
+          <!-- Contador de Pessoas do AlmoÃ§o -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-[#070e08] p-4 rounded-xl border border-[#1f3823]">
+            <div class="md:col-span-7">
+              <label class="block text-sm font-bold text-slate-200 military-font uppercase">
+                Quantidade Total de AlmoÃ§os (Pessoas):
+              </label>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Quantas pessoas irÃ£o almoÃ§ar com vocÃª? (VocÃª + Esposa + Filhos + Familiares):
+              </p>
+            </div>
+
+            <div class="md:col-span-5 flex items-center justify-end space-x-3">
+              <button type="button" onclick="alterarQtdAlmoco(-1)"
+                      class="w-10 h-10 rounded-lg bg-[#142617] hover:bg-[#203f26] text-amber-400 border border-[#2b5430] flex items-center justify-center text-lg font-bold transition-all active:scale-95">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              
+              <div class="w-20 text-center">
+                <input type="number" id="qtdAlmocos" value="1" min="1" max="30" oninput="recalcularTotalAlmoco()"
+                       class="w-full text-center text-2xl font-black font-mono text-amber-300 bg-transparent border-0 focus:outline-none">
+                <span class="text-[10px] text-slate-400 block -mt-1 uppercase font-bold">Pessoa(s)</span>
+              </div>
+
+              <button type="button" onclick="alterarQtdAlmoco(1)"
+                      class="w-10 h-10 rounded-lg bg-[#142617] hover:bg-[#203f26] text-amber-400 border border-[#2b5430] flex items-center justify-center text-lg font-bold transition-all active:scale-95">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Nomes dos Familiares / Acompanhantes -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Nome dos Acompanhantes / Familiares (Opcional):
+            </label>
+            <input type="text" id="nomesAcompanhantes" placeholder="Ex: Esposa Maria, Filhos Pedro e Lucas"
+                   class="w-full px-3 py-2.5 rounded-lg tactical-input text-xs">
+          </div>
+
+          <!-- Caixa de Valor Total e Pagamento PIX -->
+          <div class="p-4 bg-[#0a140d] rounded-xl border border-amber-500/40 space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-[#1b3420]">
+              <span class="text-xs font-bold text-slate-300 military-font uppercase">Total do AlmoÃ§o a Pagar:</span>
+              <span class="text-2xl font-black font-mono text-emerald-400" id="valorTotalAlmoco">R$ 50,00</span>
+            </div>
+
+            <!-- Dados do PIX da ComissÃ£o -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center pt-1">
+              <div class="sm:col-span-8 space-y-1">
+                <span class="text-[11px] font-bold text-amber-400 uppercase military-font block">
+                  <i class="fa-brands fa-pix mr-1"></i> Chave PIX Oficial da ComissÃ£o dos Veteranos:
+                </span>
+                <div class="flex items-center space-x-2">
+                  <input type="text" id="chavePixOficial" readonly value="veteranos5be@gmail.com"
+                         class="w-full px-2.5 py-1.5 rounded bg-[#060c07] border border-[#234227] text-xs font-mono text-amber-300 select-all">
+                  <button type="button" onclick="copiarChavePix()"
+                          class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded text-xs military-font uppercase flex items-center flex-shrink-0">
+                    <i class="fa-solid fa-copy mr-1"></i> Copiar
+                  </button>
+                </div>
+                <p class="text-[10px] text-slate-400">Favorecido: ComissÃ£o dos Veteranos do 5Âº BE â€¢ Porto UniÃ£o - SC</p>
+              </div>
+
+              <div class="sm:col-span-4">
+                <label class="block text-[11px] font-semibold text-slate-300 uppercase mb-1">
+                  Status do Pagamento:
+                </label>
+                <select id="formaPagamento" class="w-full px-2.5 py-1.5 rounded tactical-input text-xs font-semibold text-emerald-300">
+                  <option value="PIX_ANTECIPADO">PIX Feito (Comprovante via WhatsApp)</option>
+                  <option value="PAGAR_NA_ENTRADA">Pagar no Dia do AlmoÃ§o na Portaria</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEÃ‡ÃƒO ESPECÃFICA DO DESFILE DE 7 DE SETEMBRO -->
+        <div id="blocoDetalhesDesfile" class="p-5 bg-gradient-to-b from-[#102415] to-[#0c160e] rounded-xl border-2 border-emerald-500/60 space-y-4 shadow-lg">
+          <div class="flex items-center space-x-2 border-b border-[#28482d] pb-3">
+            <i class="fa-solid fa-person-military-marching text-emerald-400 text-lg"></i>
+            <h3 class="text-base font-bold text-white military-font uppercase">
+              4. ConfirmaÃ§Ã£o para o Desfile de 7 de Setembro
+            </h3>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Tamanho da Camiseta / Agasalho do Veterano <span class="text-red-400">*</span>:
+              </label>
+              <select id="tamanhoCamiseta" class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm font-bold text-amber-300">
+                <option value="M" selected>Tamanho M (PadrÃ£o)</option>
+                <option value="P">Tamanho P</option>
+                <option value="G">Tamanho G</option>
+                <option value="GG">Tamanho GG</option>
+                <option value="XG">Tamanho XG</option>
+                <option value="XXG">Tamanho XXG (Especial)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+                Como IrÃ¡ Desfilar:
+              </label>
+              <select id="modalidadeDesfile" class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+                <option value="A_PE" selected>A PÃ© (Tropa Geral de Veteranos)</option>
+                <option value="VIATURA">Em Viatura HistÃ³rica / Apoio (Sem marchar a pÃ©)</option>
+                <option value="GUARDA_HONRA">PelotÃ£o de Honra / Porta-Bandeira</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ObservaÃ§Ãµes Opcionais -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+            ObservaÃ§Ãµes ou Necessidades Especiais (Opcional):
+          </label>
+          <input type="text" id="evObs" placeholder="Ex: Levarei cadeira de rodas / restriÃ§Ã£o alimentar"
+                 class="w-full px-3 py-2 rounded-lg tactical-input text-xs">
+        </div>
+
+        <!-- BOTÃƒO DE ENVIO -->
+        <div class="pt-2">
+          <button type="submit" 
+                  class="w-full py-4 px-4 bg-gradient-to-r from-emerald-600 via-amber-500 to-green-600 hover:from-emerald-500 hover:to-green-500 text-slate-950 font-extrabold rounded-xl military-font tracking-wider text-base uppercase shadow-xl shadow-emerald-950/70 flex items-center justify-center transition-all transform active:scale-95 pulse-btn">
+            <i class="fa-solid fa-circle-check mr-2 text-xl"></i>
+            Confirmar Reserva e InscriÃ§Ã£o Oficial
+          </button>
+        </div>
+
+      </form>
+
+      <!-- CARD DE SUCESSO PÃ“S-INSCRIÃ‡ÃƒO -->
+      <div id="boxSucessoEvento" class="hidden p-6 bg-emerald-950/80 border-2 border-emerald-500 rounded-xl text-center space-y-4">
+        <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full flex items-center justify-center mx-auto text-3xl">
+          <i class="fa-solid fa-champagne-glasses"></i>
+        </div>
+        
+        <h3 class="text-2xl font-black text-emerald-300 military-font uppercase">
+          InscriÃ§Ã£o Confirmada com Sucesso!
+        </h3>
+        
+        <p class="text-xs sm:text-sm text-slate-200 max-w-lg mx-auto" id="txtDescSucessoEvento">
+          Sua reserva foi integrada com sucesso ao relatÃ³rio da ComissÃ£o dos Veteranos do 5Âº BE.
+        </p>
+
+        <!-- Resumo da Reserva -->
+        <div class="p-4 bg-[#08100a] rounded-xl border border-[#1e3823] text-left max-w-md mx-auto space-y-1.5 text-xs font-mono" id="resumoReservaBox">
+          <!-- Gerado via JS -->
+        </div>
+
+        <!-- BotÃ£o de Envio para WhatsApp -->
+        <div class="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+          <a id="btnEnviarWhatsEvento" href="#" target="_blank"
+             class="px-6 py-3.5 bg-green-500 hover:bg-green-400 text-slate-950 font-black rounded-xl text-sm military-font uppercase flex items-center justify-center shadow-lg transition-transform hover:scale-105">
+            <i class="fa-brands fa-whatsapp text-xl mr-2"></i> Enviar Comprovante no WhatsApp Oficial
+          </a>
+          <button type="button" onclick="fazerNovaInscricao()"
+                  class="px-4 py-2.5 bg-[#172d1a] hover:bg-[#234428] text-slate-200 rounded-xl text-xs military-font font-bold uppercase border border-[#2b522e]">
+            Nova Reserva
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- CONSULTA RÃPIDA DE RESERVA EXISTENTE -->
+    <section class="bg-[#0b140d] rounded-xl p-5 tactical-border space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-[#1b3420] pb-2">
+        <span class="font-bold military-font text-slate-300 uppercase flex items-center">
+          <i class="fa-solid fa-magnifying-glass mr-1.5 text-amber-400"></i> JÃ¡ fez sua reserva? Consulte aqui:
+        </span>
+        <span class="text-[10px] text-slate-400 font-mono">Consulta InstantÃ¢nea</span>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input type="text" id="buscaMinhaReserva" placeholder="Digite seu Nome de Guerra ou Celular..."
+               class="flex-1 px-3 py-2 rounded-lg tactical-input text-xs font-mono">
+        <button type="button" onclick="consultarReservaExistente()"
+                class="px-4 py-2 bg-[#1b3420] hover:bg-[#254b2d] text-amber-300 font-bold rounded-lg military-font uppercase border border-[#2e5733] flex items-center justify-center">
+          <i class="fa-solid fa-search mr-1.5"></i> Consultar Status
+        </button>
+      </div>
+      <div id="resultadoConsultaReserva" class="hidden p-3 bg-[#070e08] rounded border border-[#203c24] text-slate-200">
+        <!-- Preenchido via JS -->
+      </div>
+    </section>
+
+    <!-- RODAPÃ‰ OFICIAL -->
+    <footer class="text-center text-xs text-slate-500 py-6 border-t border-[#182a1a] space-y-4">
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a href="https://www.instagram.com/veteranos5be" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-pink-950/70 via-purple-950/70 to-pink-950/70 hover:from-pink-900 text-pink-300 rounded-lg text-xs font-bold military-font uppercase">
+          <i class="fa-brands fa-instagram text-pink-400"></i>
+          <span>Instagram @veteranos5be</span>
+        </a>
+        <a href="https://www.facebook.com/veteranos5be" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center space-x-2 px-3 py-1.5 bg-blue-950/70 hover:bg-blue-900 text-blue-300 rounded-lg text-xs font-bold military-font uppercase">
+          <i class="fa-brands fa-facebook text-blue-400"></i>
+          <span>Facebook @veteranos5be</span>
+        </a>
+        <a href="index.html"
+           class="inline-flex items-center space-x-2 px-3 py-1.5 bg-amber-600/20 hover:bg-amber-600/40 text-amber-300 border border-amber-500/50 rounded-lg text-xs military-font font-bold uppercase">
+          <i class="fa-solid fa-lock text-amber-400"></i>
+          <span>Painel Admin</span>
+        </a>
+      </div>
+      <p class="font-bold text-slate-400">ComissÃ£o dos Veteranos do 5Âº BatalhÃ£o de Engenharia de Combate Blindado â€” Porto UniÃ£o - SC</p>
+    </footer>
+
+  </div>
+
+  <!-- LÃ“GICA DE EVENTOS & RESERVAS -->
+  <script>
+    const PRECO_ALMOCO_UNITARIO = 50.00;
+    const CHAVE_PIX_COMISSAO = "veteranos5be@gmail.com";
+
+    let syncChannel = null;
+    try {
+      syncChannel = new BroadcastChannel('veteranos_5be_sync');
+    } catch(e) {}
+
+    function mascaraTelefone(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.substring(0, 11);
+      if (v.length > 6) {
+        input.value = `(${v.substring(0, 2)}) ${v.substring(2, 7)}-${v.substring(7)}`;
+      } else if (v.length > 2) {
+        input.value = `(${v.substring(0, 2)}) ${v.substring(2)}`;
+      } else {
+        input.value = v;
+      }
+    }
+
+    function toggleSecaoAlmoco() {
+      const check = document.getElementById('checkAlmoco');
+      const bloco = document.getElementById('blocoDetalhesAlmoco');
+      const card = document.getElementById('cardOptAlmoco');
+      if (check.checked) {
+        bloco.classList.remove('hidden');
+        card.className = "relative p-5 rounded-xl border-2 border-amber-500 bg-[#162719] transition-all cursor-pointer flex flex-col justify-between shadow";
+      } else {
+        bloco.classList.add('hidden');
+        card.className = "relative p-5 rounded-xl border-2 border-[#203623] bg-[#0c160e] opacity-60 transition-all cursor-pointer flex flex-col justify-between";
+      }
+      validarSelecaoMinimaEventos();
+    }
+
+    function toggleSecaoDesfile() {
+      const check = document.getElementById('checkDesfile');
+      const bloco = document.getElementById('blocoDetalhesDesfile');
+      const card = document.getElementById('cardOptDesfile');
+      if (check.checked) {
+        bloco.classList.remove('hidden');
+        card.className = "relative p-5 rounded-xl border-2 border-emerald-500 bg-[#122617] transition-all cursor-pointer flex flex-col justify-between shadow";
+      } else {
+        bloco.classList.add('hidden');
+        card.className = "relative p-5 rounded-xl border-2 border-[#203623] bg-[#0c160e] opacity-60 transition-all cursor-pointer flex flex-col justify-between";
+      }
+      validarSelecaoMinimaEventos();
+    }
+
+    function validarSelecaoMinimaEventos() {
+      const almoco = document.getElementById('checkAlmoco').checked;
+      const desfile = document.getElementById('checkDesfile').checked;
+      if (!almoco && !desfile) {
+        alert("Por favor, selecione ao menos um evento: AlmoÃ§o Anual ou Desfile de 7 de Setembro.");
+        document.getElementById('checkAlmoco').checked = true;
+        toggleSecaoAlmoco();
+      }
+    }
+
+    function alterarQtdAlmoco(delta) {
+      const input = document.getElementById('qtdAlmocos');
+      let val = parseInt(input.value) || 1;
+      val += delta;
+      if (val < 1) val = 1;
+      if (val > 30) val = 30;
+      input.value = val;
+      recalcularTotalAlmoco();
+    }
+
+    function recalcularTotalAlmoco() {
+      const input = document.getElementById('qtdAlmocos');
+      let val = parseInt(input.value) || 1;
+      if (val < 1) val = 1;
+      const total = val * PRECO_ALMOCO_UNITARIO;
+      document.getElementById('valorTotalAlmoco').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    }
+
+    function copiarChavePix() {
+      navigator.clipboard.writeText(CHAVE_PIX_COMISSAO).then(() => {
+        alert(`Chave PIX copiada: ${CHAVE_PIX_COMISSAO}`);
+      });
+    }
+
+    // Auto-preenche dados caso o veterano jÃ¡ esteja cadastrado na base
+    function autoPreencherDadosVeterano() {
+      const nomeDigitado = document.getElementById('evNome').value.trim().toLowerCase();
+      if (nomeDigitado.length < 4 || !window.VETERANOS_DATA) return;
+
+      const norm = (t) => t ? t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : '';
+      const achado = window.VETERANOS_DATA.find(v => norm(v.nome) === norm(nomeDigitado));
+      
+      if (achado) {
+        if (achado.guerra && !document.getElementById('evGuerra').value) {
+          document.getElementById('evGuerra').value = achado.guerra;
+        }
+        if (achado.grad) document.getElementById('evGrad').value = achado.grad;
+        if (achado.cia) document.getElementById('evCia').value = achado.cia;
+        if (achado.ano && !document.getElementById('evAno').value) {
+          document.getElementById('evAno').value = achado.ano;
+        }
+        if (achado.tel && !document.getElementById('evWhatsApp').value) {
+          document.getElementById('evWhatsApp').value = achado.tel;
+        }
+        if (achado.cidade && !document.getElementById('evCidade').value) {
+          document.getElementById('evCidade').value = achado.cidade;
+        }
+      }
+    }
+
+    function salvarInscricaoEvento(event) {
+      event.preventDefault();
+
+      const vaiAlmoco = document.getElementById('checkAlmoco').checked;
+      const vaiDesfile = document.getElementById('checkDesfile').checked;
+
+      if (!vaiAlmoco && !vaiDesfile) {
+        return alert("Selecione ao menos um evento para confirmar a inscriÃ§Ã£o.");
+      }
+
+      const qtdPessoas = vaiAlmoco ? (parseInt(document.getElementById('qtdAlmocos').value) || 1) : 0;
+      const totalAlmoco = vaiAlmoco ? (qtdPessoas * PRECO_ALMOCO_UNITARIO) : 0;
+
+      const novaReserva = {
+        id: Date.now(),
+        dataHora: new Date().toLocaleString('pt-BR'),
+        nome: document.getElementById('evNome').value.trim(),
+        guerra: document.getElementById('evGuerra').value.trim().toUpperCase(),
+        grad: document.getElementById('evGrad').value,
+        cia: document.getElementById('evCia').value,
+        ano: document.getElementById('evAno').value.trim(),
+        tel: document.getElementById('evWhatsApp').value.trim(),
+        cidade: document.getElementById('evCidade').value.trim(),
+        uf: document.getElementById('evEstado').value,
+        vaiAlmoco: vaiAlmoco,
+        qtdAlmocos: qtdPessoas,
+        valorTotalAlmoco: totalAlmoco,
+        formaPagamento: vaiAlmoco ? document.getElementById('formaPagamento').value : 'NAO_APLICA',
+        statusPagamento: 'PENDENTE', // Admin confirma na aba administrativa
+        acompanhantes: vaiAlmoco ? document.getElementById('nomesAcompanhantes').value.trim() : '',
+        vaiDesfile: vaiDesfile,
+        tamanhoCamiseta: vaiDesfile ? document.getElementById('tamanhoCamiseta').value : '',
+        modalidadeDesfile: vaiDesfile ? document.getElementById('modalidadeDesfile').value : '',
+        observacoes: document.getElementById('evObs').value.trim()
+      };
+
+      // 1. Salva ou atualiza no localStorage
+      let lista = [];
+      try {
+        const stored = localStorage.getItem('reservas_eventos_5be');
+        if (stored) lista = JSON.parse(stored);
+      } catch(e) { lista = []; }
+
+      // Se jÃ¡ houver reserva com mesmo telefone ou nome, atualiza no mesmo lugar
+      const idx = lista.findIndex(r => 
+        (r.tel && r.tel === novaReserva.tel) || 
+        (r.nome.toLowerCase() === novaReserva.nome.toLowerCase())
+      );
+
+      if (idx !== -1) {
+        novaReserva.id = lista[idx].id;
+        novaReserva.statusPagamento = lista[idx].statusPagamento; // preserva status anterior se jÃ¡ pago
+        lista[idx] = novaReserva;
+      } else {
+        lista.unshift(novaReserva);
+      }
+
+      localStorage.setItem('reservas_eventos_5be', JSON.stringify(lista));
+
+      // 2. Transmite via BroadcastChannel
+      try {
+        if (syncChannel) {
+          syncChannel.postMessage({ tipo: 'NOVA_RESERVA_EVENTO', registro: novaReserva });
+        }
+      } catch(e) {}
+
+      // 3. Monta Mensagem WhatsApp Oficial
+      let detalhesMsg = "";
+      if (vaiAlmoco) {
+        detalhesMsg += `ðŸ½ï¸ *ALMOÃ‡O DOS VETERANOS:*\n` +
+          `ðŸ‘¥ *Qtd de Pessoas / RefeiÃ§Ãµes:* ${novaReserva.qtdAlmocos} almoÃ§o(s)\n` +
+          (novaReserva.acompanhantes ? `ðŸ‘¨â€ðŸ‘©â€ðŸ‘§ *Acompanhantes:* ${novaReserva.acompanhantes}\n` : '') +
+          `ðŸ’° *Valor Total:* R$ ${totalAlmoco.toFixed(2).replace('.', ',')}\n` +
+          `ðŸ’³ *Pagamento:* ${novaReserva.formaPagamento === 'PIX_ANTECIPADO' ? 'PIX Efetuado (segue comprovante)' : 'Pagamento na Portaria'}\n\n`;
+      }
+      if (vaiDesfile) {
+        detalhesMsg += `ðŸŽ–ï¸ *DESFILE DE 7 DE SETEMBRO:*\n` +
+          `ðŸ‘• *Camiseta:* Tamanho ${novaReserva.tamanhoCamiseta}\n` +
+          `ðŸš¶ *Formato:* ${novaReserva.modalidadeDesfile === 'A_PE' ? 'Marcha a pÃ© na Tropa' : (novaReserva.modalidadeDesfile === 'VIATURA' ? 'Em Viatura HistÃ³rica' : 'Guarda de Honra')}\n\n`;
+      }
+
+      const msgWhatsApp = encodeURIComponent(
+        `*CONFIRMAÃ‡ÃƒO DE RESERVA DE EVENTOS - 5Âº BE CMB BLD*\n` +
+        `_ComissÃ£o dos Veteranos - BatalhÃ£o Juarez TÃ¡vora_\n\n` +
+        `ðŸ‘¤ *Veterano:* ${novaReserva.nome} (${novaReserva.guerra})\n` +
+        `ðŸŽ–ï¸ *GraduaÃ§Ã£o:* ${novaReserva.grad} - *Ano:* ${novaReserva.ano}\n` +
+        `ðŸ¢ *Companhia:* ${novaReserva.cia}\n` +
+        `ðŸ“± *WhatsApp:* ${novaReserva.tel}\n` +
+        `ðŸ“ *Cidade:* ${novaReserva.cidade} - ${novaReserva.uf}\n\n` +
+        detalhesMsg +
+        `_Confirmo minha presenÃ§a e solicito a validaÃ§Ã£o da minha reserva pela Diretoria!_`
+      );
+
+      document.getElementById('btnEnviarWhatsEvento').href = `https://api.whatsapp.com/send?text=${msgWhatsApp}`;
+
+      // 4. Preenche o Resumo na Tela
+      let htmlResumo = `
+        <div class="text-amber-400 font-bold mb-1 border-b border-[#1b3620] pb-1 uppercase">
+          <i class="fa-solid fa-receipt mr-1"></i> Resumo Oficial da InscriÃ§Ã£o #${novaReserva.id}
+        </div>
+        <div>ðŸ‘¤ <strong>Militar:</strong> ${novaReserva.grad} ${novaReserva.guerra} (${novaReserva.nome})</div>
+        <div>ðŸ¢ <strong>Companhia:</strong> ${novaReserva.cia} â€¢ Turma: ${novaReserva.ano}</div>
+      `;
+      if (vaiAlmoco) {
+        htmlResumo += `
+          <div class="mt-1 pt-1 border-t border-[#1b3420] text-amber-300">
+            ðŸ½ï¸ <strong>AlmoÃ§o Anual:</strong> ${novaReserva.qtdAlmocos} pessoa(s) â€” Total: <strong class="text-emerald-400">R$ ${totalAlmoco.toFixed(2).replace('.', ',')}</strong>
+          </div>
+          ${novaReserva.acompanhantes ? `<div>ðŸ‘¨â€ðŸ‘©â€ðŸ‘§ <strong>Familiares:</strong> ${novaReserva.acompanhantes}</div>` : ''}
+          <div class="text-[11px] text-slate-300">ðŸ’³ <strong>Status:</strong> ${novaReserva.formaPagamento === 'PIX_ANTECIPADO' ? 'Envie o comprovante PIX pelo WhatsApp abaixo para baixa imediata!' : 'Pagamento na recepÃ§Ã£o do evento'}</div>
+        `;
+      }
+      if (vaiDesfile) {
+        htmlResumo += `
+          <div class="mt-1 pt-1 border-t border-[#1b3420] text-emerald-300">
+            ðŸŽ–ï¸ <strong>Desfile 7 de Setembro:</strong> Confirmado! Camiseta: <strong>Tam. ${novaReserva.tamanhoCamiseta}</strong>
+          </div>
+        `;
+      }
+      document.getElementById('resumoReservaBox').innerHTML = htmlResumo;
+
+      // 5. Exibe confirmaÃ§Ã£o
+      document.getElementById('formEventos').classList.add('hidden');
+      document.getElementById('boxSucessoEvento').classList.remove('hidden');
+      document.getElementById('boxSucessoEvento').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function fazerNovaInscricao() {
+      document.getElementById('formEventos').reset();
+      document.getElementById('formEventos').classList.remove('hidden');
+      document.getElementById('boxSucessoEvento').classList.add('hidden');
+      toggleSecaoAlmoco();
+      toggleSecaoDesfile();
+      recalcularTotalAlmoco();
+    }
+
+    function consultarReservaExistente() {
+      const termo = document.getElementById('buscaMinhaReserva').value.trim().toLowerCase();
+      const divRes = document.getElementById('resultadoConsultaReserva');
+      if (!termo) return alert("Digite seu nome de guerra ou telefone para consultar.");
+
+      let lista = [];
+      try {
+        const stored = localStorage.getItem('reservas_eventos_5be');
+        if (stored) lista = JSON.parse(stored);
+      } catch(e) { lista = []; }
+
+      const telDigitos = termo.replace(/\D/g, '');
+      const achados = lista.filter(r => 
+        (r.guerra && r.guerra.toLowerCase().includes(termo)) ||
+        (r.nome && r.nome.toLowerCase().includes(termo)) ||
+        (telDigitos && r.tel && r.tel.replace(/\D/g, '').includes(telDigitos))
+      );
+
+      divRes.classList.remove('hidden');
+      if (achados.length === 0) {
+        divRes.innerHTML = `<span class="text-amber-400 font-bold"><i class="fa-solid fa-circle-exclamation mr-1"></i> Nenhuma reserva encontrada para "${termo}".</span> Preencha o formulÃ¡rio acima para garantir seu almoÃ§o e desfile!`;
+        return;
+      }
+
+      const r = achados[0];
+      const statusClass = r.statusPagamento === 'PAGO' ? 'text-emerald-400 bg-emerald-950 border-emerald-600' : 'text-amber-400 bg-amber-950 border-amber-600';
+      divRes.innerHTML = `
+        <div class="flex items-center justify-between pb-1.5 border-b border-[#1b3420]">
+          <span class="font-bold text-white uppercase military-font">${r.grad} ${r.guerra} (${r.nome})</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusClass}">
+            ${r.statusPagamento === 'PAGO' ? 'âœ… PAGAMENTO CONFIRMADO' : 'â³ PAGAMENTO PENDENTE'}
+          </span>
+        </div>
+        <div class="mt-2 space-y-1 text-[11px] font-mono">
+          <div>ðŸ¢ <strong>Companhia:</strong> ${r.cia} â€¢ Ano: ${r.ano}</div>
+          ${r.vaiAlmoco ? `<div>ðŸ½ï¸ <strong>AlmoÃ§o:</strong> ${r.qtdAlmocos} pessoa(s) â€” Total: <strong>R$ ${parseFloat(r.valorTotalAlmoco || 0).toFixed(2).replace('.', ',')}</strong></div>` : ''}
+          ${r.vaiDesfile ? `<div>ðŸŽ–ï¸ <strong>Desfile 7 de Setembro:</strong> Confirmado (Camiseta Tam. ${r.tamanhoCamiseta})</div>` : ''}
+          <div class="text-slate-400 text-[10px] mt-1">Data do registro: ${r.dataHora}</div>
+        </div>
+      `;
+    }
+
+    // InicializaÃ§Ã£o
+    window.addEventListener('DOMContentLoaded', () => {
+      toggleSecaoAlmoco();
+      toggleSecaoDesfile();
+      recalcularTotalAlmoco();
+    });
+  </script>
+</body>
+</html>

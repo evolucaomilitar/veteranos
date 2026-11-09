@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Portal do Veterano 5º BE - Reencontro & Inscrição Oficial</title>
+
+  <!-- Configurações PWA: Aplicativo para Celular & Computador -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a110b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Veteranos 5º BE">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="icon" type="image/png" href="logo_veteranos.png">
+  <script src="pwa.js" defer></script>
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Banco Oficial de Veteranos -->
+  <script src="dados.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b120c;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.15) 0%, transparent 65%),
+        linear-gradient(to bottom, #0e1710 0%, #060a07 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+    .military-font {
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.5px;
+    }
+    .tactical-border {
+      border: 1px solid #28442c;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(40, 68, 44, 0.2);
+    }
+    .gold-gradient {
+      background: linear-gradient(135deg, #fff2a3 0%, #d4af37 50%, #997300 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tactical-input {
+      background-color: #121f14;
+      border: 1px solid #2b472f;
+      color: #f1f5f9;
+      transition: all 0.2s;
+    }
+    .tactical-input:focus {
+      outline: none;
+      border-color: #d4af37;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      background-color: #162819;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #0a110b;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #233f27;
+      border-radius: 3px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #39673f;
+    }
+    @keyframes pulse-gold {
+      0%, 100% { border-color: rgba(212, 175, 55, 0.8); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+      50% { border-color: rgba(34, 197, 94, 0.8); box-shadow: 0 0 20px rgba(34, 197, 94, 0.4); }
+    }
+    .card-novo-membro {
+      animation: pulse-gold 2.5s infinite;
+    }
+  </style>
+</head>
+<body class="py-6 px-3 sm:px-6">
+
+  <div class="max-w-5xl mx-auto space-y-6">
+    
+    <!-- CABEÇALHO TÁTICO COM BRASÃO E ACESSO ADMIN -->
+    <header class="bg-[#0e1710] rounded-2xl p-6 sm:p-8 tactical-border relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-600 via-amber-400 to-emerald-600"></div>
+
+      <!-- Barra Superior: Logo Evolução Militar (Esquerda) & Acesso Admin (Direita) -->
+      <div class="flex justify-between items-center mb-4 gap-2">
+        <!-- Logo Loja Evolução Militar com Link Externo -->
+        <a href="https://www.evolucaomilitar.com.br" target="_blank" rel="noopener noreferrer"
+           title="Loja Oficial Evolução Militar • Acesse: www.evolucaomilitar.com.br"
+           class="group inline-flex flex-col items-center justify-center transition-all flex-shrink-0 text-center">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 bg-black rounded-xl border-2 border-amber-400/90 group-hover:border-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.3)] group-hover:shadow-[0_0_22px_rgba(251,191,36,0.5)] flex items-center justify-center overflow-hidden transition-all group-hover:scale-105 shrink-0">
+            <video src="logo_evolucao_militar.mp4" poster="logo_evolucao_militar.jpg" autoplay loop muted playsinline 
+                   class="w-full h-full object-cover rounded-lg pointer-events-none">
+              <img src="logo_evolucao_militar.jpg" alt="Loja Evolução Militar" class="w-full h-full object-cover rounded-lg">
+            </video>
+          </div>
+          <span class="text-[9px] sm:text-[10px] font-black uppercase military-font text-amber-400 group-hover:text-amber-300 tracking-wider leading-none mt-1 flex items-center">
+            ACESSE A LOJA <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[7px] text-amber-400"></i>
+          </span>
+        </a>
+
+        <!-- Botão Instalar App -->
+        <button onclick="acionarInstalacaoApp()" 
+                title="Instalar Aplicativo no Celular ou Computador"
+                class="btn-instalar-app px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-600 hover:from-emerald-500 hover:to-green-500 text-slate-950 font-extrabold rounded-lg text-xs military-font uppercase flex items-center shadow-lg transition-all transform active:scale-95">
+          <i class="fa-solid fa-mobile-screen-button mr-1.5 text-xs"></i>
+          <span>Instalar App</span>
+        </button>
+      </div>
+
+      <div class="text-center">
+        <div class="flex justify-center mb-4 drop-shadow-[0_4px_24px_rgba(212,175,55,0.4)]">
+          <img src="logo_veteranos.png" alt="Veteranos 5º BE Cmb Bld" class="h-36 sm:h-48 w-auto object-contain filter drop-shadow hover:scale-105 transition-transform duration-300">
+        </div>
+
+        <div class="inline-flex items-center space-x-2 px-3 py-1 bg-amber-950/60 border border-amber-600/50 rounded-full text-xs font-bold text-amber-400 military-font tracking-widest uppercase mb-2">
+          <i class="fa-solid fa-id-card"></i>
+          <span>Portal Oficial do Veterano • Inscrição & Reencontro</span>
+        </div>
+
+        <h1 class="military-font leading-tight">
+          <span class="text-3xl sm:text-5xl font-black gold-gradient uppercase tracking-wider block">
+            VETERANOS
+          </span>
+          <span class="text-sm sm:text-lg text-emerald-400 font-extrabold uppercase tracking-wide military-font block mt-1">
+            DO 5º BATALHÃO DE ENGENHARIA DE COMBATE BLINDADO
+          </span>
+        </h1>
+        <p class="text-xs sm:text-sm text-amber-300 font-bold uppercase tracking-wider military-font mt-1">
+          Batalhão Juarez Távora • Porto União - SC
+        </p>
+        
+        <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto mt-3 leading-relaxed">
+          Preencha sua inscrição ou atualização abaixo. 
+          <strong class="text-amber-300">A partir do momento em que fizer o cadastro, a lista dos soldados da sua Companhia será liberada na mesma hora</strong> com o nome e o ano em que serviram!
+        </p>
+        <p class="text-[11px] text-slate-400 mt-1">
+          <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Por segurança, os telefones de contato ficam restritos e só o Administrador pode liberar.
+        </p>
+      </div>
+
+    </header>
+
+    <!-- BANNER DE CONVITE AO ALMOÇO DE CONFRATERNIZAÇÃO -->
+    <div class="tactical-border rounded-xl p-4 sm:p-5 bg-gradient-to-r from-[#142316] via-[#1a2c1d] to-[#142316] border border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/40">
+          <i class="fa-solid fa-utensils"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-[9px] text-amber-400 font-extrabold uppercase military-font tracking-wider">Tradicional Encontro</span>
+            <span class="px-1.5 py-0.2 bg-emerald-950 text-emerald-300 border border-emerald-500/40 rounded text-[9px] font-mono font-bold">ALMOÇO 2026</span>
+          </div>
+          <h3 class="text-sm sm:text-base font-bold text-white uppercase military-font">
+            Almoço dos Veteranos do 5º BE • Porto União - SC
+          </h3>
+          <p class="text-[11px] text-slate-300">
+            R$ 50,00 Adulto • R$ 25,00 Meio (6 a 10 anos) • Chave PIX: <strong class="text-amber-300 font-mono">42999378607</strong>
+          </p>
+        </div>
+      </div>
+      <a href="index.html" class="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black rounded-lg text-xs military-font uppercase flex items-center justify-center shadow flex-shrink-0 transition-transform transform active:scale-95">
+        <i class="fa-solid fa-ticket mr-1.5"></i> Participar do Almoço
+      </a>
+    </div>
+
+    <!-- FORMULÁRIO DE INSCRIÇÃO & ATUALIZAÇÃO -->
+    <section id="secaoCadastro" class="bg-[#101b12] rounded-xl p-6 sm:p-8 tactical-border relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-emerald-400 to-amber-500"></div>
+
+      <div class="mb-6 pb-4 border-b border-[#243c27]">
+        <h2 class="text-xl sm:text-2xl font-bold military-font text-white flex items-center">
+          <i class="fa-solid fa-pen-to-square text-amber-400 mr-2"></i>
+          1. Inscrição / Atualização Cadastral do Veterano
+        </h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Seus dados serão incorporados ao efetivo geral da Comissão dos Veteranos e a lista da sua Companhia será desbloqueada abaixo.
+        </p>
+      </div>
+
+      <form id="formCadastroVeterano" onsubmit="salvarCadastroPortal(event)" class="space-y-4">
+        
+        <!-- Nome Completo & Nome de Guerra -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Nome Completo <span class="text-red-400">*</span>
+            </label>
+            <input type="text" id="cadNomeCompleto" required placeholder="Ex: João da Silva Silveira"
+                   class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Nome de Guerra <span class="text-red-400">*</span>
+            </label>
+            <input type="text" id="cadNomeGuerra" required placeholder="Ex: SILVA"
+                   class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm uppercase">
+          </div>
+        </div>
+
+        <!-- Posto/Graduação, Companhia & Ano que Serviu -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Posto / Graduação <span class="text-red-400">*</span>
+            </label>
+            <select id="cadGraduação" required class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+              <option value="Sd" selected>Soldado (Sd)</option>
+              <option value="Cb">Cabo (Cb)</option>
+              <option value="3º Sgt">3º Sargento</option>
+              <option value="2º Sgt">2º Sargento</option>
+              <option value="1º Sgt">1º Sargento</option>
+              <option value="Sgt">Sargento (Sgt)</option>
+              <option value="Sub Ten">Subtenente</option>
+              <option value="Asp">Aspirante</option>
+              <option value="Ten">Tenente (Ten)</option>
+              <option value="Cap">Capitão (Cap)</option>
+              <option value="Maj">Major (Maj)</option>
+              <option value="Ten Cel">Tenente-Coronel</option>
+              <option value="Cel">Coronel (Cel)</option>
+              <option value="Gen">General (Gen)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Companhia em que Serviu <span class="text-red-400">*</span>
+            </label>
+            <select id="cadCompanhia" required class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm font-bold text-amber-300">
+              <option value="1º Cia Eng Cmb Bld">1ª Cia Eng Cmb Bld — 🦁 Leão</option>
+              <option value="2º Cia Eng Cmb Bld">2ª Cia Eng Cmb Bld — 🐆 Onça</option>
+              <option value="Cia Cmdo e Ap - (CCAp)">Cia Cmdo e Apoio (CCAp) — 🐾 Pantera</option>
+              <option value="Cia Eng Pnt (CEP)">Cia Eng Pontes (CEP) — 🦅 Águia</option>
+              <option value="Estado Maior Geral e Especial">Estado-Maior Geral e Especial</option>
+              <option value="NPOR">NPOR</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Ano que Serviu (Incorporação) <span class="text-red-400">*</span>
+            </label>
+            <input type="number" id="cadAno" min="1940" max="2030" placeholder="Ex: 1985" required
+                   class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm font-mono">
+          </div>
+        </div>
+
+        <!-- WhatsApp, Cidade e UF -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              WhatsApp / Celular <span class="text-red-400">*</span>
+            </label>
+            <input type="tel" id="cadWhatsApp" required placeholder="(42) 99999-9999" oninput="mascaraTelefone(this)"
+                   class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm font-mono text-emerald-400">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Cidade Onde Mora <span class="text-red-400">*</span>
+            </label>
+            <input type="text" id="cadCidade" required placeholder="Ex: Porto União"
+                   class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Estado (UF) <span class="text-red-400">*</span>
+            </label>
+            <select id="cadEstado" required class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+              <option value="Santa Catarina" selected>Santa Catarina (SC)</option>
+              <option value="Paraná">Paraná (PR)</option>
+              <option value="Rio Grande do Sul">Rio Grande do Sul (RS)</option>
+              <option value="São Paulo">São Paulo (SP)</option>
+              <option value="Distrito Federal">Distrito Federal (DF)</option>
+              <option value="Rio de Janeiro">Rio de Janeiro (RJ)</option>
+              <option value="Minas Gerais">Minas Gerais (MG)</option>
+              <option value="Mato Grosso do Sul">Mato Grosso do Sul (MS)</option>
+              <option value="Mato Grosso">Mato Grosso (MT)</option>
+              <option value="Outro">Outro Estado</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Bairro e Rua (Opcionais) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Bairro (Opcional)
+            </label>
+            <input type="text" id="cadBairro" placeholder="Ex: Centro"
+                   class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">
+              Rua / Logradouro (Opcional)
+            </label>
+            <input type="text" id="cadRua" placeholder="Ex: Av. Coronel Amazonas, 100"
+                   class="w-full px-3 py-2.5 rounded-lg tactical-input text-sm">
+          </div>
+        </div>
+
+        <!-- Botão de Submissão -->
+        <div class="pt-2">
+          <button type="submit" 
+                  class="w-full py-4 px-6 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-600 hover:from-emerald-500 hover:to-green-500 text-slate-950 font-extrabold rounded-xl military-font tracking-wider text-base uppercase shadow-lg shadow-emerald-950/60 flex items-center justify-center transition-all transform active:scale-95">
+            <i class="fa-solid fa-unlock-keyhole mr-2 text-lg"></i>
+            Concluir Inscrição e Liberar Lista da Minha Companhia
+          </button>
+        </div>
+
+      </form>
+
+      <!-- MODAL / BOX DE CONFIRMAÇÃO DE SUCESSO -->
+      <div id="sucessoCadastroBox" class="hidden mt-6 p-6 bg-emerald-950/80 border-2 border-emerald-500 rounded-xl text-center space-y-4">
+        <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl">
+          <i class="fa-solid fa-shield-check"></i>
+        </div>
+        <h3 id="tituloSucessoCadastro" class="text-2xl font-bold text-emerald-300 military-font uppercase">
+          Inscrição Confirmada com Sucesso!
+        </h3>
+        <p id="descSucessoCadastro" class="text-sm text-slate-200 max-w-lg mx-auto">
+          Seu cadastro foi registrado no efetivo geral. A lista dos soldados da sua Companhia foi <strong class="text-amber-400">liberada logo abaixo</strong> para você conferir!
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+          <a id="btnWhatsConfirmacao" href="#" target="_blank"
+             class="px-6 py-3 bg-green-500 hover:bg-green-400 text-slate-950 font-bold rounded-xl text-sm military-font uppercase flex items-center justify-center shadow-lg">
+            <i class="fa-brands fa-whatsapp text-xl mr-2"></i> Enviar Confirmação via WhatsApp
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ÁREA DA LISTA DA COMPANHIA: BLOQUEADA ATÉ A INSCRIÇÃO OU LIBERADA -->
+    <div id="areaListaCompanhia">
+      
+      <!-- ESTADO 1: BLOQUEADO (Antes da inscrição) -->
+      <div id="cardCompanhiaBloqueada" class="bg-[#101b12] rounded-xl p-8 sm:p-12 tactical-border text-center border-2 border-dashed border-[#28482d] space-y-4">
+        <div class="w-16 h-16 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full flex items-center justify-center mx-auto text-3xl">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3 class="text-2xl font-extrabold military-font text-white uppercase">
+          Lista de Soldados da Companhia Protegida
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
+          A relação com os nomes e os anos em que serviram os soldados de cada Companhia <strong class="text-amber-300">é liberada a partir do momento em que você faz a inscrição ou atualização de cadastro acima</strong>.
+        </p>
+        <div class="p-3 bg-[#0a120c] rounded-lg border border-[#1d3420] inline-block text-xs text-slate-400 font-mono">
+          <i class="fa-solid fa-shield-halved text-emerald-400 mr-1.5"></i> Telefones de contato são estritamente confidenciais e só o Administrador pode liberar.
+        </div>
+      </div>
+
+      <!-- ESTADO 2: MURAL LIBERADO (Apenas após inscrição ou para Admin) -->
+      <section id="cardCompanhiaLiberada" class="hidden bg-[#101b12] rounded-xl p-5 sm:p-6 tactical-border space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-[#233f27]">
+          <div>
+            <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 bg-emerald-950/70 border border-emerald-600/50 rounded-full text-[11px] font-bold text-emerald-400 military-font uppercase mb-1">
+              <i class="fa-solid fa-lock-open text-amber-400 mr-1"></i>
+              <span>Acesso Liberado para Você</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold military-font gold-gradient uppercase flex items-center" id="tituloMuralLiberado">
+              1ª Cia Eng Cmb Bld
+            </h2>
+            <p class="text-xs text-slate-400">Soldados cadastrados com <strong class="text-slate-200">Nome</strong> e <strong class="text-slate-200">Ano que serviu</strong>.</p>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <span id="badgeQtdCompanhia" class="text-sm font-bold font-mono px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg">
+              -- Soldados
+            </span>
+          </div>
+        </div>
+
+        <!-- Barra de Abas das Companhias com os Desenhos dos Animais Mascotes -->
+        <div class="p-3 bg-[#0a120c] rounded-xl border border-[#1e3422] space-y-2">
+          <div class="flex items-center justify-between text-[11px] text-slate-400 font-semibold uppercase military-font">
+            <span class="flex items-center"><i class="fa-solid fa-paw text-amber-400 mr-1.5"></i> Ver Integrantes por Companhia:</span>
+            <span class="text-amber-400 font-bold">Mascotes das Companhias</span>
+          </div>
+          <div class="flex flex-wrap gap-2" id="botoesCiasReencontro">
+            <!-- Gerado via JavaScript com os 4 animais -->
+          </div>
+        </div>
+
+        <!-- Bloco Tático: Puxar Integrantes pelo Ano em que Serviu -->
+        <div class="p-4 bg-gradient-to-r from-[#122315] via-[#0b140d] to-[#122315] rounded-xl border-2 border-emerald-600/70 shadow-lg space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center text-sm font-bold shadow-sm">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-slate-100 military-font uppercase tracking-wide flex items-center">
+                  Puxar Integrantes do Ano que Serviu
+                  <span class="ml-2 px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded text-[10px] font-bold">Turma de Caserna</span>
+                </h4>
+                <p class="text-[11px] text-slate-300">
+                  Coloque o ano em que você serviu para puxar os integrantes da sua época:
+                </p>
+              </div>
+            </div>
+            <button type="button" onclick="limparFiltroAnoMural()" id="btnVerTodosAnosMural"
+                    class="px-3 py-1.5 bg-[#182c1c] hover:bg-[#233f28] text-slate-200 border border-[#2d5632] rounded-lg text-xs military-font font-bold uppercase transition-all flex items-center self-start sm:self-auto shadow-sm">
+              <i class="fa-solid fa-users mr-1.5 text-amber-400"></i> Ver Todos os Anos
+            </button>
+          </div>
+
+          <!-- Controles: Input de Ano + Botão Puxar + Busca de Nome -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 pt-1">
+            <div class="sm:col-span-5 flex gap-2">
+              <div class="relative flex-1">
+                <i class="fa-solid fa-calendar-days absolute left-3 top-2.5 text-amber-400 text-xs"></i>
+                <input type="number" id="filtroMuralAno" oninput="filtrarMural()"
+                       placeholder="Ex: 1984" min="1940" max="2030"
+                       class="w-full pl-9 pr-3 py-2 rounded-lg bg-[#070e08] border-2 border-emerald-500/80 text-amber-300 text-sm font-mono font-bold focus:outline-none focus:border-amber-400 placeholder:text-slate-500">
+              </div>
+              <button type="button" onclick="filtrarMural()"
+                      class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-slate-950 font-extrabold rounded-lg text-xs military-font uppercase flex items-center shadow-md">
+                <i class="fa-solid fa-filter mr-1.5"></i> Puxar
+              </button>
+            </div>
+
+            <div class="sm:col-span-7 relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+              <input type="text" id="filtroMuralBusca" oninput="filtrarMural()"
+                     placeholder="Ou busque por Nome / Nome de Guerra..."
+                     class="w-full pl-9 pr-3 py-2 rounded-lg bg-[#070e08] border border-[#264429] text-xs text-slate-200 focus:outline-none focus:border-amber-400">
+            </div>
+          </div>
+
+          <!-- Faixa de Status: Mostra exatamente o que está puxado -->
+          <div id="faixaStatusMuralAno" class="flex flex-wrap items-center justify-between gap-2 px-3 py-1.5 bg-[#060c07] rounded-lg border border-[#1b3420] text-xs text-slate-300">
+            <div id="txtStatusAnoMural" class="flex items-center space-x-1.5 font-medium">
+              <i class="fa-solid fa-circle-info text-amber-400 text-[11px]"></i>
+              <span>Exibindo todos os soldados da Companhia. Digite o ano acima para puxar sua turma.</span>
+            </div>
+            <div id="qtdAnoPuxadoMural" class="font-mono text-emerald-400 font-bold text-[11px]">
+              --
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid de Soldados -->
+        <div id="containerMuralCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[600px] overflow-y-auto custom-scroll pr-1">
+          <!-- Soldados da Companhia com Nome e Ano que serviu -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- MODAL: LOGIN DO ADMINISTRADOR -->
+    <div id="modalAdminReencontro" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+      <div class="bg-[#111e13] max-w-sm w-full rounded-2xl overflow-hidden border border-[#d4af37] shadow-[0_0_30px_rgba(212,175,55,0.3)] relative">
+        <div class="bg-[#172b1a] p-4 border-b border-[#254228] flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-full bg-amber-950 border border-amber-500 flex items-center justify-center text-amber-400 text-sm font-bold">
+              <i class="fa-solid fa-key"></i>
+            </div>
+            <h3 class="text-sm font-bold text-white military-font uppercase">Acesso Administrativo</h3>
+          </div>
+          <button onclick="fecharModalAdmin()" class="text-slate-400 hover:text-white p-1">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <form onsubmit="autenticarAdminReencontro(event)" class="p-5 space-y-4 text-xs">
+          <p class="text-slate-300 text-[11px]">
+            Digite a senha de administrador para liberar todos os dados e telefones.
+          </p>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Senha:</label>
+            <input type="password" id="inputSenhaReencontro" required placeholder="Digite a senha..."
+                   class="w-full px-3 py-2 bg-[#09100a] border border-[#2b4c2f] rounded-lg text-slate-100 font-mono tracking-widest text-center text-sm focus:outline-none focus:border-amber-400">
+            <div id="erroSenhaReencontro" class="hidden text-red-400 font-bold text-[11px] mt-1.5 text-center">
+              Senha incorreta!
+            </div>
+          </div>
+          <button type="submit" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-slate-950 font-extrabold rounded-lg text-xs military-font uppercase">
+            Autenticar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- RODAPÉ TÁTICO: Redes Sociais, Admin e Informações -->
+    <footer class="text-center text-xs text-slate-500 py-6 border-t border-[#192b1b] space-y-4">
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <!-- Instagram Oficial -->
+        <a href="https://www.instagram.com/veteranos5be" target="_blank" rel="noopener noreferrer"
+           title="Siga o Instagram Oficial: @veteranos5be"
+           class="inline-flex items-center space-x-2 px-3.5 py-2 bg-gradient-to-r from-pink-950/70 via-purple-950/70 to-pink-950/70 hover:from-pink-900 hover:to-purple-900 border border-pink-500/50 hover:border-pink-400 text-pink-300 hover:text-white rounded-lg text-xs font-bold military-font uppercase transition-all shadow">
+          <i class="fa-brands fa-instagram text-base text-pink-400"></i>
+          <span>Instagram @veteranos5be</span>
+        </a>
+
+        <!-- Facebook Oficial -->
+        <a href="https://www.facebook.com/veteranos5be" target="_blank" rel="noopener noreferrer"
+           title="Siga o Facebook Oficial: @veteranos5be"
+           class="inline-flex items-center space-x-2 px-3.5 py-2 bg-blue-950/70 hover:bg-blue-900 border border-blue-500/50 hover:border-blue-400 text-blue-300 hover:text-white rounded-lg text-xs font-bold military-font uppercase transition-all shadow">
+          <i class="fa-brands fa-facebook text-base text-blue-400"></i>
+          <span>Facebook @veteranos5be</span>
+        </a>
+
+        <!-- Área Admin com Senha -->
+        <button id="btnAdminReencontro" onclick="abrirModalAdmin()" 
+                title="Acesso Restrito do Administrador com Senha"
+                class="inline-flex items-center space-x-2 px-3.5 py-2 bg-amber-600/20 hover:bg-amber-600/40 text-amber-300 border border-amber-500/50 hover:border-amber-400 rounded-lg text-xs military-font font-bold uppercase transition-all shadow">
+          <i class="fa-solid fa-lock text-amber-400"></i>
+          <span>Área Admin</span>
+        </button>
+
+        <!-- Badge Admin Autenticado -->
+        <div id="badgeAdminReencontro" class="hidden flex items-center space-x-2">
+          <span class="px-3 py-1.5 bg-emerald-950 text-emerald-300 border border-emerald-500 rounded-lg text-xs font-bold military-font uppercase flex items-center">
+            <i class="fa-solid fa-shield-halved text-emerald-400 mr-1.5"></i> Admin Autenticado
+          </span>
+          <button onclick="fazerLogoutAdmin()" class="px-2.5 py-1.5 bg-red-950 hover:bg-red-900 text-red-300 border border-red-700/50 rounded-lg text-xs font-bold military-font uppercase">
+            Sair
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-2 text-[11px] text-slate-500">
+        <p class="font-bold text-slate-400">Veteranos do 5º Batalhão de Engenharia de Combate Blindado — Batalhão Juarez Távora</p>
+        <p class="mt-0.5">"Pela Pátria, Todo o Sacrifício é Dever!" • Batalhão Juarez Távora • Porto União - SC</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- SCRIPT DO PORTAL -->
+  <script>
+    const SENHA_ADMIN_OFICIAL = "104832";
+    let efetivoGeral = [];
+    let recemCadastradoNome = null;
+    let ciaAtivaMural = "1º Cia Eng Cmb Bld";
+
+    let syncChannel = null;
+    try {
+      syncChannel = new BroadcastChannel('veteranos_5be_sync');
+      syncChannel.onmessage = () => carregarEfetivoGeral();
+    } catch (e) {}
+
+    function verificarAdminLogado() {
+      return sessionStorage.getItem('admin_5be_logado') === 'true';
+    }
+
+    function abrirModalAdmin() {
+      document.getElementById('erroSenhaReencontro').classList.add('hidden');
+      document.getElementById('inputSenhaReencontro').value = '';
+      document.getElementById('modalAdminReencontro').classList.remove('hidden');
+      setTimeout(() => document.getElementById('inputSenhaReencontro').focus(), 100);
+    }
+
+    function fecharModalAdmin() {
+      document.getElementById('modalAdminReencontro').classList.add('hidden');
+    }
+
+    function autenticarAdminReencontro(event) {
+      event.preventDefault();
+      const senha = document.getElementById('inputSenhaReencontro').value.trim();
+      if (senha === SENHA_ADMIN_OFICIAL) {
+        sessionStorage.setItem('admin_5be_logado', 'true');
+        fecharModalAdmin();
+        atualizarHeaderAdmin();
+        renderizarMural();
+      } else {
+        document.getElementById('erroSenhaReencontro').classList.remove('hidden');
+      }
+    }
+
+    function fazerLogoutAdmin() {
+      sessionStorage.removeItem('admin_5be_logado');
+      atualizarHeaderAdmin();
+      renderizarMural();
+    }
+
+    function atualizarHeaderAdmin() {
+      const isAdmin = verificarAdminLogado();
+      const btnAdmin = document.getElementById('btnAdminReencontro');
+      const badgeAdmin = document.getElementById('badgeAdminReencontro');
+      if (isAdmin) {
+        btnAdmin.classList.add('hidden');
+        badgeAdmin.classList.remove('hidden');
+      } else {
+        btnAdmin.classList.remove('hidden');
+        badgeAdmin.classList.add('hidden');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      atualizarHeaderAdmin();
+      carregarEfetivoGeral();
+    });
+
+    function encontrarMilitarExistente(lista, dados) {
+      if (!lista || !Array.isArray(lista) || !dados) return null;
+
+      const norm = (txt) => {
+        if (!txt) return '';
+        return txt.toString().toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]/g, '');
+      };
+
+      const digitos = (tel) => {
+        if (!tel) return '';
+        const d = tel.toString().replace(/\D/g, '');
+        return d.length >= 8 ? d.slice(-8) : d;
+      };
+
+      const idNovo = dados.id;
+      const nomeNovo = norm(dados.nome);
+      const guerraNovo = norm(dados.guerra);
+      const anoNovo = dados.ano ? String(dados.ano).trim() : '';
+      const cpfNovo = dados.cpf ? String(dados.cpf).replace(/\D/g, '') : '';
+      const telNovo = digitos(dados.tel || dados.telDial);
+
+      for (let i = 0; i < lista.length; i++) {
+        const item = lista[i];
+
+        // 0. Match direto pelo mesmo ID numérico
+        if (idNovo && item.id && String(idNovo) === String(item.id)) {
+          return { militar: item, index: i, motivo: 'ID' };
+        }
+
+        // 1. Match por CPF (mínimo 9 dígitos)
+        const cpfItem = item.cpf ? String(item.cpf).replace(/\D/g, '') : '';
+        if (cpfNovo && cpfItem && cpfNovo.length >= 9 && cpfNovo === cpfItem) {
+          return { militar: item, index: i, motivo: 'CPF' };
+        }
+
+        // 2. Match por Nome Completo normalizado idêntico
+        const nomeItem = norm(item.nome);
+        if (nomeNovo && nomeItem && nomeNovo === nomeItem) {
+          return { militar: item, index: i, motivo: 'Nome Completo' };
+        }
+
+        // 3. Match por Telefone (últimos 8 dígitos) + Primeiro Nome ou Nome de Guerra
+        const telItem = digitos(item.tel || item.telDial);
+        if (telNovo && telItem && telNovo.length >= 8 && telNovo === telItem) {
+          const guerraItem = norm(item.guerra);
+          const primNovo = (dados.nome || '').trim().split(' ')[0].toLowerCase();
+          const primItem = (item.nome || '').trim().split(' ')[0].toLowerCase();
+          if ((guerraNovo && guerraItem && guerraNovo === guerraItem) || (primNovo && primItem && primNovo === primItem)) {
+            return { militar: item, index: i, motivo: 'Telefone e Nome' };
+          }
+        }
+
+        // 4. Match por Nome de Guerra + Ano de Incorporação (quando guerra tem pelo menos 4 letras)
+        const guerraItem = norm(item.guerra);
+        const anoItem = item.ano ? String(item.ano).trim() : '';
+        if (guerraNovo && guerraItem && guerraNovo.length >= 4 && guerraNovo === guerraItem) {
+          if (anoNovo && anoItem && anoNovo === anoItem) {
+            return { militar: item, index: i, motivo: 'Guerra e Ano' };
+          }
+        }
+      }
+
+      return null;
+    }
+
+    function carregarEfetivoGeral() {
+      let base = [];
+      if (window.VETERANOS_DATA && Array.isArray(window.VETERANOS_DATA)) {
+        base = JSON.parse(JSON.stringify(window.VETERANOS_DATA));
+      }
+      let novos = [];
+      try {
+        const stored = localStorage.getItem('novos_veteranos_5be');
+        if (stored) novos = JSON.parse(stored);
+      } catch (e) { novos = []; }
+
+      // Unifica atualizações e novos: se o veterano já existe, apenas atualiza as informações sem duplicar
+      novos.forEach(n => {
+        let indexBase = base.findIndex(b => b.id === n.id);
+        if (indexBase === -1) {
+          const m = encontrarMilitarExistente(base, n);
+          if (m) indexBase = m.index;
+        }
+
+        if (indexBase !== -1) {
+          Object.assign(base[indexBase], n, { isAtualizado: true, isNovo: true });
+        } else {
+          n.isNovo = true;
+          base.unshift(n);
+        }
+      });
+
+      efetivoGeral = base;
+      renderizarMural();
+
+      // Se o veterano já estiver cadastrado no dispositivo, avisa e preenche os campos
+      const savedNome = localStorage.getItem('veterano_inscrito_nome');
+      const savedCia = localStorage.getItem('veterano_inscrito_cia');
+      const savedAno = localStorage.getItem('veterano_inscrito_ano');
+      if (savedNome && savedCia) {
+        const inpNome = document.getElementById('cadNomeCompleto');
+        if (inpNome && !inpNome.value) inpNome.value = savedNome;
+        const inpAno = document.getElementById('cadAno');
+        if (inpAno && !inpAno.value && savedAno) inpAno.value = savedAno;
+        const selCia = document.getElementById('cadCompanhia');
+        if (selCia && !selCia.dataset.userChanged) selCia.value = savedCia;
+
+        const boxSucesso = document.getElementById('sucessoCadastroBox');
+        const tituloSucesso = document.getElementById('tituloSucessoCadastro');
+        const descSucesso = document.getElementById('descSucessoCadastro');
+        if (boxSucesso && tituloSucesso && descSucesso && boxSucesso.classList.contains('hidden')) {
+          tituloSucesso.innerText = "Cadastro Ativo — Lista Liberada Sempre!";
+          descSucesso.innerHTML = `Olá, <strong>${savedNome}</strong>! Seu cadastro está registrado no efetivo geral. A lista dos soldados da <strong>${savedCia}</strong> permanece <strong class="text-amber-400">sempre liberada</strong> logo abaixo para sua consulta permanente neste dispositivo.`;
+          boxSucesso.classList.remove('hidden');
+        }
+      }
+    }
+
+    const MASCOTES_CIAS = {
+      "1º Cia Eng Cmb Bld": {
+        nome: "Leão",
+        label: "1ª Cia Eng Cmb Bld",
+        badge: "LEÃO",
+        svg: "animal_leao.svg",
+        emoji: "🦁",
+        cor: "#f59e0b",
+        bgTag: "bg-amber-950/90 text-amber-300 border border-amber-500/60"
+      },
+      "2º Cia Eng Cmb Bld": {
+        nome: "Onça",
+        label: "2ª Cia Eng Cmb Bld",
+        badge: "ONÇA",
+        svg: "animal_onca.svg",
+        emoji: "🐆",
+        cor: "#eab308",
+        bgTag: "bg-yellow-950/90 text-yellow-300 border border-yellow-500/60"
+      },
+      "Cia Cmdo e Ap - (CCAp)": {
+        nome: "Pantera",
+        label: "Cia Cmdo e Ap (CCAp)",
+        badge: "PANTERA",
+        svg: "animal_pantera.svg",
+        emoji: "🐾",
+        cor: "#10b981",
+        bgTag: "bg-emerald-950/90 text-emerald-300 border border-emerald-500/60"
+      },
+      "Cia Eng Pnt (CEP)": {
+        nome: "Águia",
+        label: "Cia Pontes (CEP)",
+        badge: "ÁGUIA",
+        svg: "animal_aguia.svg",
+        emoji: "🦅",
+        cor: "#38bdf8",
+        bgTag: "bg-sky-950/90 text-sky-300 border border-sky-500/60"
+      },
+      "Estado Maior Geral e Especial": {
+        nome: "Estado-Maior",
+        label: "Estado-Maior",
+        badge: "EM",
+        icone: "fa-solid fa-star",
+        emoji: "⭐",
+        cor: "#c084fc",
+        bgTag: "bg-purple-950/90 text-purple-300 border border-purple-500/60"
+      },
+      "NPOR": {
+        nome: "NPOR",
+        label: "NPOR",
+        badge: "NPOR",
+        icone: "fa-solid fa-graduation-cap",
+        emoji: "🎓",
+        cor: "#f472b6",
+        bgTag: "bg-pink-950/90 text-pink-300 border border-pink-500/60"
+      }
+    };
+
+    function normalizarCia(cia) {
+      if (!cia) return '';
+      return cia.replace(/º/g, 'ª').trim().toLowerCase();
+    }
+
+    function obterMascoteCia(cia) {
+      if (!cia) return null;
+      const n = normalizarCia(cia);
+      for (const [key, val] of Object.entries(MASCOTES_CIAS)) {
+        if (normalizarCia(key) === n) return val;
+      }
+      return null;
+    }
+
+    function montarBotoesCiasReencontro(ciaAtual) {
+      const container = document.getElementById('botoesCiasReencontro');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const cias = [
+        { id: "1º Cia Eng Cmb Bld", label: "1ª Cia", animal: "Leão", svg: "animal_leao.svg" },
+        { id: "2º Cia Eng Cmb Bld", label: "2ª Cia", animal: "Onça", svg: "animal_onca.svg" },
+        { id: "Cia Cmdo e Ap - (CCAp)", label: "CCAp", animal: "Pantera", svg: "animal_pantera.svg" },
+        { id: "Cia Eng Pnt (CEP)", label: "CEP", animal: "Águia", svg: "animal_aguia.svg" },
+        { id: "Estado Maior Geral e Especial", label: "Estado-Maior", icone: "fa-solid fa-star" },
+        { id: "NPOR", label: "NPOR", icone: "fa-solid fa-graduation-cap" }
+      ];
+
+      cias.forEach(c => {
+        const isActive = normalizarCia(c.id) === normalizarCia(ciaAtual);
+        const count = efetivoGeral.filter(i => normalizarCia(i.cia) === normalizarCia(c.id)).length;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => {
+          localStorage.setItem('veterano_inscrito_cia', c.id);
+          sessionStorage.setItem('veterano_inscrito_cia', c.id);
+          ciaAtivaMural = c.id;
+          renderizarMural();
+        };
+
+        btn.className = `group px-3 py-1.5 rounded-lg text-xs font-bold military-font uppercase flex items-center transition-all ${
+          isActive 
+            ? 'bg-amber-500 text-slate-950 font-extrabold shadow-md ring-2 ring-amber-300' 
+            : 'bg-[#122115] text-slate-300 hover:bg-[#1a3320] border border-[#233f28]'
+        }`;
+
+        let imgHtml = '';
+        if (c.svg) {
+          imgHtml = `<img src="${c.svg}" alt="${c.animal}" class="w-5 h-5 mr-1.5 object-contain filter drop-shadow group-hover:scale-110 transition-transform">`;
+        } else {
+          imgHtml = `<i class="${c.icone} mr-1.5 text-xs ${isActive ? 'text-slate-950' : 'text-amber-400'}"></i>`;
+        }
+
+        btn.innerHTML = `
+          ${imgHtml}
+          <span>${c.label}</span>
+          ${c.animal ? `<span class="ml-1 px-1.5 py-0.2 rounded text-[9px] font-black ${isActive ? 'bg-slate-950 text-amber-300' : 'bg-black/60 text-amber-400 border border-amber-500/30'}">${c.animal}</span>` : ''}
+          <span class="ml-1.5 px-1.5 py-0.2 rounded-full text-[10px] font-mono ${isActive ? 'bg-amber-600/70 text-slate-950' : 'bg-emerald-950 text-emerald-400 border border-emerald-700/50'}">${count}</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function renderizarMural() {
+      const bloqueadoCard = document.getElementById('cardCompanhiaBloqueada');
+      const liberadoCard = document.getElementById('cardCompanhiaLiberada');
+      const container = document.getElementById('containerMuralCards');
+      if (!bloqueadoCard || !liberadoCard || !container) return;
+
+      const isAdmin = verificarAdminLogado();
+      const inscricaoCia = localStorage.getItem('veterano_inscrito_cia') || sessionStorage.getItem('veterano_inscrito_cia');
+      const inscricaoNome = localStorage.getItem('veterano_inscrito_nome') || sessionStorage.getItem('veterano_inscrito_nome') || recemCadastradoNome || '';
+
+      // A lista só é liberada a partir do momento em que faz a inscrição ou se for o Admin
+      const liberado = Boolean(inscricaoCia || isAdmin);
+
+      if (!liberado) {
+        bloqueadoCard.classList.remove('hidden');
+        liberadoCard.classList.add('hidden');
+        return;
+      }
+
+      bloqueadoCard.classList.add('hidden');
+      liberadoCard.classList.remove('hidden');
+
+      const ciaAlvo = inscricaoCia || ciaAtivaMural;
+      
+      const masc = obterMascoteCia(ciaAlvo);
+      const tituloMural = document.getElementById('tituloMuralLiberado');
+      if (tituloMural) {
+        if (masc && masc.svg) {
+          tituloMural.innerHTML = `
+            <img src="${masc.svg}" alt="${masc.nome}" class="w-8 h-8 sm:w-10 sm:h-10 inline-block mr-2.5 object-contain filter drop-shadow">
+            <span>${ciaAlvo}</span>
+            <span class="ml-2.5 text-xs sm:text-sm px-2.5 py-0.5 rounded font-black uppercase ${masc.bgTag}">Mascote: ${masc.badge}</span>
+          `;
+        } else {
+          tituloMural.innerText = ciaAlvo;
+        }
+      }
+      montarBotoesCiasReencontro(ciaAlvo);
+
+      let lista = efetivoGeral.filter(i => normalizarCia(i.cia) === normalizarCia(ciaAlvo));
+      document.getElementById('badgeQtdCompanhia').innerText = `${lista.length} Soldados`;
+
+      // Se tiver ano do cadastro do veterano e o campo estiver vazio na primeira abertura, preenche
+      const inputAno = document.getElementById('filtroMuralAno');
+      const anoInscrito = localStorage.getItem('veterano_inscrito_ano') || sessionStorage.getItem('veterano_inscrito_ano');
+      if (anoInscrito && inputAno && !inputAno.dataset.iniciado) {
+        inputAno.value = anoInscrito;
+        inputAno.dataset.iniciado = "true";
+      }
+
+      const busca = (document.getElementById('filtroMuralBusca').value || '').toLowerCase().trim();
+      const anoFiltro = (inputAno?.value || '').trim();
+
+      if (busca) {
+        lista = lista.filter(i => 
+          (i.nome && i.nome.toLowerCase().includes(busca)) ||
+          (i.guerra && i.guerra.toLowerCase().includes(busca)) ||
+          (i.cidade && i.cidade.toLowerCase().includes(busca))
+        );
+      }
+
+      if (anoFiltro) {
+        lista = lista.filter(i => i.ano && i.ano.toString() === anoFiltro);
+      }
+
+      // Atualiza faixa de status do ano puxado
+      const txtStatus = document.getElementById('txtStatusAnoMural');
+      const qtdStatus = document.getElementById('qtdAnoPuxadoMural');
+      if (txtStatus && qtdStatus) {
+        if (anoFiltro) {
+          txtStatus.innerHTML = `<span class="text-amber-300 font-bold"><i class="fa-solid fa-calendar-check mr-1 text-emerald-400"></i> Turma de ${anoFiltro}:</span> Militares que serviram no ano de <strong class="text-white">${anoFiltro}</strong> na <strong>${ciaAlvo}</strong>`;
+          qtdStatus.innerText = `${lista.length} militar(es) do ano ${anoFiltro}`;
+        } else {
+          txtStatus.innerHTML = `<i class="fa-solid fa-users text-emerald-400 mr-1.5"></i> Exibindo todos os anos da <strong>${ciaAlvo}</strong>. Digite o ano que serviu para puxar sua turma.`;
+          qtdStatus.innerText = `${lista.length} militares no total`;
+        }
+      }
+
+      lista.sort((a, b) => {
+        if (a.nome === inscricaoNome) return -1;
+        if (b.nome === inscricaoNome) return 1;
+        const anoA = parseInt(a.ano) || 0;
+        const anoB = parseInt(b.ano) || 0;
+        if (anoA !== anoB) return anoB - anoA;
+        return (a.nome || '').localeCompare(b.nome || '');
+      });
+
+      container.innerHTML = '';
+
+      if (lista.length === 0) {
+        container.innerHTML = `<div class="col-span-full py-8 text-center text-slate-400 text-xs">Nenhum soldado encontrado com os filtros informados.</div>`;
+        return;
+      }
+
+      const telefonesLiberados = (localStorage.getItem('liberar_telefones_veteranos') === 'true') || isAdmin;
+
+      lista.forEach(item => {
+        const ehProprio = (item.nome === inscricaoNome || item.isNovo);
+        const card = document.createElement('div');
+        card.className = `p-3.5 rounded-xl border transition-all ${
+          ehProprio 
+            ? 'bg-[#1b3820] card-novo-membro' 
+            : 'bg-[#0d160f] border-[#223a26] hover:border-emerald-600/70'
+        }`;
+
+        const telDial = item.telDial || (item.tel || '').replace(/\D/g, '');
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-1.5">
+            <div class="flex items-center space-x-1.5">
+              <span class="px-2 py-0.5 bg-[#1b301f] text-emerald-400 border border-emerald-600/30 rounded text-[11px] font-bold military-font uppercase">
+                ${item.grad || 'Sd'}
+              </span>
+              <span class="text-sm font-bold text-amber-300 military-font tracking-wide">
+                ${item.guerra || (item.nome ? item.nome.split(' ')[0].toUpperCase() : '')}
+              </span>
+              ${ehProprio ? '<span class="px-1.5 py-0.2 bg-amber-500 text-slate-950 font-bold rounded text-[9px] uppercase tracking-wider">VOCÊ</span>' : ''}
+            </div>
+            <span onclick="puxarAnoDireto('${item.ano}')" class="cursor-pointer hover:bg-emerald-950 text-xs font-mono font-bold px-2 py-0.5 bg-[#09110a] text-emerald-400 border border-[#1e3823] rounded transition-all" title="Clique para puxar todos deste ano">
+              Ano: ${item.ano || '--'} <i class="fa-solid fa-filter text-[9px] ml-0.5 text-amber-400"></i>
+            </span>
+          </div>
+
+          <div class="text-xs font-semibold text-slate-200 line-clamp-1" title="${item.nome}">
+            ${item.nome}
+          </div>
+
+          <div class="text-[11px] text-slate-400 mt-1 flex items-center space-x-1">
+            <i class="fa-solid fa-location-dot text-slate-500 text-[10px]"></i>
+            <span>${item.cidade || 'Não informada'}${item.uf ? ' - ' + item.uf : ''}</span>
+          </div>
+
+          <div class="mt-2.5 pt-2 border-t border-[#18291b] flex items-center justify-between text-xs">
+            ${telefonesLiberados && item.tel ? `
+              <span class="font-mono text-emerald-400 font-bold">${item.tel}</span>
+              <a href="https://api.whatsapp.com/send?phone=${telDial.length <= 11 ? '55' + telDial : telDial}&text=${encodeURIComponent('Prezado Veterano ' + (item.guerra || item.nome) + ', sou veterano do 5º BE!')}" 
+                 target="_blank" title="Enviar mensagem no WhatsApp"
+                 class="px-2 py-0.5 bg-green-600 hover:bg-green-500 text-slate-950 font-bold rounded text-[10px] flex items-center space-x-1">
+                <i class="fa-brands fa-whatsapp"></i> <span>Contato</span>
+              </a>
+            ` : `
+              <span class="text-slate-500 text-[11px] font-mono flex items-center">
+                <i class="fa-solid fa-lock text-amber-500/80 mr-1.5 text-[10px]"></i> Telefone restrito ao Admin
+              </span>
+            `}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function filtrarMural() {
+      renderizarMural();
+    }
+
+    function limparFiltroAnoMural() {
+      const inputAno = document.getElementById('filtroMuralAno');
+      if (inputAno) {
+        inputAno.value = '';
+        inputAno.dataset.iniciado = "true";
+      }
+      const inputBusca = document.getElementById('filtroMuralBusca');
+      if (inputBusca) inputBusca.value = '';
+      renderizarMural();
+    }
+
+    function puxarAnoDireto(ano) {
+      if (!ano || ano === '--') return;
+      const inputAno = document.getElementById('filtroMuralAno');
+      if (inputAno) {
+        inputAno.value = ano;
+        inputAno.dataset.iniciado = "true";
+        renderizarMural();
+        inputAno.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function mascaraTelefone(input) {
+      let v = input.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.substring(0, 11);
+      if (v.length > 6) {
+        input.value = `(${v.substring(0, 2)}) ${v.substring(2, 7)}-${v.substring(7)}`;
+      } else if (v.length > 2) {
+        input.value = `(${v.substring(0, 2)}) ${v.substring(2)}`;
+      } else {
+        input.value = v;
+      }
+    }
+
+    function salvarCadastroPortal(event) {
+      event.preventDefault();
+
+      const dialNumber = document.getElementById('cadWhatsApp').value.replace(/\D/g, '');
+      const telDial = dialNumber.length <= 11 ? '55' + dialNumber : dialNumber;
+
+      const dadosForm = {
+        nome: document.getElementById('cadNomeCompleto').value.trim(),
+        guerra: document.getElementById('cadNomeGuerra').value.trim().toUpperCase(),
+        grad: document.getElementById('cadGraduação').value,
+        cia: document.getElementById('cadCompanhia').value,
+        ano: document.getElementById('cadAno').value.trim(),
+        tel: document.getElementById('cadWhatsApp').value.trim(),
+        telDial: telDial,
+        cidade: document.getElementById('cadCidade').value.trim(),
+        uf: document.getElementById('cadEstado').value,
+        bairro: document.getElementById('cadBairro').value.trim(),
+        rua: document.getElementById('cadRua').value.trim(),
+        email: '',
+        cpf: ''
+      };
+
+      // Procura se a pessoa já está cadastrada no Efetivo Geral (por nome, CPF, telefone ou guerra+ano)
+      const match = encontrarMilitarExistente(efetivoGeral, dadosForm);
+      const isAtualizacao = Boolean(match);
+
+      let listaNovos = [];
+      try {
+        const stored = localStorage.getItem('novos_veteranos_5be');
+        if (stored) listaNovos = JSON.parse(stored);
+      } catch (e) { listaNovos = []; }
+
+      let registroFinal = null;
+
+      if (isAtualizacao) {
+        // Apenas atualiza as informações do militar existente mantendo seu ID
+        registroFinal = Object.assign({}, match.militar, dadosForm, {
+          id: match.militar.id,
+          dataAtualizacao: new Date().toLocaleDateString('pt-BR'),
+          isAtualizado: true,
+          isNovo: true
+        });
+
+        // Atualiza na lista de novos/modificados
+        let idxNovo = listaNovos.findIndex(n => n.id === registroFinal.id);
+        if (idxNovo === -1) {
+          const mNovo = encontrarMilitarExistente(listaNovos, registroFinal);
+          if (mNovo) idxNovo = mNovo.index;
+        }
+
+        if (idxNovo !== -1) {
+          listaNovos[idxNovo] = registroFinal;
+        } else {
+          listaNovos.unshift(registroFinal);
+        }
+      } else {
+        // Novo cadastro inédito
+        registroFinal = Object.assign({}, dadosForm, {
+          id: Date.now(),
+          dataCadastro: new Date().toLocaleDateString('pt-BR'),
+          isNovo: true
+        });
+        listaNovos.unshift(registroFinal);
+      }
+
+      localStorage.setItem('novos_veteranos_5be', JSON.stringify(listaNovos));
+
+      // Grava permanentemente no dispositivo para liberar sempre a lista da companhia
+      localStorage.setItem('veterano_inscrito_cia', registroFinal.cia);
+      localStorage.setItem('veterano_inscrito_nome', registroFinal.nome);
+      localStorage.setItem('veterano_inscrito_ano', registroFinal.ano);
+      localStorage.setItem('veterano_liberado_sempre', 'true');
+      sessionStorage.setItem('veterano_inscrito_cia', registroFinal.cia);
+      sessionStorage.setItem('veterano_inscrito_nome', registroFinal.nome);
+      sessionStorage.setItem('veterano_inscrito_ano', registroFinal.ano);
+
+      // Preenche o campo de ano imediatamente para puxar a turma dele
+      const inputAnoMural = document.getElementById('filtroMuralAno');
+      if (inputAnoMural && registroFinal.ano) {
+        inputAnoMural.value = registroFinal.ano;
+      }
+      recemCadastradoNome = registroFinal.nome;
+      ciaAtivaMural = registroFinal.cia;
+
+      try {
+        if (syncChannel) syncChannel.postMessage({ 
+          tipo: isAtualizacao ? 'ATUALIZACAO_CADASTRO' : 'NOVO_CADASTRO', 
+          registro: registroFinal 
+        });
+      } catch (e) {}
+
+      carregarEfetivoGeral();
+
+      const tituloMsg = isAtualizacao 
+        ? `*ATUALIZAÇÃO DE CADASTRO DE VETERANO - 5º BE CMB BLD*`
+        : `*INSCRIÇÃO OFICIAL DE VETERANO - 5º BE CMB BLD*`;
+      const confirmacaoMsg = isAtualizacao
+        ? `\n_Confirmo a atualização das minhas informações na Comissão dos Veteranos do 5º BE!_`
+        : `\n_Confirmo minha inscrição e liberação da lista da minha Companhia na Comissão dos Veteranos do 5º BE!_`;
+
+      const msgWhats = 
+        `${tituloMsg}\n` +
+        `_Batalhão Juarez Távora_\n\n` +
+        `👤 *Nome:* ${registroFinal.nome} (${registroFinal.guerra})\n` +
+        `🎖 *Graduação:* ${registroFinal.grad}\n` +
+        `🏢 *Companhia:* ${registroFinal.cia}\n` +
+        `📅 *Ano que Serviu:* ${registroFinal.ano}\n` +
+        `📱 *WhatsApp:* ${registroFinal.tel}\n` +
+        `📍 *Cidade:* ${registroFinal.cidade} - ${registroFinal.uf}\n` +
+        (registroFinal.rua ? `🏠 *Endereço:* ${registroFinal.rua}, ${registroFinal.bairro}\n` : '') +
+        confirmacaoMsg;
+
+      document.getElementById('btnWhatsConfirmacao').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(msgWhats)}`;
+
+      const tituloSucesso = document.getElementById('tituloSucessoCadastro');
+      const descSucesso = document.getElementById('descSucessoCadastro');
+      if (tituloSucesso) {
+        tituloSucesso.innerText = isAtualizacao ? "Dados Atualizados com Sucesso!" : "Inscrição Confirmada com Sucesso!";
+      }
+      if (descSucesso) {
+        descSucesso.innerHTML = isAtualizacao
+          ? `Suas informações foram atualizadas no Efetivo Geral. A lista de soldados da <strong>${registroFinal.cia}</strong> foi liberada abaixo!`
+          : `Seus dados foram incorporados à <strong>${registroFinal.cia}</strong>. A lista dos soldados foi liberada abaixo!`;
+      }
+
+      document.getElementById('formCadastroVeterano').classList.add('hidden');
+      document.getElementById('sucessoCadastroBox').classList.remove('hidden');
+
+      setTimeout(() => {
+        const muralEl = document.getElementById('areaListaCompanhia');
+        if (muralEl) muralEl.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  </script>
+</body>
+</html>

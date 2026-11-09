@@ -1,0 +1,13 @@
+{
+  "name": "veteranos-5be",
+  "displayName": "Veteranos 5º BE Cmb Bld",
+  "version": "1.0.0",
+  "description": "Plugin Oficial de Gestão e Operação do 5º Batalhão de Engenharia de Combate Blindado (Batalhão Juarez Távora). Efetivo de 658 veteranos, turmas, mascotes de companhia, almoço de reencontro e tesouraria PIX.",
+  "author": "Comissão de Veteranos 5º BE",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Consultar veteranos da 1ª Cia ou por ano de incorporação",
+    "Verificar status de confirmação e pagamentos PIX do almoço",
+    "Gerar mensagem oficial de convocação para o Reencontro dos Veteranos"
+  ]
+}
