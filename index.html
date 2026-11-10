@@ -341,19 +341,6 @@
           </p>
         </div>
 
-        <!-- Alerta de Identificação Automática ao Digitar Nome -->
-        <div id="avisoAutoPreenchimentoPub" class="hidden mb-5 p-3.5 bg-emerald-950/90 border border-emerald-500 rounded-xl text-emerald-200 text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
-          <div class="flex items-center space-x-2.5">
-            <i class="fa-solid fa-circle-check text-amber-400 text-xl shrink-0"></i>
-            <span id="txtAvisoAutoPreenchimentoPub">
-              <strong>Cadastro localizado no efetivo!</strong> Seus dados militares foram preenchidos automaticamente.
-            </span>
-          </div>
-          <span class="text-[11px] font-mono px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg font-bold uppercase shrink-0 text-center">
-            DADOS ENCONTRADOS
-          </span>
-        </div>
-
         <form id="formInscriçãoPublica" onsubmit="salvarInscriçãoPublica(event)" class="space-y-4">
           
           <!-- Nome Completo & Nome de Guerra -->
@@ -363,7 +350,6 @@
                 1. Seu Nome Completo <span class="text-red-400">*</span>
               </label>
               <input type="text" id="pubNomeCompleto" required placeholder="Ex: João Carlos da Silva"
-                     oninput="autoPreencherCadastroPublico(this)"
                      class="w-full px-3.5 py-3 rounded-xl bg-[#081009] border border-[#2b4d2f] text-slate-100 text-sm sm:text-base focus:outline-none focus:border-amber-400 font-medium">
             </div>
             <div>
@@ -371,7 +357,6 @@
                 2. Nome de Guerra <span class="text-red-400">*</span>
               </label>
               <input type="text" id="pubNomeGuerra" required placeholder="Ex: SILVA"
-                     oninput="autoPreencherCadastroPublico(this)"
                      class="w-full px-3.5 py-3 rounded-xl bg-[#081009] border border-[#2b4d2f] text-amber-300 text-sm sm:text-base uppercase focus:outline-none focus:border-amber-400 font-bold tracking-wider">
             </div>
           </div>
@@ -3186,53 +3171,8 @@
     }
 
     function autoPreencherCadastroPublico(elDisparador) {
-      const elNome = document.getElementById('pubNomeCompleto');
-      const elGuerra = document.getElementById('pubNomeGuerra');
-      const nomeDigitado = elNome ? elNome.value.trim() : '';
-      const guerraDigitada = elGuerra ? elGuerra.value.trim() : '';
-
-      const query = (elDisparador && elDisparador.id === 'pubNomeGuerra') ? guerraDigitada : (nomeDigitado || guerraDigitada);
-      if (query.length < 3) return;
-
-      const norm = (t) => t ? t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim() : '';
-      const qNorm = norm(query);
-
-      let todos = (typeof integrantedAtuais !== 'undefined' && Array.isArray(integrantedAtuais)) ? integrantedAtuais : [];
-      if (todos.length === 0 && window.VETERANOS_DATA && Array.isArray(window.VETERANOS_DATA)) {
-        todos = window.VETERANOS_DATA;
-      }
-
-      let achado = todos.find(v => norm(v.nome) === qNorm);
-      if (!achado && qNorm.length >= 4) {
-        achado = todos.find(v => norm(v.nome).startsWith(qNorm));
-      }
-      if (!achado) {
-        achado = todos.find(v => v.guerra && norm(v.guerra) === qNorm);
-      }
-
-      if (achado) {
-        if (elNome && (!elNome.value || qNorm.length >= 4)) elNome.value = achado.nome || elNome.value;
-        if (elGuerra && achado.guerra && !elGuerra.value) elGuerra.value = achado.guerra;
-        if (achado.grad && document.getElementById('pubGraduação')) document.getElementById('pubGraduação').value = achado.grad;
-        if (achado.cia && document.getElementById('pubCompanhia')) document.getElementById('pubCompanhia').value = achado.cia;
-        if (achado.ano && document.getElementById('pubAno')) document.getElementById('pubAno').value = achado.ano;
-        if (achado.tel && document.getElementById('pubWhatsApp') && !document.getElementById('pubWhatsApp').value) {
-          document.getElementById('pubWhatsApp').value = achado.tel;
-        }
-        if (achado.cidade && document.getElementById('pubCidade') && !document.getElementById('pubCidade').value) {
-          document.getElementById('pubCidade').value = achado.cidade;
-        }
-        if (achado.uf && document.getElementById('pubEstado') && !document.getElementById('pubEstado').value) {
-          document.getElementById('pubEstado').value = achado.uf;
-        }
-
-        const banner = document.getElementById('avisoAutoPreenchimentoPub');
-        const txtBanner = document.getElementById('txtAvisoAutoPreenchimentoPub');
-        if (banner && txtBanner) {
-          txtBanner.innerHTML = `<strong>Encontramos seu registro no 5º BE!</strong> Dados de <strong>${achado.nome}</strong> (${achado.guerra || achado.grad || ''}) preenchidos automaticamente. Confira e conclua seu cadastro abaixo.`;
-          banner.classList.remove('hidden');
-        }
-      }
+      // Desativado: preenchimento automático removido para permitir que qualquer veterano digite livremente seus dados sem interferência
+      return;
     }
 
     function rolarParaFormularioCadastroPub() {
@@ -3341,15 +3281,6 @@
             return { militar: item, index: i, motivo: 'Telefone e Nome' };
           }
         }
-
-        // 4. Match por Nome de Guerra + Ano de Incorporação (quando guerra tem pelo menos 4 letras)
-        const guerraItem = norm(item.guerra);
-        const anoItem = item.ano ? String(item.ano).trim() : '';
-        if (guerraNovo && guerraItem && guerraNovo.length >= 4 && guerraNovo === guerraItem) {
-          if (anoNovo && anoItem && anoNovo === anoItem) {
-            return { militar: item, index: i, motivo: 'Guerra e Ano' };
-          }
-        }
       }
 
       return null;
@@ -3430,18 +3361,10 @@
       renderizarMuralPublico();
       renderizarTabelaAlmocoAdmin();
 
-      // Se o veterano já estiver cadastrado no dispositivo, avisa e preenche os campos
+      // Notificação sutil apenas se o veterano já possui inscrição ativa
       const savedNome = localStorage.getItem('veterano_inscrito_nome');
       const savedCia = localStorage.getItem('veterano_inscrito_cia');
-      const savedAno = localStorage.getItem('veterano_inscrito_ano');
       if (savedNome && savedCia) {
-        const inpNome = document.getElementById('pubNomeCompleto');
-        if (inpNome && !inpNome.value) inpNome.value = savedNome;
-        const inpAno = document.getElementById('pubAno');
-        if (inpAno && !inpAno.value && savedAno) inpAno.value = savedAno;
-        const selCia = document.getElementById('pubCompanhia');
-        if (selCia && !selCia.dataset.userChanged) selCia.value = savedCia;
-
         const boxSucesso = document.getElementById('boxSucessoInscrição');
         const tituloSucesso = document.getElementById('tituloSucessoInscriçãoPub');
         const descSucesso = document.getElementById('descSucessoInscriçãoPub');
