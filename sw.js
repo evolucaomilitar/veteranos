@@ -1,5 +1,5 @@
 // Service Worker - Veteranos 5º BE Cmb Bld (PWA Offline & Instant Load)
-const CACHE_NAME = 'veteranos-5be-v7';
+const CACHE_NAME = 'veteranos-5be-v8';
 
 const STATIC_ASSETS = [
   './',
@@ -7,6 +7,7 @@ const STATIC_ASSETS = [
   './reencontro.html',
   './cadastro.html',
   './dados.js',
+  './cloud-sync.js',
   './pwa.js',
   './manifest.json',
   './icon-192.png',
@@ -50,6 +51,9 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   // Apenas intercepta requisições GET
   if (event.request.method !== 'GET') return;
+
+  // Nunca cacheia chamadas para a nuvem de sincronização em tempo real (ntfy.sh / SSE / polling)
+  if (event.request.url.includes('ntfy.sh')) return;
 
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {

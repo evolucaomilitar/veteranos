@@ -1,232 +1,487 @@
 /**
  * SISTEMA DOS VETERANOS 5º BE CMB BLD - BATALHÃO JUAREZ TÁVORA
- * CLOUD SYNC MANAGER (Sincronização em Nuvem Automática em Tempo Real)
+ * MOTOR DE SINCRONIZAÇÃO EM NUVEM AUTOMÁTICA EM TEMPO REAL
  * 
- * Sincroniza cadastros e adesões ao almoço entre celulares dos veteranos
- * e o painel administrativo da diretoria através de:
- * 1. Google Sheets (Google Apps Script Web App - 100% Gratuito & Permanente)
- * 2. Firebase Realtime Database (Google Cloud)
- * 3. Vercel Serverless API (/api/sync)
+ * Baseado na mesma arquitetura do Simulador Biriba:
+ * - Tecnologia: ntfy.sh (Pub/Sub mundial via SSE EventSource + HTTP)
+ * - 100% Compatível com GitHub Pages e celulares/computadores
+ * - Sem dependência de Vercel ou servidores backend proprietários
+ * - Notificações sonoras militares harmônicas nativas (Web Audio API)
  */
 
 (function (window) {
   'use strict';
 
-  // Configuração Padrão
+  // Tópico Padrão do 5º BE Cmb Bld (exclusivo para o Batalhão Juarez Távora)
+  const DEFAULT_SYNC_TOPIC = "veteranos_5be_juarez_tavora_oficial";
+
   const STORAGE_KEYS = {
-    URL: 'nuvem_sync_url',
-    ULTIMO_SYNC: 'nuvem_ultimo_sync_ts',
-    FILA_PENDENTE: 'nuvem_fila_pendente_v1',
+    TOPIC: 'veteranos_5be_sync_topic',
     NOVOS_VETERANOS: 'novos_veteranos_5be',
     ALMOCO: 'almoco_veteranos_5be',
-    EXCLUIDOS: 'excluidos_veteranos_5be'
+    EXCLUIDOS: 'excluidos_veteranos_5be',
+    ULTIMO_SYNC: 'veteranos_5be_ultimo_sync'
   };
 
-  // URL Padrão caso não haja nenhuma customizada salva pelo Administrador
-  // Pode ser configurada pelo Admin no Modal de Nuvem ou vir pré-configurada
-  const URL_NUVEM_DEFAULT = window.VETERANOS_CLOUD_URL || '';
+  let cloudEventSource = null;
+  let cloudHeartbeatInterval = null;
+  let _sincronizando = false;
+  let _ultimoStatus = 'conectando'; // 'conectado' | 'conectando' | 'offline'
+  let _ultimaMensagem = 'Iniciando nuvem em tempo real...';
 
+  // Objeto Global CloudSync
   const CloudSync = {
-    _timerAutoSync: null,
-    _sincronizando: false,
-    _ultimoStatus: 'pronto', // 'pronto' | 'sincronizando' | 'online' | 'erro' | 'desconectado'
-    _ultimaMensagem: '',
+    DEFAULT_TOPIC: DEFAULT_SYNC_TOPIC,
 
     /**
-     * Obtém a URL ativa da nuvem
+     * Obtém o tópico atual da nuvem
      */
-    getUrl: function () {
-      const urlSalva = localStorage.getItem(STORAGE_KEYS.URL);
-      if (urlSalva && urlSalva.trim()) return urlSalva.trim();
-      if (URL_NUVEM_DEFAULT && URL_NUVEM_DEFAULT.trim()) return URL_NUVEM_DEFAULT.trim();
-
-      // Se estiver rodando em servidor web (como Vercel)
-      if (window.location && window.location.origin && window.location.origin.startsWith('http')) {
-        return window.location.origin + '/api/sync';
-      }
-      return '';
+    getTopic: function () {
+      const salvo = localStorage.getItem(STORAGE_KEYS.TOPIC);
+      return (salvo && salvo.trim()) ? salvo.trim() : DEFAULT_SYNC_TOPIC;
     },
 
     /**
-     * Salva nova URL da nuvem
+     * Altera o tópico da nuvem
      */
-    setUrl: function (novaUrl) {
-      if (!novaUrl || !novaUrl.trim()) {
-        localStorage.removeItem(STORAGE_KEYS.URL);
+    setTopic: function (novoTopico) {
+      if (!novoTopico || !novoTopico.trim()) {
+        localStorage.removeItem(STORAGE_KEYS.TOPIC);
       } else {
-        localStorage.setItem(STORAGE_KEYS.URL, novaUrl.trim());
+        localStorage.setItem(STORAGE_KEYS.TOPIC, novoTopico.trim());
       }
-      this.atualizarStatusVisual('pronto', 'URL atualizada. Clique em Sincronizar.');
-      return this.getUrl();
+      this.conectar();
+      return this.getTopic();
     },
 
     /**
-     * Detecta o tipo de backend a partir da URL
+     * Reseta para o tópico oficial padrão
      */
-    detectarTipoBackend: function (url) {
-      const u = (url || this.getUrl() || '').toLowerCase();
-      if (u.includes('script.google.com') || u.includes('script.googleusercontent.com')) {
-        return 'google_sheets';
-      }
-      if (u.includes('firebaseio.com')) {
-        return 'firebase';
-      }
-      if (u.includes('/api/sync') || u.includes('/api/cadastros')) {
-        return 'vercel_api';
-      }
-      return 'generico';
+    resetarTopicoPadrao: function () {
+      localStorage.removeItem(STORAGE_KEYS.TOPIC);
+      this.conectar();
+      return DEFAULT_SYNC_TOPIC;
     },
 
     /**
-     * Envia um cadastro de veterano para a nuvem
+     * Sinal Sonoro Harmonioso Militar com Web Audio API
+     * (Nativo, sem arquivos de áudio externos, funciona em qualquer celular e PC)
      */
-    enviarCadastro: async function (cadastro) {
-      if (!cadastro) return { sucesso: false, erro: 'Sem dados' };
-      const url = this.getUrl();
+    tocarSino: function () {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+        const now = ctx.currentTime;
 
-      // Sempre garante que está salvo localmente primeiro
-      this._salvarLocalCadastro(cadastro);
+        // Tom 1: C5 (523.25 Hz)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(523.25, now);
+        gain1.gain.setValueAtTime(0.28, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.35);
 
-      if (!url) {
-        console.info('[CloudSync] Nenhuma URL de nuvem configurada. Salvo apenas localmente.');
-        return { sucesso: true, localApenas: true };
+        // Tom 2: G5 (783.99 Hz)
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(783.99, now + 0.12);
+        gain2.gain.setValueAtTime(0.32, now + 0.12);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now + 0.12);
+        osc2.stop(now + 0.65);
+      } catch (e) {
+        console.warn("[CloudSync] Áudio bloqueado pelo navegador até interação do usuário:", e);
       }
+    },
 
-      const payload = {
-        acao: 'salvar_cadastro',
-        tipo: 'cadastro',
-        origem: 'app_veteranos_5be',
-        timestamp: new Date().toISOString(),
-        dados: cadastro
-      };
+    /**
+     * Transmissão para a Nuvem de Novos Cadastros de Veteranos
+     */
+    enviarCadastro: async function (militar) {
+      if (!militar) return { sucesso: false, erro: 'Sem dados' };
+      const topic = this.getTopic();
+
+      // Salva localmente primeiro
+      this._salvarLocalCadastro(militar);
 
       try {
-        const resposta = await this._enviarRequisicao(url, payload);
-        this.atualizarStatusVisual('online', `Cadastro de ${cadastro.nome} sincronizado na nuvem!`);
-        return { sucesso: true, resposta: resposta };
+        await fetch(`https://ntfy.sh/${topic}`, {
+          method: 'POST',
+          headers: {
+            'Title': `🎖️ Cadastro 5º BE: ${militar.nome} (${militar.cia || 'Veterano'})`,
+            'Priority': 'urgent',
+            'Tags': 'shield,medal,military_helmet'
+          },
+          body: JSON.stringify({
+            tipo: militar.isAtualizado ? 'ATUALIZACAO_CADASTRO' : 'NOVO_CADASTRO',
+            registro: militar,
+            timestamp: Date.now()
+          })
+        });
+        console.log('[CloudSync] Cadastro transmitido para a nuvem:', militar.nome);
+        this.atualizarStatusVisual('conectado', `Transmitido: ${militar.nome}`);
+        return { sucesso: true };
       } catch (err) {
-        console.warn('[CloudSync] Falha ao enviar para a nuvem, enfileirando para retry:', err);
-        this._enfileirarPendente('cadastro', cadastro);
-        this.atualizarStatusVisual('erro', 'Offline: salvo no celular e aguardando conexão.');
-        return { sucesso: false, enfileirado: true, erro: err.message };
+        console.warn('[CloudSync] Falha ao transmitir cadastro imediatamente:', err);
+        return { sucesso: false, erro: err.message };
       }
     },
 
     /**
-     * Envia uma adesão ao almoço para a nuvem
+     * Transmissão para a Nuvem de Adesões ao Almoço
      */
     enviarAlmoco: async function (itemAlmoco) {
       if (!itemAlmoco) return { sucesso: false, erro: 'Sem dados' };
-      const url = this.getUrl();
+      const topic = this.getTopic();
 
-      if (!url) {
-        console.info('[CloudSync] Salvo apenas localmente.');
-        return { sucesso: true, localApenas: true };
-      }
-
-      const payload = {
-        acao: 'salvar_almoco',
-        tipo: 'almoco',
-        origem: 'app_veteranos_5be',
-        timestamp: new Date().toISOString(),
-        dados: itemAlmoco
-      };
+      // Salva localmente
+      this._salvarLocalAlmoco(itemAlmoco);
 
       try {
-        const resposta = await this._enviarRequisicao(url, payload);
-        this.atualizarStatusVisual('online', `Almoço de ${itemAlmoco.nome} sincronizado na nuvem!`);
-        return { sucesso: true, resposta: resposta };
+        await fetch(`https://ntfy.sh/${topic}`, {
+          method: 'POST',
+          headers: {
+            'Title': `🍽️ Almoço 5º BE: ${itemAlmoco.nome} (${itemAlmoco.qtd} ref)`,
+            'Priority': 'urgent',
+            'Tags': 'utensils,tada,dollar'
+          },
+          body: JSON.stringify({
+            tipo: 'NOVO_ALMOCO',
+            item: itemAlmoco,
+            timestamp: Date.now()
+          })
+        });
+        console.log('[CloudSync] Adesão ao almoço transmitida para a nuvem:', itemAlmoco.nome);
+        this.atualizarStatusVisual('conectado', `Almoço transmitido: ${itemAlmoco.nome}`);
+        return { sucesso: true };
       } catch (err) {
-        console.warn('[CloudSync] Falha ao enviar almoço, enfileirando:', err);
-        this._enfileirarPendente('almoco', itemAlmoco);
-        return { sucesso: false, enfileirado: true, erro: err.message };
+        console.warn('[CloudSync] Falha ao transmitir adesão do almoço:', err);
+        return { sucesso: false, erro: err.message };
       }
     },
 
     /**
-     * Exclui cadastro da nuvem
+     * Transmissão de Exclusão de Cadastro de Militar na Nuvem
      */
     excluirCadastro: async function (id) {
-      const url = this.getUrl();
-      if (!url || !id) return;
-      const payload = {
-        acao: 'excluir_cadastro',
-        tipo: 'exclusao_cadastro',
-        id: id,
-        timestamp: new Date().toISOString()
-      };
+      if (!id) return;
+      const topic = this.getTopic();
       try {
-        await this._enviarRequisicao(url, payload);
-        console.log('[CloudSync] Cadastro removido da nuvem:', id);
-      } catch (e) {
-        console.warn('[CloudSync] Não foi possível remover da nuvem imediatamente:', e);
+        await fetch(`https://ntfy.sh/${topic}`, {
+          method: 'POST',
+          headers: {
+            'Priority': 'low',
+            'Tags': 'wastebasket'
+          },
+          body: JSON.stringify({
+            tipo: 'EXCLUIR_CADASTRO',
+            id: id,
+            timestamp: Date.now()
+          })
+        });
+        console.log('[CloudSync] Exclusão de cadastro sincronizada na nuvem:', id);
+      } catch (err) {
+        console.warn('[CloudSync] Falha ao enviar exclusão para a nuvem:', err);
       }
     },
 
     /**
-     * Exclui adesão ao almoço da nuvem
+     * Transmissão de Exclusão de Inscrição de Almoço na Nuvem
      */
     excluirAlmoco: async function (id) {
-      const url = this.getUrl();
-      if (!url || !id) return;
-      const payload = {
-        acao: 'excluir_almoco',
-        tipo: 'exclusao_almoco',
-        id: id,
-        timestamp: new Date().toISOString()
-      };
+      if (!id) return;
+      const topic = this.getTopic();
       try {
-        await this._enviarRequisicao(url, payload);
-        console.log('[CloudSync] Almoço removido da nuvem:', id);
-      } catch (e) {
-        console.warn('[CloudSync] Não foi possível remover almoço da nuvem:', e);
+        await fetch(`https://ntfy.sh/${topic}`, {
+          method: 'POST',
+          headers: {
+            'Priority': 'low',
+            'Tags': 'wastebasket'
+          },
+          body: JSON.stringify({
+            tipo: 'EXCLUIR_ALMOCO',
+            id: id,
+            timestamp: Date.now()
+          })
+        });
+        console.log('[CloudSync] Exclusão de almoço sincronizada na nuvem:', id);
+      } catch (err) {
+        console.warn('[CloudSync] Falha ao enviar exclusão de almoço para a nuvem:', err);
       }
     },
 
     /**
-     * Puxa todos os dados da nuvem e mescla com os registros locais sem duplicar
+     * Puxa histórico recente da nuvem (últimos 30 dias de mensagens persistidas)
+     */
+    puxarHistorico: async function (silencioso = false) {
+      const topic = this.getTopic();
+      if (_sincronizando) return;
+      _sincronizando = true;
+
+      try {
+        const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=30d`);
+        if (!res.ok) {
+          _sincronizando = false;
+          return;
+        }
+
+        const text = await res.text();
+        if (!text || !text.trim()) {
+          _sincronizando = false;
+          this.atualizarStatusVisual('conectado', 'Nuvem sincronizada (sem pendências)');
+          return;
+        }
+
+        const lines = text.trim().split('\n');
+        let novosCadastros = 0;
+        let novosAlmoco = 0;
+        let alterados = 0;
+
+        lines.forEach(line => {
+          try {
+            const item = JSON.parse(line);
+            if (item.event === 'message' && item.message) {
+              const payload = JSON.parse(item.message);
+              const r = this._aplicarPayload(payload);
+              if (r.tipo === 'cadastro' && r.isNovo) novosCadastros++;
+              if (r.tipo === 'almoco' && r.isNovo) novosAlmoco++;
+              if (r.alterado) alterados++;
+            }
+          } catch (e) {}
+        });
+
+        // Atualiza a tela se houve alterações
+        if (novosCadastros > 0 || alterados > 0 || novosAlmoco > 0) {
+          if (typeof window.recarregarEfetivoComNovos === 'function') {
+            window.recarregarEfetivoComNovos();
+          }
+          if (typeof window.renderizarTabelaAlmocoAdmin === 'function') {
+            window.renderizarTabelaAlmocoAdmin();
+          }
+          if (typeof window.renderizarGridParticipantesModal === 'function') {
+            window.renderizarGridParticipantesModal();
+          }
+          if (typeof window.renderizarMuralPublico === 'function') {
+            window.renderizarMuralPublico();
+          }
+
+          if (!silencioso && (novosCadastros > 0 || novosAlmoco > 0)) {
+            this.tocarSino();
+            if (typeof window.mostrarNotificaçãoTatica === 'function') {
+              window.mostrarNotificaçãoTatica(`🎉 ${novosCadastros} novo(s) veterano(s) sincronizados da nuvem!`);
+            }
+          }
+        }
+
+        localStorage.setItem(STORAGE_KEYS.ULTIMO_SYNC, Date.now().toString());
+        this.atualizarStatusVisual('conectado', 'Conectado em Tempo Real');
+        _sincronizando = false;
+
+        return {
+          sucesso: true,
+          novosCadastros: novosCadastros,
+          novosAlmoco: novosAlmoco
+        };
+
+      } catch (err) {
+        _sincronizando = false;
+        console.warn('[CloudSync] Erro no polling de histórico da nuvem:', err);
+        this.atualizarStatusVisual('offline', 'Modo Local (Offline)');
+      }
+    },
+
+    /**
+     * Conecta EventSource em tempo real (SSE) + Polling de segurança
+     */
+    conectar: function () {
+      const topic = this.getTopic();
+
+      if (cloudEventSource) {
+        try { cloudEventSource.close(); } catch (e) {}
+      }
+
+      this.atualizarStatusVisual('conectando', 'Conectando à nuvem em tempo real...');
+
+      // 1. Puxa histórico recente
+      this.puxarHistorico(true);
+
+      // 2. Conecta via Server-Sent Events (SSE) nativo
+      if (typeof window !== 'undefined' && window.EventSource) {
+        try {
+          cloudEventSource = new window.EventSource(`https://ntfy.sh/${topic}/sse`);
+
+          cloudEventSource.onopen = () => {
+            this.atualizarStatusVisual('conectado', 'Conectado em Tempo Real (Nuvem Ativa)');
+          };
+
+          cloudEventSource.onerror = () => {
+            this.atualizarStatusVisual('conectando', 'Reconectando à nuvem...');
+          };
+
+          cloudEventSource.onmessage = (event) => {
+            try {
+              const data = JSON.parse(event.data);
+              if (data.event === 'message' && data.message) {
+                const payload = JSON.parse(data.message);
+                this._processarMensagemRealtime(payload);
+              }
+            } catch (e) {}
+          };
+        } catch (err) {
+          console.warn('[CloudSync] EventSource bloqueado ou não suportado:', err);
+        }
+      }
+
+      // 3. Heartbeat de segurança a cada 8 segundos (igual ao Biriba)
+      if (cloudHeartbeatInterval) clearInterval(cloudHeartbeatInterval);
+      cloudHeartbeatInterval = setInterval(() => {
+        this.puxarHistorico(true);
+      }, 8000);
+
+      // 4. Reconexão e busca instantânea quando o usuário foca na aba
+      if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) {
+            this.puxarHistorico(true);
+          }
+        });
+      }
+
+      // 5. Reconexão quando a internet volta
+      if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+        window.addEventListener('online', () => {
+          this.conectar();
+          this.puxarHistorico(false);
+        });
+      }
+
+      console.log(`[CloudSync] Nuvem ativa no tópico: ${topic}`);
+    },
+
+    /**
+     * Interface de compatibilidade com métodos anteriores
      */
     sincronizarTudo: async function (opcoes) {
       const opt = opcoes || {};
-      const silencioso = Boolean(opt.silencioso);
-      const url = this.getUrl();
+      return await this.puxarHistorico(Boolean(opt.silencioso));
+    },
 
-      if (!url) {
-        if (!silencioso) {
-          this.atualizarStatusVisual('desconectado', 'Nenhuma URL de nuvem configurada.');
-        }
-        return { sucesso: false, erro: 'Sem URL configurada' };
+    iniciarAutoSync: function () {
+      this.conectar();
+    },
+
+    /**
+     * Atualiza os badges visuais de conexão na interface
+     */
+    atualizarStatusVisual: function (status, msg) {
+      _ultimoStatus = status;
+      _ultimaMensagem = msg || '';
+
+      // Badge no Navbar do Admin
+      const iconeNav = document.getElementById('iconeNuvemNav');
+      const labelNav = document.getElementById('labelNuvemNav');
+
+      if (iconeNav) {
+        iconeNav.className = 'w-2 h-2 rounded-full inline-block mr-1 ' + (
+          status === 'conectado' ? 'bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse' :
+          status === 'conectando' ? 'bg-amber-400 animate-ping' :
+          'bg-slate-400'
+        );
       }
 
-      if (this._sincronizando) {
-        return { sucesso: false, ocupado: true };
+      if (labelNav) {
+        labelNav.innerText = (
+          status === 'conectado' ? 'Nuvem OK' :
+          status === 'conectando' ? 'Sincronizando...' :
+          'Offline'
+        );
       }
 
-      this._sincronizando = true;
-      this.atualizarStatusVisual('sincronizando', 'Buscando novos cadastros na nuvem...');
+      // Badge no Hub de Sincronização (caso exista na página)
+      const badgeHub = document.getElementById('badgeStatusNuvem');
+      const textoHub = document.getElementById('textoStatusNuvem');
+      const pontoHub = document.getElementById('pontoStatusNuvem');
 
-      try {
-        // 1. Processa itens que estavam offline na fila de espera
-        await this.processarFilaPendente();
-
-        // 2. Busca dados atualizados da nuvem
-        const dadosNuvem = await this._buscarDadosNuvem(url);
-
-        if (!dadosNuvem || (!dadosNuvem.cadastros && !dadosNuvem.almoco && !Array.isArray(dadosNuvem))) {
-          throw new Error('Formato de resposta inválido da nuvem.');
+      if (badgeHub && textoHub) {
+        if (status === 'conectado') {
+          badgeHub.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-600/70 text-emerald-300 text-[11px] font-bold self-start sm:self-auto";
+          if (pontoHub) pontoHub.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+          textoHub.textContent = msg || "Conectado em Tempo Real";
+        } else if (status === 'conectando') {
+          badgeHub.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-950/80 border border-amber-600/70 text-amber-300 text-[11px] font-bold self-start sm:self-auto";
+          if (pontoHub) pontoHub.className = "w-2 h-2 rounded-full bg-amber-400 animate-ping";
+          textoHub.textContent = msg || "Sincronizando Nuvem...";
+        } else {
+          badgeHub.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-gray-900 border border-gray-700 text-gray-400 text-[11px] font-bold self-start sm:self-auto";
+          if (pontoHub) pontoHub.className = "w-2 h-2 rounded-full bg-gray-500";
+          textoHub.textContent = msg || "Modo Local (Offline)";
         }
+      }
 
-        const cadastrosRemotos = dadosNuvem.cadastros || (Array.isArray(dadosNuvem) ? dadosNuvem : []);
-        const almocoRemoto = dadosNuvem.almoco || [];
+      // Modal de Configuração se aberto
+      const statusModalTxt = document.getElementById('modalNuvemStatusTxt');
+      const statusModalBadge = document.getElementById('modalNuvemStatusBadge');
+      if (statusModalTxt) statusModalTxt.innerText = _ultimaMensagem || 'Pronto';
+      if (statusModalBadge) {
+        statusModalBadge.className = 'px-2.5 py-1 rounded text-xs font-bold uppercase ' + (
+          status === 'conectado' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/60' :
+          status === 'conectando' ? 'bg-amber-950 text-amber-300 border border-amber-500/60' :
+          'bg-slate-900 text-slate-300 border border-slate-700'
+        );
+        statusModalBadge.innerText = (
+          status === 'conectado' ? '🟢 Conectado em Tempo Real' :
+          status === 'conectando' ? '🟡 Sincronizando...' :
+          '⚪ Offline'
+        );
+      }
+    },
 
-        // 3. Mescla com os dados locais
-        const qtdNovosCadastros = this._mesclarCadastros(cadastrosRemotos);
-        const qtdNovosAlmoco = this._mesclarAlmoco(almocoRemoto);
+    // ==========================================
+    // MÉTODOS INTERNOS / PRIVADOS
+    // ==========================================
 
-        // 4. Salva timestamp
-        localStorage.setItem(STORAGE_KEYS.ULTIMO_SYNC, Date.now().toString());
+    _processarMensagemRealtime: function (payload) {
+      if (!payload || !payload.tipo) return;
+      const r = this._aplicarPayload(payload);
 
-        // 5. Atualiza o sistema na tela
+      if (r.tipo === 'cadastro') {
+        if (typeof window.recarregarEfetivoComNovos === 'function') {
+          window.recarregarEfetivoComNovos();
+        }
+        if (typeof window.renderizarMuralPublico === 'function') {
+          window.renderizarMuralPublico();
+        }
+        if (r.isNovo) {
+          this.tocarSino();
+          if (typeof window.mostrarNotificaçãoTatica === 'function') {
+            window.mostrarNotificaçãoTatica(`🔔 NOVO VETERANO EM TEMPO REAL: ${payload.registro.nome} (${payload.registro.cia || ''})!`);
+          }
+        }
+      } else if (r.tipo === 'almoco') {
+        if (typeof window.renderizarTabelaAlmocoAdmin === 'function') {
+          window.renderizarTabelaAlmocoAdmin();
+        }
+        if (typeof window.renderizarGridParticipantesModal === 'function') {
+          window.renderizarGridParticipantesModal();
+        }
+        if (r.isNovo) {
+          this.tocarSino();
+          if (typeof window.mostrarNotificaçãoTatica === 'function') {
+            window.mostrarNotificaçãoTatica(`🍽️ ADESÃO AO ALMOÇO EM TEMPO REAL: ${payload.item.nome}!`);
+          }
+        }
+      } else if (r.tipo === 'exclusao') {
         if (typeof window.recarregarEfetivoComNovos === 'function') {
           window.recarregarEfetivoComNovos();
         }
@@ -236,391 +491,150 @@
         if (typeof window.renderizarGridParticipantesModal === 'function') {
           window.renderizarGridParticipantesModal();
         }
-
-        const horaFormatada = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        const msgResumo = `Nuvem atualizada às ${horaFormatada} • ${cadastrosRemotos.length} cadastros • ${almocoRemoto.length} almoços`;
-        this.atualizarStatusVisual('online', msgResumo);
-
-        if (!silencioso && (qtdNovosCadastros > 0 || qtdNovosAlmoco > 0)) {
-          if (typeof window.mostrarNotificaçãoTatica === 'function') {
-            window.mostrarNotificaçãoTatica(`☁️ Sincronização concluída! ${qtdNovosCadastros} novo(s) veterano(s) recebidos.`);
-          }
-        }
-
-        this._sincronizando = false;
-        return {
-          sucesso: true,
-          cadastrosTotal: cadastrosRemotos.length,
-          almocoTotal: almocoRemoto.length,
-          novosCadastros: qtdNovosCadastros,
-          novosAlmoco: qtdNovosAlmoco
-        };
-
-      } catch (err) {
-        this._sincronizando = false;
-        console.warn('[CloudSync] Erro na sincronização:', err);
-        this.atualizarStatusVisual('erro', 'Falha ao conectar na nuvem. Usando dados locais.');
-        return { sucesso: false, erro: err.message };
       }
     },
 
-    /**
-     * Inicia sincronização automática em segundo plano
-     */
-    iniciarAutoSync: function (intervaloSegundos) {
-      if (this._timerAutoSync) {
-        clearInterval(this._timerAutoSync);
-      }
+    _aplicarPayload: function (payload) {
+      if (!payload || !payload.tipo) return { isNovo: false, alterado: false };
 
-      const intervaloMs = Math.max(15, (intervaloSegundos || 30)) * 1000;
+      // 1. Cadastros
+      if (payload.tipo === 'NOVO_CADASTRO' || payload.tipo === 'ATUALIZACAO_CADASTRO') {
+        const militar = payload.registro;
+        if (!militar || !militar.nome) return { isNovo: false };
 
-      // Executa periodicamente apenas se a janela estiver visível
-      this._timerAutoSync = setInterval(() => {
-        if (!document.hidden && this.getUrl()) {
-          // Se for admin ou se houver conexão, sincroniza silenciosamente
-          this.sincronizarTudo({ silencioso: true });
-        }
-      }, intervaloMs);
-
-      // Re-sincroniza imediatamente quando o usuário volta para a aba
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && this.getUrl()) {
-          this.sincronizarTudo({ silencioso: true });
-        }
-      });
-
-      // Tenta enviar pendentes assim que a internet volta
-      window.addEventListener('online', () => {
-        console.log('[CloudSync] Conexão restabelecida! Sincronizando...');
-        this.processarFilaPendente();
-        this.sincronizarTudo({ silencioso: false });
-      });
-
-      console.log(`[CloudSync] AutoSync ativo a cada ${intervaloMs / 1000}s`);
-    },
-
-    /**
-     * Testa a conexão com uma URL específica ou a configurada
-     */
-    testarConexao: async function (urlTeste) {
-      const url = (urlTeste || this.getUrl() || '').trim();
-      if (!url) {
-        return { sucesso: false, erro: 'URL em branco. Digite ou cole o link do Google Sheets ou Firebase.' };
-      }
-
-      try {
-        const dados = await this._buscarDadosNuvem(url);
-        const tipo = this.detectarTipoBackend(url);
-        let totalC = 0;
-        let totalA = 0;
-
-        if (dados && dados.cadastros && Array.isArray(dados.cadastros)) {
-          totalC = dados.cadastros.length;
-        } else if (Array.isArray(dados)) {
-          totalC = dados.length;
-        }
-
-        if (dados && dados.almoco && Array.isArray(dados.almoco)) {
-          totalA = dados.almoco.length;
-        }
-
-        return {
-          sucesso: true,
-          tipo: tipo,
-          totalCadastros: totalC,
-          totalAlmoco: totalA,
-          mensagem: `Conexão bem sucedida! ${totalC} cadastros e ${totalA} almoços identificados na nuvem.`
-        };
-      } catch (err) {
-        return {
-          sucesso: false,
-          erro: `Não foi possível conectar: ${err.message}`
-        };
-      }
-    },
-
-    /**
-     * Processa itens que foram salvos em offline
-     */
-    processarFilaPendente: async function () {
-      let fila = [];
-      try {
-        const raw = localStorage.getItem(STORAGE_KEYS.FILA_PENDENTE);
-        if (raw) fila = JSON.parse(raw);
-      } catch (e) { fila = []; }
-
-      if (!fila || fila.length === 0) return;
-
-      const url = this.getUrl();
-      if (!url) return;
-
-      const restante = [];
-      for (const item of fila) {
+        let locais = [];
         try {
-          const payload = {
-            acao: item.tipo === 'almoco' ? 'salvar_almoco' : 'salvar_cadastro',
-            tipo: item.tipo,
-            origem: 'retry_offline',
-            dados: item.dados
-          };
-          await this._enviarRequisicao(url, payload);
-        } catch (e) {
-          restante.push(item);
-        }
-      }
+          const raw = localStorage.getItem(STORAGE_KEYS.NOVOS_VETERANOS);
+          if (raw) locais = JSON.parse(raw);
+        } catch (e) { locais = []; }
 
-      try {
-        if (restante.length === 0) {
-          localStorage.removeItem(STORAGE_KEYS.FILA_PENDENTE);
-        } else {
-          localStorage.setItem(STORAGE_KEYS.FILA_PENDENTE, JSON.stringify(restante));
-        }
-      } catch (e) {}
-    },
-
-    /**
-     * Atualiza o visual do status da nuvem no header e painel
-     */
-    atualizarStatusVisual: function (status, mensagem) {
-      this._ultimoStatus = status;
-      this._ultimaMensagem = mensagem || '';
-
-      // Atualiza badge no Navbar do Admin
-      const iconeNav = document.getElementById('iconeNuvemNav');
-      const labelNav = document.getElementById('labelNuvemNav');
-      const btnNav = document.getElementById('btnStatusNuvemNav');
-
-      if (iconeNav) {
-        iconeNav.className = 'w-2 h-2 rounded-full inline-block mr-1.5 ' + (
-          status === 'online' ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' :
-          status === 'sincronizando' ? 'bg-amber-400 animate-ping' :
-          status === 'erro' ? 'bg-red-400' :
-          'bg-slate-400'
-        );
-      }
-
-      if (labelNav) {
-        labelNav.innerText = (
-          status === 'online' ? 'Nuvem OK' :
-          status === 'sincronizando' ? 'Sincronizando...' :
-          status === 'erro' ? 'Nuvem Offline' :
-          'Configurar Nuvem'
-        );
-      }
-
-      // Atualiza modal se estiver aberto
-      const statusModalTxt = document.getElementById('modalNuvemStatusTxt');
-      const statusModalBadge = document.getElementById('modalNuvemStatusBadge');
-      if (statusModalTxt) statusModalTxt.innerText = this._ultimaMensagem || 'Pronto';
-      if (statusModalBadge) {
-        statusModalBadge.className = 'px-2.5 py-1 rounded text-xs font-bold uppercase ' + (
-          status === 'online' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/60' :
-          status === 'sincronizando' ? 'bg-amber-950 text-amber-300 border border-amber-500/60' :
-          status === 'erro' ? 'bg-red-950 text-red-300 border border-red-500/60' :
-          'bg-slate-900 text-slate-300 border border-slate-700'
-        );
-        statusModalBadge.innerText = (
-          status === 'online' ? '🟢 Conectado' :
-          status === 'sincronizando' ? '🟡 Em Andamento' :
-          status === 'erro' ? '🔴 Erro de Conexão' :
-          '⚪ Não Configurado'
-        );
-      }
-    },
-
-    // ==========================================
-    // MÉTODOS INTERNOS / PRIVADOS
-    // ==========================================
-
-    _enviarRequisicao: async function (url, payload) {
-      const tipo = this.detectarTipoBackend(url);
-
-      if (tipo === 'google_sheets') {
-        // Para Google Apps Script: enviar como text/plain evita preflight CORS OPTIONS
-        // O Apps Script recebe e faz JSON.parse(e.postData.contents) perfeitamente!
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload),
-          redirect: 'follow'
-        });
-        const txt = await resp.text();
+        let excluidos = [];
         try {
-          return JSON.parse(txt);
-        } catch (e) {
-          return { texto: txt };
-        }
-      }
+          const rawE = localStorage.getItem(STORAGE_KEYS.EXCLUIDOS);
+          if (rawE) excluidos = JSON.parse(rawE);
+        } catch (e) { excluidos = []; }
+        if (excluidos.map(String).includes(String(militar.id))) return { isNovo: false };
 
-      if (tipo === 'firebase') {
-        // REST API do Firebase
-        const subcaminho = payload.tipo === 'almoco' ? '/almoco' : '/cadastros';
-        const id = (payload.dados && payload.dados.id) || payload.id || Date.now();
-        const fireUrl = url.replace(/\/+$/, '') + subcaminho + '/' + id + '.json';
-
-        if (payload.acao && payload.acao.startsWith('excluir')) {
-          const resp = await fetch(fireUrl, { method: 'DELETE' });
-          return await resp.json();
-        } else {
-          const resp = await fetch(fireUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload.dados)
-          });
-          return await resp.json();
-        }
-      }
-
-      // Vercel / Padrão REST
-      const resp = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      return await resp.json();
-    },
-
-    _buscarDadosNuvem: async function (url) {
-      const tipo = this.detectarTipoBackend(url);
-
-      if (tipo === 'firebase') {
-        const base = url.replace(/\/+$/, '');
-        const [respCadastros, respAlmoco] = await Promise.all([
-          fetch(base + '/cadastros.json').then(r => r.json()).catch(() => ({})),
-          fetch(base + '/almoco.json').then(r => r.json()).catch(() => ({}))
-        ]);
-
-        const cadastros = respCadastros ? Object.values(respCadastros).filter(Boolean) : [];
-        const almoco = respAlmoco ? Object.values(respAlmoco).filter(Boolean) : [];
-        return { cadastros: cadastros, almoco: almoco };
-      }
-
-      // Google Sheets e Vercel respondem via GET
-      const separator = url.includes('?') ? '&' : '?';
-      const urlFinal = `${url}${separator}_t=${Date.now()}`;
-
-      const resp = await fetch(urlFinal, {
-        method: 'GET',
-        redirect: 'follow'
-      });
-
-      if (!resp.ok) {
-        throw new Error(`Servidor respondeu com código ${resp.status}`);
-      }
-
-      const txt = await resp.text();
-      try {
-        return JSON.parse(txt);
-      } catch (e) {
-        throw new Error('A resposta da nuvem não é um JSON válido. Verifique se a implantação do Apps Script está como "Qualquer pessoa".');
-      }
-    },
-
-    _mesclarCadastros: function (remotos) {
-      if (!Array.isArray(remotos) || remotos.length === 0) return 0;
-
-      let locais = [];
-      try {
-        const stored = localStorage.getItem(STORAGE_KEYS.NOVOS_VETERANOS);
-        if (stored) locais = JSON.parse(stored);
-      } catch (e) { locais = []; }
-
-      let excluidos = [];
-      try {
-        const storedExcl = localStorage.getItem(STORAGE_KEYS.EXCLUIDOS);
-        if (storedExcl) excluidos = JSON.parse(storedExcl);
-      } catch (e) { excluidos = []; }
-      const setExcluidos = new Set(excluidos.map(String));
-
-      let novosAdicionados = 0;
-
-      remotos.forEach(remoto => {
-        if (!remoto || !remoto.nome) return;
-        if (setExcluidos.has(String(remoto.id))) return; // Respeita exclusões feitas pelo admin
-
-        // Procura se já existe nos locais por ID ou telefone ou Nome
-        let idx = locais.findIndex(l => String(l.id) === String(remoto.id));
+        let idx = locais.findIndex(l => String(l.id) === String(militar.id));
         if (idx === -1 && typeof window.encontrarMilitarExistente === 'function') {
-          const match = window.encontrarMilitarExistente(locais, remoto);
+          const match = window.encontrarMilitarExistente(locais, militar);
           if (match) idx = match.index;
         }
 
         if (idx !== -1) {
-          // Atualiza dados mantendo a versão mais completa
-          locais[idx] = Object.assign({}, locais[idx], remoto);
+          locais[idx] = Object.assign({}, locais[idx], militar);
+          try { localStorage.setItem(STORAGE_KEYS.NOVOS_VETERANOS, JSON.stringify(locais)); } catch (e) {}
+          return { tipo: 'cadastro', isNovo: false, alterado: true };
         } else {
-          // Novo registro vindo da nuvem!
-          remoto.isNovo = true;
-          locais.unshift(remoto);
-          novosAdicionados++;
+          militar.isNovo = true;
+          locais.unshift(militar);
+          try { localStorage.setItem(STORAGE_KEYS.NOVOS_VETERANOS, JSON.stringify(locais)); } catch (e) {}
+          return { tipo: 'cadastro', isNovo: true, alterado: true };
         }
-      });
+      }
 
-      try {
-        localStorage.setItem(STORAGE_KEYS.NOVOS_VETERANOS, JSON.stringify(locais));
-      } catch (e) {}
+      // 2. Almoço
+      if (payload.tipo === 'NOVO_ALMOCO' || payload.tipo === 'ATUALIZAR_ALMOCO') {
+        const item = payload.item;
+        if (!item || !item.nome) return { isNovo: false };
 
-      return novosAdicionados;
-    },
+        let locais = [];
+        try {
+          const raw = localStorage.getItem(STORAGE_KEYS.ALMOCO);
+          if (raw) locais = JSON.parse(raw);
+        } catch (e) { locais = []; }
 
-    _mesclarAlmoco: function (remotos) {
-      if (!Array.isArray(remotos) || remotos.length === 0) return 0;
-
-      let locais = [];
-      try {
-        const stored = localStorage.getItem(STORAGE_KEYS.ALMOCO);
-        if (stored) locais = JSON.parse(stored);
-      } catch (e) { locais = []; }
-
-      let novosAdicionados = 0;
-
-      remotos.forEach(remoto => {
-        if (!remoto || !remoto.nome) return;
-        const idx = locais.findIndex(l => String(l.id) === String(remoto.id));
-
+        const idx = locais.findIndex(l => String(l.id) === String(item.id));
         if (idx !== -1) {
-          locais[idx] = Object.assign({}, locais[idx], remoto);
+          locais[idx] = Object.assign({}, locais[idx], item);
+          try { localStorage.setItem(STORAGE_KEYS.ALMOCO, JSON.stringify(locais)); } catch (e) {}
+          return { tipo: 'almoco', isNovo: false, alterado: true };
         } else {
-          locais.unshift(remoto);
-          novosAdicionados++;
+          locais.unshift(item);
+          try { localStorage.setItem(STORAGE_KEYS.ALMOCO, JSON.stringify(locais)); } catch (e) {}
+          return { tipo: 'almoco', isNovo: true, alterado: true };
         }
-      });
+      }
 
-      try {
-        localStorage.setItem(STORAGE_KEYS.ALMOCO, JSON.stringify(locais));
-      } catch (e) {}
+      // 3. Exclusão de Cadastro
+      if (payload.tipo === 'EXCLUIR_CADASTRO' && payload.id) {
+        let locais = [];
+        try {
+          const raw = localStorage.getItem(STORAGE_KEYS.NOVOS_VETERANOS);
+          if (raw) locais = JSON.parse(raw);
+        } catch (e) { locais = []; }
 
-      return novosAdicionados;
+        const novosFiltrados = locais.filter(l => String(l.id) !== String(payload.id));
+        try { localStorage.setItem(STORAGE_KEYS.NOVOS_VETERANOS, JSON.stringify(novosFiltrados)); } catch (e) {}
+
+        let excluidos = [];
+        try {
+          const rawE = localStorage.getItem(STORAGE_KEYS.EXCLUIDOS);
+          if (rawE) excluidos = JSON.parse(rawE);
+        } catch (e) { excluidos = []; }
+        if (!excluidos.map(String).includes(String(payload.id))) {
+          excluidos.push(payload.id);
+          try { localStorage.setItem(STORAGE_KEYS.EXCLUIDOS, JSON.stringify(excluidos)); } catch (e) {}
+        }
+
+        return { tipo: 'exclusao', alterado: true };
+      }
+
+      // 4. Exclusão de Almoço
+      if (payload.tipo === 'EXCLUIR_ALMOCO' && payload.id) {
+        let locais = [];
+        try {
+          const raw = localStorage.getItem(STORAGE_KEYS.ALMOCO);
+          if (raw) locais = JSON.parse(raw);
+        } catch (e) { locais = []; }
+
+        const listaFiltrada = locais.filter(l => String(l.id) !== String(payload.id));
+        try { localStorage.setItem(STORAGE_KEYS.ALMOCO, JSON.stringify(listaFiltrada)); } catch (e) {}
+        return { tipo: 'exclusao', alterado: true };
+      }
+
+      return { isNovo: false, alterado: false };
     },
 
-    _salvarLocalCadastro: function (cadastro) {
+    _salvarLocalCadastro: function (militar) {
       try {
         let locais = [];
         const raw = localStorage.getItem(STORAGE_KEYS.NOVOS_VETERANOS);
         if (raw) locais = JSON.parse(raw);
-
-        let idx = locais.findIndex(l => String(l.id) === String(cadastro.id));
+        const idx = locais.findIndex(l => String(l.id) === String(militar.id));
         if (idx !== -1) {
-          locais[idx] = Object.assign({}, locais[idx], cadastro);
+          locais[idx] = Object.assign({}, locais[idx], militar);
         } else {
-          locais.unshift(cadastro);
+          locais.unshift(militar);
         }
         localStorage.setItem(STORAGE_KEYS.NOVOS_VETERANOS, JSON.stringify(locais));
       } catch (e) {}
     },
 
-    _enfileirarPendente: function (tipo, dados) {
+    _salvarLocalAlmoco: function (item) {
       try {
-        let fila = [];
-        const raw = localStorage.getItem(STORAGE_KEYS.FILA_PENDENTE);
-        if (raw) fila = JSON.parse(raw);
-        fila.push({ tipo: tipo, dados: dados, ts: Date.now() });
-        localStorage.setItem(STORAGE_KEYS.FILA_PENDENTE, JSON.stringify(fila));
+        let locais = [];
+        const raw = localStorage.getItem(STORAGE_KEYS.ALMOCO);
+        if (raw) locais = JSON.parse(raw);
+        const idx = locais.findIndex(l => String(l.id) === String(item.id));
+        if (idx !== -1) {
+          locais[idx] = Object.assign({}, locais[idx], item);
+        } else {
+          locais.unshift(item);
+        }
+        localStorage.setItem(STORAGE_KEYS.ALMOCO, JSON.stringify(locais));
       } catch (e) {}
     }
   };
 
   // Expõe no escopo global
   window.CloudSync = CloudSync;
+
+  // Inicializa imediatamente ao carregar o script
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => CloudSync.conectar());
+  } else {
+    CloudSync.conectar();
+  }
 
 })(window);

@@ -717,6 +717,46 @@
         </div>
       </div>
 
+      <!-- HUB DE SINCRONIZAÇÃO EM NUVEM AUTOMÁTICA EM TEMPO REAL (ESTILO BIRIBA) -->
+      <div class="tactical-card rounded-xl p-3.5 sm:p-4 bg-[#0d1710] border border-[#234228] text-xs space-y-3 shadow-md">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-[#1c3321] pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <strong class="text-amber-400 font-sans text-xs sm:text-sm tracking-wide uppercase military-font">
+              SINCRONIZAÇÃO AUTOMÁTICA EM TEMPO REAL (NUVEM ATIVA)
+            </strong>
+          </div>
+          <div id="badgeStatusNuvem" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-600/70 text-emerald-300 text-[11px] font-bold self-start sm:self-auto">
+            <span id="pontoStatusNuvem" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="textoStatusNuvem">Conectado em Tempo Real</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <p class="text-slate-300 text-[11px] leading-relaxed max-w-2xl">
+            ⚡ <strong>100% Automático entre Celulares e Computadores:</strong> Quando qualquer veterano preencher o formulário ou aderir ao almoço no celular dele em qualquer lugar, os dados entram <strong>instantaneamente</strong> aqui na sua tela com toque de clarim/sino 🔔, sem precisar recarregar a página! As exclusões e edições sincronizam automaticamente em todos os aparelhos conectados via GitHub Pages.
+          </p>
+
+          <div class="flex items-center gap-1.5 flex-wrap flex-shrink-0">
+            <button type="button" onclick="forcarSincronizacaoNuvemManual()"
+                    class="px-2.5 py-1.5 bg-[#172b1a] hover:bg-[#203a24] border border-[#2d5632] text-emerald-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-sm military-font uppercase">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Sincronizar Agora</span>
+            </button>
+            <button type="button" onclick="testarSomSino()"
+                    class="px-2.5 py-1.5 bg-[#142017] hover:bg-[#1c2c20] border border-[#27402a] text-amber-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-sm military-font uppercase">
+              <i class="fa-solid fa-bell"></i>
+              <span>Testar Som</span>
+            </button>
+            <button type="button" onclick="abrirModalConfigNuvem()"
+                    class="px-2.5 py-1.5 bg-[#101b12] hover:bg-[#1a2e1e] border border-[#243c27] text-slate-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-sm military-font uppercase">
+              <i class="fa-solid fa-sliders"></i>
+              <span>Canal da Nuvem</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Cards de Estatísticas Rápidas -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <div class="tactical-card rounded-xl p-4 border-l-4 border-l-emerald-500">
@@ -2306,7 +2346,7 @@
     </div>
   </div>
 
-  <!-- MODAL: CONFIGURAÇÃO DE NUVEM & BANCO DE DADOS (ADMIN) -->
+  <!-- MODAL: CONFIGURAÇÃO DE NUVEM EM TEMPO REAL (ESTILO BIRIBA / GITHUB PAGES) -->
   <div id="modalConfigNuvem" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="tactical-card max-w-xl w-full rounded-2xl overflow-hidden border-2 border-emerald-500/70 shadow-[0_0_40px_rgba(16,185,129,0.3)] relative max-h-[92vh] flex flex-col bg-gradient-to-br from-[#0c180e] via-[#08100a] to-[#0c180e]">
       
@@ -2317,8 +2357,8 @@
             <i class="fa-solid fa-cloud"></i>
           </div>
           <div>
-            <span class="text-[10px] text-emerald-400 uppercase military-font font-bold tracking-widest block">Sincronização em Tempo Real</span>
-            <h3 class="text-base font-bold text-white military-font uppercase leading-tight">Nuvem & Banco de Dados</h3>
+            <span class="text-[10px] text-emerald-400 uppercase military-font font-bold tracking-widest block">Sincronização em Tempo Real (Pub/Sub)</span>
+            <h3 class="text-base font-bold text-white military-font uppercase leading-tight">Canal da Nuvem (GitHub Pages)</h3>
           </div>
         </div>
         <button onclick="fecharModalConfigNuvem()" class="text-slate-400 hover:text-white text-xl p-1 cursor-pointer">
@@ -2332,87 +2372,58 @@
         <!-- Status Card -->
         <div class="p-3.5 bg-[#0e1c11] rounded-xl border border-emerald-900/60 flex items-center justify-between">
           <div>
-            <span class="text-[10px] uppercase military-font text-slate-400 block font-bold">Status da Conexão:</span>
-            <span id="modalNuvemStatusTxt" class="text-xs font-semibold text-slate-200">Verificando...</span>
+            <span class="text-[10px] uppercase military-font text-slate-400 block font-bold">Status da Nuvem:</span>
+            <span id="modalNuvemStatusTxt" class="text-xs font-semibold text-emerald-300">Conectado em Tempo Real</span>
           </div>
-          <span id="modalNuvemStatusBadge" class="px-2.5 py-1 rounded text-[11px] font-bold uppercase bg-slate-900 text-slate-300 border border-slate-700">
-            ⚪ Aguardando
+          <span id="modalNuvemStatusBadge" class="px-2.5 py-1 rounded text-[11px] font-bold uppercase bg-emerald-950 text-emerald-300 border border-emerald-500/60">
+            🟢 Conectado em Tempo Real
           </span>
         </div>
 
         <p class="text-slate-300 leading-relaxed text-[11px]">
-          Conecte sua <strong>Planilha Google Sheets (100% Gratuito)</strong> ou <strong>Firebase</strong> para que todos os cadastros e adesões ao almoço feitos pelos veteranos nos celulares apareçam <strong>automaticamente</strong> no seu painel em tempo real!
+          ⚡ <strong>Tecnologia em Nuvem Instantânea (Sem Vercel):</strong> Funciona 100% no <strong>GitHub Pages</strong>. Qualquer cadastro ou reserva de almoço feita em celulares Android, iPhones ou computadores é transmitida e sincronizada <strong>em menos de 1 segundo</strong> para todos os aparelhos conectados.
         </p>
 
-        <!-- Campo de URL -->
+        <!-- Campo de Tópico -->
         <div class="space-y-1.5">
           <label class="block text-xs font-bold text-emerald-400 uppercase">
-            <i class="fa-solid fa-link mr-1"></i> URL do Webhook da Nuvem (Google Apps Script / Firebase / Vercel API):
+            <i class="fa-solid fa-satellite-dish mr-1"></i> Tópico / Canal da Nuvem (ntfy.sh):
           </label>
-          <input type="url" id="inputUrlNuvem" placeholder="https://script.google.com/macros/s/.../exec"
-                 class="w-full px-3.5 py-2.5 bg-[#060c07] border border-[#2b4c2f] rounded-lg text-slate-100 text-xs font-mono focus:outline-none focus:border-emerald-400">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400 font-mono text-xs">ntfy.sh/</span>
+            <input type="text" id="inputTopicoNuvem" placeholder="veteranos_5be_juarez_tavora_oficial"
+                   class="flex-1 px-3 py-2 bg-[#060c07] border border-[#2b4c2f] rounded-lg text-amber-300 font-bold text-xs font-mono focus:outline-none focus:border-emerald-400">
+          </div>
           <p class="text-[10px] text-slate-400">
-            💡 Se deixar em branco e o site estiver hospedado no Vercel, o sistema utilizará a API nativa integrada automaticamente.
+            🔒 Canal oficial exclusivo e protegido do Batalhão Juarez Távora.
           </p>
         </div>
 
         <!-- Botões de Ação Imediata -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-          <button type="button" onclick="testarConexaoNuvem()"
-                  class="py-2.5 px-3 bg-[#162719] hover:bg-[#1f3723] text-emerald-300 border border-emerald-600/60 font-bold rounded-lg text-xs military-font uppercase flex items-center justify-center transition-all cursor-pointer">
-            <i class="fa-solid fa-flask-vial mr-1.5"></i> Testar Conexão
-          </button>
-          <button type="button" onclick="salvarConfigNuvem()"
+          <button type="button" onclick="salvarConfigTopicoNuvem()"
                   class="py-2.5 px-3 bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-600 hover:to-emerald-500 text-white font-extrabold rounded-lg text-xs military-font uppercase shadow-lg flex items-center justify-center transition-all cursor-pointer">
-            <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar & Ativar
+            <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar Canal
+          </button>
+          <button type="button" onclick="testarSomSino()"
+                  class="py-2.5 px-3 bg-[#162719] hover:bg-[#1f3723] text-amber-300 border border-amber-500/60 font-bold rounded-lg text-xs military-font uppercase flex items-center justify-center transition-all cursor-pointer">
+            <i class="fa-solid fa-bell mr-1.5"></i> Testar Sinal Sonoro
           </button>
           <button type="button" onclick="forcarSincronizacaoNuvemManual()"
                   class="py-2.5 px-3 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-extrabold rounded-lg text-xs military-font uppercase shadow-lg flex items-center justify-center transition-all cursor-pointer">
-            <i class="fa-solid fa-cloud-arrow-down mr-1.5"></i> Sincronizar Agora
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Sincronizar Agora
+          </button>
+        </div>
+
+        <div class="pt-2">
+          <button type="button" onclick="restaurarTopicoPadraoNuvem()"
+                  class="w-full py-2 bg-[#121f14] hover:bg-[#1a2d1d] text-slate-300 border border-[#2a452d] font-bold rounded-lg text-[11px] military-font uppercase flex items-center justify-center transition-all cursor-pointer">
+            <i class="fa-solid fa-rotate-left mr-1.5 text-amber-400"></i> Restaurar Canal Oficial Padrão (Recomendado)
           </button>
         </div>
 
         <!-- Resultado do Teste / Feedback -->
         <div id="boxResultadoTesteNuvem" class="hidden p-3 rounded-lg text-xs font-semibold"></div>
-
-        <!-- Guia Passo a Passo Expansível para Google Sheets -->
-        <div class="mt-4 border border-[#2b4c2f] rounded-xl overflow-hidden bg-[#070e08]">
-          <button type="button" onclick="document.getElementById('guiaGoogleSheetsAccordion').classList.toggle('hidden')"
-                  class="w-full p-3 bg-[#102013] hover:bg-[#162a19] flex items-center justify-between text-left text-xs font-bold text-amber-300 military-font uppercase transition-all cursor-pointer">
-            <span class="flex items-center">
-              <i class="fa-solid fa-table-cells mr-2 text-emerald-400"></i> Como Criar Sua Planilha Google Gratuita em 1 Minuto
-            </span>
-            <i class="fa-solid fa-chevron-down text-xs"></i>
-          </button>
-          <div id="guiaGoogleSheetsAccordion" class="p-4 space-y-3 text-[11px] text-slate-300 border-t border-[#1c3320] leading-relaxed hidden">
-            <ol class="list-decimal list-inside space-y-2 text-slate-200">
-              <li>Acesse <a href="https://sheets.new" target="_blank" class="text-amber-400 underline font-bold">sheets.new</a> para abrir uma nova Planilha Google em seu Google Drive.</li>
-              <li>No menu superior da planilha, clique em <strong>Extensões</strong> ➔ <strong>Apps Script</strong>.</li>
-              <li>Apague o que estiver lá e <strong>cole o código do script</strong> clicando no botão abaixo:</li>
-            </ol>
-
-            <button type="button" onclick="copiarCodigoAppsScriptModal()"
-                    class="w-full py-2 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200 border border-emerald-600/70 rounded-lg font-bold text-xs flex items-center justify-center transition-all cursor-pointer">
-              <i class="fa-solid fa-copy mr-1.5"></i> Copiar Código Oficial do Apps Script (Pronto)
-            </button>
-            <div id="avisoCopiadoAppsScript" class="hidden text-center text-emerald-400 font-bold text-[10px]">
-              ✅ Código copiado para a área de transferência! Cole no Google Apps Script.
-            </div>
-
-            <ol start="4" class="list-decimal list-inside space-y-2 text-slate-200">
-              <li>Clique no ícone de <strong>Salvar (Disquete)</strong>.</li>
-              <li>Clique no botão azul <strong>Implantar</strong> ➔ <strong>Nova Implantação</strong>.</li>
-              <li>Na engrenagem ⚙️, escolha <strong>App da Web</strong>:
-                <ul class="list-disc list-inside ml-4 mt-1 text-slate-300">
-                  <li><strong>Executar como:</strong> Eu (seu email)</li>
-                  <li><strong>Quem tem acesso:</strong> <span class="text-amber-300 font-bold">Qualquer pessoa</span> (obrigatório para os veteranos enviarem)</li>
-                </ul>
-              </li>
-              <li>Clique em <strong>Implantar</strong>, autorize sua conta Google e copie a <strong>URL do App da Web</strong> (termina com <code class="text-amber-400">/exec</code>).</li>
-              <li>Cole a URL no campo acima e clique em <strong>Salvar & Ativar</strong>!</li>
-            </ol>
-          </div>
-        </div>
 
       </div>
 
@@ -6650,19 +6661,19 @@ Compartilhe com os veteranos da sua turma! Brasil Acima de Tudo! 🇧🇷`;
     }
 
     // ========================================================
-    // FUNÇÕES DO MODAL DE CONFIGURAÇÃO DE NUVEM (ADMIN)
+    // FUNÇÕES DE SINCRONIZAÇÃO EM NUVEM (ESTILO BIRIBA / GITHUB PAGES)
     // ========================================================
     function abrirModalConfigNuvem() {
       const modal = document.getElementById('modalConfigNuvem');
-      const input = document.getElementById('inputUrlNuvem');
+      const input = document.getElementById('inputTopicoNuvem');
       const box = document.getElementById('boxResultadoTesteNuvem');
       if (box) box.classList.add('hidden');
 
       if (input && window.CloudSync) {
-        input.value = localStorage.getItem('nuvem_sync_url') || '';
+        input.value = window.CloudSync.getTopic();
       }
       if (window.CloudSync) {
-        window.CloudSync.atualizarStatusVisual(window.CloudSync._ultimoStatus, window.CloudSync._ultimaMensagem);
+        window.CloudSync.atualizarStatusVisual(window.CloudSync._ultimoStatus || 'conectado');
       }
       if (modal) modal.classList.remove('hidden');
     }
@@ -6672,70 +6683,57 @@ Compartilhe com os veteranos da sua turma! Brasil Acima de Tudo! 🇧🇷`;
       if (modal) modal.classList.add('hidden');
     }
 
-    async function testarConexaoNuvem() {
-      const input = document.getElementById('inputUrlNuvem');
+    function salvarConfigTopicoNuvem() {
+      const input = document.getElementById('inputTopicoNuvem');
       const box = document.getElementById('boxResultadoTesteNuvem');
-      const url = (input ? input.value : '').trim();
+      const novoTopico = (input ? input.value : '').trim();
 
-      if (box) {
-        box.className = 'p-3 rounded-lg text-xs font-semibold bg-amber-950/80 border border-amber-500/60 text-amber-200 block';
-        box.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Testando comunicação com a nuvem...';
-        box.classList.remove('hidden');
-      }
-
-      if (!window.CloudSync) {
-        if (box) box.innerHTML = '❌ Módulo CloudSync não encontrado.';
+      if (!novoTopico) {
+        alert("Por favor, digite um nome válido para o canal da nuvem.");
         return;
       }
 
-      const res = await window.CloudSync.testarConexao(url);
-      if (box) {
-        if (res.sucesso) {
+      if (window.CloudSync) {
+        window.CloudSync.setTopic(novoTopico);
+        mostrarNotificaçãoTatica(`💾 Canal da nuvem atualizado para: ${novoTopico}`);
+        if (box) {
           box.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-950/80 border border-emerald-500/60 text-emerald-200 block';
-          box.innerHTML = `✅ <strong>Conexão bem sucedida!</strong><br><span class="text-[11px]">${res.mensagem}</span>`;
-        } else {
-          box.className = 'p-3 rounded-lg text-xs font-semibold bg-red-950/80 border border-red-500/60 text-red-200 block';
-          box.innerHTML = `❌ <strong>Falha na conexão:</strong><br><span class="text-[11px]">${res.erro}</span>`;
+          box.innerHTML = `✅ <strong>Canal Conectado com Sucesso!</strong><br><span class="text-[11px]">Sincronizando em tempo real no tópico: <strong>${novoTopico}</strong></span>`;
+          box.classList.remove('hidden');
         }
       }
     }
 
-    function salvarConfigNuvem() {
-      const input = document.getElementById('inputUrlNuvem');
-      const url = (input ? input.value : '').trim();
+    function restaurarTopicoPadraoNuvem() {
       if (window.CloudSync) {
-        window.CloudSync.setUrl(url);
-        mostrarNotificaçãoTatica("💾 Configuração da nuvem salva! Puxando dados...");
-        window.CloudSync.sincronizarTudo({ silencioso: false });
-        fecharModalConfigNuvem();
+        const padrao = window.CloudSync.resetarTopicoPadrao();
+        const input = document.getElementById('inputTopicoNuvem');
+        if (input) input.value = padrao;
+        const box = document.getElementById('boxResultadoTesteNuvem');
+        if (box) {
+          box.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-950/80 border border-emerald-500/60 text-emerald-200 block';
+          box.innerHTML = `✅ <strong>Canal Oficial Restaurado!</strong><br><span class="text-[11px]">Tópico oficial ativo: <strong>${padrao}</strong></span>`;
+          box.classList.remove('hidden');
+        }
+        mostrarNotificaçãoTatica("🔄 Canal oficial padrão do 5º BE restaurado!");
+      }
+    }
+
+    function testarSomSino() {
+      if (window.CloudSync && typeof window.CloudSync.tocarSino === 'function') {
+        window.CloudSync.tocarSino();
+        mostrarNotificaçãoTatica("🔔 Sinal sonoro militar reproduzido com sucesso!");
       }
     }
 
     function forcarSincronizacaoNuvemManual() {
       if (window.CloudSync) {
-        mostrarNotificaçãoTatica("🔄 Sincronizando com a nuvem...");
-        window.CloudSync.sincronizarTudo({ silencioso: false }).then(res => {
-          if (res.sucesso) {
-            mostrarNotificaçãoTatica(`☁️ Sincronização concluída! ${res.novosCadastros || 0} novo(s) veterano(s) recebidos.`);
+        mostrarNotificaçãoTatica("🔄 Sincronizando com a nuvem em tempo real...");
+        window.CloudSync.puxarHistorico(false).then(res => {
+          if (res && res.sucesso) {
+            mostrarNotificaçãoTatica(`☁️ Nuvem 100% atualizada! ${res.novosCadastros || 0} novo(s) veterano(s) sincronizados.`);
           }
         });
-      }
-    }
-
-    function copiarCodigoAppsScriptModal() {
-      const codigo = `// Cole este código no Google Apps Script da sua planilha:
-function doGet(e){try{const ss=SpreadsheetApp.getActiveSpreadsheet(),sc=obterOuCriarAba(ss,"Cadastros",["ID","Data Cadastro","Nome Completo","Nome de Guerra","Graduação","Companhia","Ano","WhatsApp","Cidade","UF","Bairro","Rua","Endereço","Status"]),sa=obterOuCriarAba(ss,"Almoco",["ID","Data","Hora","Nome","Nome de Guerra","Companhia","Ano","WhatsApp","Qtd Adulto","Qtd Meio","Total Pessoas","Valor Total (R$)","Forma Pagamento","Status Pagamento"]);return ContentService.createTextOutput(JSON.stringify({sucesso:!0,timestamp:(new Date).toISOString(),cadastros:lerDadosAba(sc),almoco:lerDadosAba(sa)})).setMimeType(ContentService.MimeType.JSON)}catch(err){return ContentService.createTextOutput(JSON.stringify({sucesso:!1,erro:err.toString()})).setMimeType(ContentService.MimeType.JSON)}}function doPost(e){try{let p={};e&&e.postData&&e.postData.contents?p=JSON.parse(e.postData.contents):e&&e.parameter&&(p=e.parameter);const a=p.acao||p.action||"salvar_cadastro",ss=SpreadsheetApp.getActiveSpreadsheet();if("salvar_cadastro"===a||"cadastrar_veterano"===a){const s=obterOuCriarAba(ss,"Cadastros"),i=p.dados||p.payload||p;return salvarOuAtualizarLinha(s,i.id,[i.id||Date.now(),i.dataCadastro||(new Date).toLocaleDateString("pt-BR"),i.nome||"",i.guerra||"",i.grad||"",i.cia||"",i.ano||"",i.tel||"",i.cidade||"",i.uf||"",i.bairro||"",i.rua||"",i.endereco||"",i.isAtualizado?"Atualizado":"Novo"]),jsonRetorno({sucesso:!0,mensagem:"Cadastro salvo!",id:i.id})}if("salvar_almoco"===a||"cadastrar_almoco"===a){const s=obterOuCriarAba(ss,"Almoco"),i=p.dados||p.payload||p;return salvarOuAtualizarLinha(s,i.id,[i.id||Date.now(),i.data||(new Date).toLocaleDateString("pt-BR"),i.hora||(new Date).toLocaleTimeString("pt-BR"),i.nome||"",i.guerra||"",i.cia||"",i.ano||"",i.telefone||"",i.qtdAdulto||0,i.qtdInfantil||0,i.qtd||0,i.valorTotal||0,i.formaPagamento||"PIX",i.statusPagamento||"Pendente"]),jsonRetorno({sucesso:!0,mensagem:"Almoço salvo!",id:i.id})}if("excluir_cadastro"===a)return excluirLinhaPorId(obterOuCriarAba(ss,"Cadastros"),p.id),jsonRetorno({sucesso:!0,mensagem:"Cadastro excluído."});if("excluir_almoco"===a)return excluirLinhaPorId(obterOuCriarAba(ss,"Almoco"),p.id),jsonRetorno({sucesso:!0,mensagem:"Almoço excluído."});if("obter_tudo"===a||"ping"===a)return doGet(e);return jsonRetorno({sucesso:!1,erro:"Ação desconhecida"})}catch(err){return jsonRetorno({sucesso:!1,erro:err.toString()})}}function jsonRetorno(o){return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON)}function obterOuCriarAba(ss,n,c){let s=ss.getSheetByName(n);return s||(s=ss.insertSheet(n),c&&c.length>0&&(s.appendRow(c),s.getRange(1,1,1,c.length).setBackground("#1a3821").setFontColor("#fff").setFontWeight("bold"),s.setFrozenRows(1))),s}function salvarOuAtualizarLinha(s,id,v){const d=s.getDataRange().getValues(),idStr=String(id);for(let i=1;i<d.length;i++)if(String(d[i][0])===idStr)return void s.getRange(i+1,1,1,v.length).setValues([v]);s.appendRow(v)}function excluirLinhaPorId(s,id){const d=s.getDataRange().getValues(),idStr=String(id);for(let i=d.length-1;i>=1;i--)String(d[i][0])===idStr&&s.deleteRow(i+1)}function lerDadosAba(s){const d=s.getDataRange().getValues();if(d.length<=1)return[];const h=d[0],res=[];for(let i=1;i<d.length;i++){const r=d[i];if(r[0]||r[2]){const item={};h.forEach((c,idx)=>{item[normalizarChave(c)]=r[idx]}),"Cadastros"===s.getName()?(item.id=item.id||Date.now(),item.nome=item.nomeCompleto||item.nome||"",item.guerra=item.nomeDeGuerra||item.guerra||"",item.grad=item.graduacao||item.grad||"Sd",item.cia=item.companhia||item.cia||"",item.ano=item.ano?String(item.ano):"",item.tel=item.whatsapp||item.tel||"",item.telDial=item.tel?"55"+String(item.tel).replace(/\\D/g,""):"",item.cidade=item.cidade||"",item.uf=item.uf||"PR",item.rua=item.rua||"",item.bairro=item.bairro||"",item.endereco=item.endereco||(item.rua?item.rua+" - "+item.cidade:item.cidade),item.isNovo=!0):"Almoco"===s.getName()&&(item.id=item.id||Date.now(),item.nome=item.nome||"",item.guerra=item.nomeDeGuerra||item.guerra||"",item.cia=item.companhia||item.cia||"",item.ano=item.ano?String(item.ano):"",item.telefone=item.whatsapp||item.telefone||"",item.qtdAdulto=Number(item.qtdAdulto)||1,item.qtdInfantil=Number(item.qtdMeio)||0,item.qtd=Number(item.totalPessoas)||item.qtdAdulto+item.qtdInfantil,item.valorTotal=Number(item.valorTotalR)||0,item.formaPagamento=item.formaPagamento||"PIX",item.statusPagamento=item.statusPagamento||"Pendente"),res.push(item)}}return res}function normalizarChave(s){return s.toString().replace(/[^\\w\\s]/gi,"").trim().split(/\\s+/).map((w,i)=>0===i?w.toLowerCase():w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join("")}`;
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(codigo).then(() => {
-          const aviso = document.getElementById('avisoCopiadoAppsScript');
-          if (aviso) {
-            aviso.classList.remove('hidden');
-            setTimeout(() => aviso.classList.add('hidden'), 5000);
-          }
-        });
-      } else {
-        alert("O código oficial está disponível no arquivo google_apps_script.js da pasta.");
       }
     }
   </script>
