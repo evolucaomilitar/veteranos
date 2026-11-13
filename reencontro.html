@@ -109,13 +109,22 @@
           </span>
         </a>
 
-        <!-- Botão Instalar App -->
-        <button onclick="acionarInstalacaoApp()" 
-                title="Instalar Aplicativo no Celular ou Computador"
-                class="btn-instalar-app px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-600 hover:from-emerald-500 hover:to-green-500 text-slate-950 font-extrabold rounded-lg text-xs military-font uppercase flex items-center shadow-lg transition-all transform active:scale-95">
-          <i class="fa-solid fa-mobile-screen-button mr-1.5 text-xs"></i>
-          <span>Instalar App</span>
-        </button>
+        <!-- Ações do Cabeçalho -->
+        <div class="flex items-center space-x-2">
+          <button onclick="compartilharComAmigosReencontro()" 
+                  title="Compartilhar link com amigos no WhatsApp"
+                  class="px-3 sm:px-3.5 py-1.5 bg-[#142817] hover:bg-[#1f3f24] text-emerald-300 border border-emerald-500/50 hover:border-emerald-400 rounded-lg text-xs military-font font-bold uppercase transition-all shadow flex items-center cursor-pointer">
+            <i class="fa-brands fa-whatsapp text-green-400 mr-1.5 text-sm"></i>
+            <span>Convidar Amigos</span>
+          </button>
+          <!-- Botão Instalar App -->
+          <button onclick="acionarInstalacaoApp()" 
+                  title="Instalar Aplicativo no Celular ou Computador"
+                  class="btn-instalar-app px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-600 hover:from-emerald-500 hover:to-green-500 text-slate-950 font-extrabold rounded-lg text-xs military-font uppercase flex items-center shadow-lg transition-all transform active:scale-95">
+            <i class="fa-solid fa-mobile-screen-button mr-1.5 text-xs"></i>
+            <span>Instalar App</span>
+          </button>
+        </div>
       </div>
 
       <div class="text-center">
@@ -339,6 +348,10 @@
              class="px-6 py-3 bg-green-500 hover:bg-green-400 text-slate-950 font-bold rounded-xl text-sm military-font uppercase flex items-center justify-center shadow-lg">
             <i class="fa-brands fa-whatsapp text-xl mr-2"></i> Enviar Confirmação via WhatsApp
           </a>
+          <button type="button" onclick="compartilharComAmigosReencontro()"
+                  class="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black rounded-xl text-sm military-font uppercase flex items-center justify-center shadow-lg cursor-pointer">
+            <i class="fa-solid fa-share-nodes mr-2 text-base"></i> Convidar Amigos de Farda
+          </button>
         </div>
       </div>
 
@@ -1173,6 +1186,39 @@
         const muralEl = document.getElementById('areaListaCompanhia');
         if (muralEl) muralEl.scrollIntoView({ behavior: 'smooth' });
       }, 300);
+    }
+
+    // Compartilhamento com Amigos no WhatsApp
+    function compartilharComAmigosReencontro() {
+      let urlBase = window.location.href.split('?')[0].split('#')[0];
+      if (!urlBase.startsWith('http')) {
+        urlBase = 'https://evolucaomilitar.github.io/veteranos_5be/reencontro.html';
+      }
+
+      const nomeSalvo = localStorage.getItem('veterano_inscrito_nome') || '';
+      const ciaSalva = localStorage.getItem('veterano_inscrito_cia') || '';
+      const anoSalvo = localStorage.getItem('veterano_inscrito_ano') || '';
+      let assinatura = '';
+      if (nomeSalvo) {
+        const ciaTxt = ciaSalva ? ` • ${ciaSalva}` : '';
+        const anoTxt = anoSalvo ? ` (Turma de ${anoSalvo})` : '';
+        assinatura = `\n\n_Convite enviado pelo seu irmão de farda: ${nomeSalvo}${ciaTxt}${anoTxt}_`;
+      }
+
+      const msg = `*🇧🇷 ATENÇÃO VETERANOS DO 5º BE CMB BLD!*
+_Batalhão Juarez Távora - Porto União / SC_
+
+Prezado Irmão de Farda! Acesse o portal oficial abaixo para *VER A LISTA COM OS SOLDADOS DA NOSSA COMPANHIA* e atualizar seu cadastro:
+
+👉 *Acesse o Portal do Reencontro:*
+${urlBase}
+
+No portal você escolhe sua Companhia (1ª Cia, 2ª Cia, CEP, CCAp, NPOR ou Estado-Maior) e reencontra seus companheiros de farda e turma de caserna!${assinatura}
+
+Compartilhe no grupo da nossa turma! Brasil Acima de Tudo! 🇧🇷`;
+
+      const link = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+      window.open(link, '_blank');
     }
   </script>
 </body>

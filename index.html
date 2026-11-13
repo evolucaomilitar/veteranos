@@ -189,20 +189,28 @@
 
       </div>
 
-      <!-- Navegação Pública (Almoço quando liberado pelo Admin) -->
-      <nav id="navPublico" class="flex items-center space-x-2">
+      <!-- Navegação Pública: Início & Mural, Compartilhar com Amigos e Almoço -->
+      <nav id="navPublico" class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <button id="nav-pub-btn-inscricao" onclick="trocarAbaPrincipal('inscricao')"
+                class="px-3 sm:px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-emerald-700 text-white shadow flex items-center cursor-pointer">
+          <i class="fa-solid fa-house mr-1.5 text-amber-400"></i> Início & Mural
+        </button>
+        <button id="nav-pub-btn-compartilhar" onclick="trocarAbaPrincipal('compartilhar')"
+                class="px-3 sm:px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-[#122616] hover:bg-[#1a3820] text-emerald-300 hover:text-white border border-emerald-500/50 shadow flex items-center cursor-pointer">
+          <i class="fa-brands fa-whatsapp text-green-400 mr-1.5 text-sm sm:text-base"></i> Compartilhar com Amigos
+        </button>
         <button id="nav-btn-participantes-almoco" onclick="abrirModalParticipantesAlmoco()"
-                class="hidden px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-[#172c1c] hover:bg-[#203c27] text-amber-300 hover:text-white border border-amber-500/40 shadow flex items-center">
+                class="hidden px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-[#172c1c] hover:bg-[#203c27] text-amber-300 hover:text-white border border-amber-500/40 shadow flex items-center cursor-pointer">
           <i class="fa-solid fa-users mr-1.5 text-amber-400"></i> Participantes Almoço
         </button>
         <button id="nav-btn-adesao-almoco" onclick="abrirModalInscricaoAlmoco()"
-                class="hidden px-3.5 py-2 rounded-lg text-xs sm:text-sm font-black military-font uppercase transition-all bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg flex items-center">
+                class="hidden px-3.5 py-2 rounded-lg text-xs sm:text-sm font-black military-font uppercase transition-all bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg flex items-center cursor-pointer">
           <i class="fa-solid fa-utensils mr-1.5"></i> Almoço (Adesão)
         </button>
       </nav>
 
       <!-- Navegação Administrativa (Liberada para o Administrador) -->
-      <nav id="navAdmin" class="hidden flex items-center space-x-1 sm:space-x-2 bg-[#09110a] p-1.5 rounded-lg border border-[#1f3722]">
+      <nav id="navAdmin" class="hidden flex flex-wrap items-center gap-1 sm:gap-1.5 bg-[#09110a] p-1.5 rounded-lg border border-[#1f3722]">
         <button id="nav-btn-integrantes" onclick="trocarAbaPrincipal('integrantes')"
                 class="px-3 py-2 rounded-md text-xs font-bold military-font uppercase transition-all bg-emerald-700 text-white shadow">
           <i class="fa-solid fa-users-viewfinder mr-1"></i> Integrantes
@@ -221,7 +229,11 @@
         </button>
         <button id="nav-btn-inscricao" onclick="trocarAbaPrincipal('inscricao')"
                 class="px-3 py-2 rounded-md text-xs font-bold military-font uppercase transition-all text-slate-300 hover:text-white hover:bg-[#1a2f1d]">
-          <i class="fa-solid fa-house mr-1 text-purple-400"></i> Página Inicial
+          <i class="fa-solid fa-house mr-1 text-purple-400"></i> Início
+        </button>
+        <button id="nav-btn-compartilhar" onclick="trocarAbaPrincipal('compartilhar')"
+                class="px-3 py-2 rounded-md text-xs font-bold military-font uppercase transition-all text-slate-300 hover:text-white hover:bg-[#1a2f1d]">
+          <i class="fa-brands fa-whatsapp mr-1 text-green-400"></i> Convidar Amigos
         </button>
         <button id="btnStatusNuvemNav" onclick="abrirModalConfigNuvem()"
                 class="px-2.5 py-1.5 rounded-md text-xs font-bold military-font uppercase transition-all bg-[#102013] hover:bg-[#18311d] border border-emerald-500/50 text-emerald-300 flex items-center space-x-1 shadow"
@@ -319,6 +331,10 @@
             <button type="button" onclick="rolarParaMuralCompanhiaPub()" 
                     class="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs military-font uppercase flex items-center shadow-md transition-all cursor-pointer">
               <i class="fa-solid fa-users mr-1.5"></i> Ver Meus Colegas
+            </button>
+            <button type="button" onclick="trocarAbaPrincipal('compartilhar')" 
+                    class="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black rounded-xl text-xs military-font uppercase flex items-center shadow-md transition-all cursor-pointer">
+              <i class="fa-brands fa-whatsapp mr-1.5 text-slate-950 text-sm"></i> Convidar Amigos
             </button>
             <button type="button" onclick="alternarFormularioAtualizacaoPub()" 
                     class="px-3.5 py-2.5 bg-[#0c160e] hover:bg-[#152718] text-amber-300 border border-amber-500/40 font-bold rounded-xl text-xs military-font uppercase flex items-center transition-all cursor-pointer">
@@ -673,6 +689,276 @@
             <!-- Preenchido via JS com Nome e Ano que serviu -->
           </div>
 
+          <!-- Banner de Convidar Amigos ao final da lista da Companhia -->
+          <div class="mt-4 p-4 rounded-xl bg-gradient-to-r from-[#122416] via-[#1a3821] to-[#122416] border border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left shadow-lg">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-full bg-green-500/20 text-green-400 border border-green-500/40 flex items-center justify-center text-lg shrink-0">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white military-font uppercase">Conhece outros irmãos de farda desta Companhia?</h4>
+                <p class="text-[11px] text-slate-300">Ajude a divulgar o portal oficial nos grupos de WhatsApp da sua turma de caserna!</p>
+              </div>
+            </div>
+            <button type="button" onclick="trocarAbaPrincipal('compartilhar')"
+                    class="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black rounded-lg text-xs military-font uppercase flex items-center shadow-md cursor-pointer shrink-0">
+              <i class="fa-brands fa-whatsapp mr-1.5 text-sm"></i> Convidar Amigos Agora
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- SEÇÃO PÚBLICA: COMPARTILHAR COM OS AMIGOS DE CASERNA     -->
+    <!-- ======================================================== -->
+    <section id="aba-compartilhar" class="hidden space-y-6">
+      
+      <!-- HERO DO COMPARTILHAMENTO -->
+      <div class="tactical-card rounded-2xl p-6 sm:p-8 border-2 border-amber-500/70 relative overflow-hidden shadow-2xl bg-gradient-to-br from-[#122316] via-[#0c170f] to-[#122316]">
+        <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-green-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-amber-400 to-emerald-500"></div>
+
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 sm:gap-5 flex-1">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-600 to-emerald-800 border-2 border-emerald-400 text-white flex items-center justify-center text-3xl sm:text-4xl shadow-[0_0_25px_rgba(34,197,94,0.4)] shrink-0">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <div>
+              <div class="inline-flex items-center space-x-2 px-3 py-0.5 bg-amber-500/20 border border-amber-500/50 rounded-full text-[10px] sm:text-xs font-bold text-amber-300 military-font uppercase tracking-wider mb-1.5">
+                <i class="fa-solid fa-users text-amber-400"></i> Confraternização & Reencontro da Tropa
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-black gold-gradient hero-title-font uppercase tracking-wide">
+                Compartilhe com seus Amigos de Caserna!
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                Ajude a reunir nossos companheiros do <strong>5º BE CMB BLD • Batalhão Juarez Távora</strong>. Envie o link oficial para os veteranos da sua turma e grupos de WhatsApp com apenas <strong>1 clique</strong>!
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full md:w-auto shrink-0">
+            <button type="button" onclick="trocarAbaPrincipal('inscricao')"
+                    class="w-full sm:w-auto px-4 py-2.5 bg-[#0e1a11] hover:bg-[#162a1b] text-slate-300 hover:text-white border border-[#233f27] font-bold rounded-xl text-xs military-font uppercase flex items-center justify-center transition-all cursor-pointer">
+              <i class="fa-solid fa-arrow-left mr-1.5 text-amber-400"></i> Voltar ao Mural
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD PRINCIPAL: BOTÃO GIGANTE DE WHATSAPP (1 CLIQUE PARA IDOSOS) -->
+      <div class="tactical-card rounded-2xl p-6 sm:p-8 border-2 border-emerald-500/80 bg-gradient-to-b from-[#102414] to-[#09130b] shadow-2xl space-y-6">
+        
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+          <span class="px-3 py-1 bg-green-500/20 border border-green-500/40 text-green-300 text-xs font-bold military-font uppercase rounded-full inline-block">
+            MÉTODO MAIS FÁCIL E RÁPIDO
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-white military-font uppercase">
+            Envie Agora no WhatsApp para seus Amigos e Grupos
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Ao tocar no botão verde abaixo, o seu WhatsApp será aberto automaticamente com a mensagem e o link oficial prontos. Basta escolher o amigo ou grupo da sua Companhia e enviar!
+          </p>
+        </div>
+
+        <!-- BOTÃO GIGANTE 1 CLIQUE -->
+        <div class="max-w-xl mx-auto">
+          <button type="button" onclick="dispararCompartilhamentoWhatsAppVeterano()"
+                  class="w-full py-4 sm:py-5 px-6 sm:px-8 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-400 hover:to-green-500 text-slate-950 font-black rounded-2xl text-base sm:text-xl military-font uppercase tracking-wide flex items-center justify-center shadow-[0_0_35px_rgba(34,197,94,0.45)] transition-all transform active:scale-95 hover:scale-[1.02] cursor-pointer">
+            <i class="fa-brands fa-whatsapp text-3xl sm:text-4xl mr-3 sm:mr-4 shrink-0 animate-bounce"></i>
+            <span>ENVIAR NO WHATSAPP PARA MEUS AMIGOS</span>
+          </button>
+        </div>
+
+        <!-- AÇÕES SECUNDÁRIAS: COPIAR LINK E COMPARTILHAR NO APARELHO -->
+        <div class="max-w-2xl mx-auto pt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button type="button" onclick="copiarLinkOficialVeterano()"
+                  class="py-3 px-4 bg-[#142817] hover:bg-[#1f3f24] border border-amber-500/60 text-amber-300 hover:text-white font-bold rounded-xl text-xs sm:text-sm military-font uppercase flex items-center justify-center shadow transition-all cursor-pointer">
+            <i class="fa-solid fa-copy mr-2 text-amber-400 text-base"></i> Copiar Link Oficial
+          </button>
+          <button type="button" onclick="abrirMenuCompartilharCelularVeterano()"
+                  class="py-3 px-4 bg-[#142817] hover:bg-[#1f3f24] border border-emerald-500/60 text-emerald-300 hover:text-white font-bold rounded-xl text-xs sm:text-sm military-font uppercase flex items-center justify-center shadow transition-all cursor-pointer">
+            <i class="fa-solid fa-share-nodes mr-2 text-emerald-400 text-base"></i> Compartilhar pelo Celular
+          </button>
+        </div>
+
+        <!-- CAMPO EXIBINDO O LINK OFICIAL CLICÁVEL -->
+        <div class="max-w-2xl mx-auto bg-[#070e08] p-3.5 rounded-xl border border-[#234027] space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-400 military-font uppercase text-center sm:text-left">
+            Link oficial do portal para divulgar:
+          </label>
+          <div class="flex items-center space-x-2">
+            <input type="text" id="campoLinkPublicoVeterano" readonly
+                   value="https://evolucaomilitar.github.io/veteranos_5be/reencontro.html"
+                   class="w-full px-3 py-2 bg-[#050805] border border-[#234027] rounded-lg text-xs font-mono text-amber-300 select-all font-bold">
+            <button type="button" onclick="copiarLinkOficialVeterano()"
+                    class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs military-font uppercase shrink-0">
+              <i class="fa-solid fa-copy"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SELETOR DE MENSAGENS PRONTAS -->
+      <div class="tactical-card rounded-2xl p-6 sm:p-7 border border-[#26442b] bg-gradient-to-br from-[#0e1a11] to-[#08100a] shadow-xl space-y-4">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#1f3923]">
+          <div>
+            <h3 class="text-lg sm:text-xl font-bold military-font text-white uppercase flex items-center">
+              <i class="fa-solid fa-envelope-open-text text-amber-400 mr-2"></i>
+              Escolha o Tipo de Mensagem que Deseja Enviar
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Toque em uma das opções abaixo para trocar o modelo da mensagem:
+            </p>
+          </div>
+          <!-- Identificação se o usuário estiver cadastrado -->
+          <div id="badgeIdentificacaoRemetente" class="hidden sm:inline-flex items-center px-2.5 py-1 bg-emerald-950/80 border border-emerald-500/50 rounded-lg text-[11px] font-bold text-emerald-300 military-font">
+            <i class="fa-solid fa-user-check mr-1.5 text-amber-400"></i> <span id="txtRemetenteVeterano">Veterano</span>
+          </div>
+        </div>
+
+        <!-- BOTÕES SELETORES DE MODELO -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <button type="button" id="btnModeloMsgReencontro" onclick="selecionarModeloMsgVeterano('reencontro')"
+                  class="p-3 rounded-xl border-2 border-amber-500 bg-[#162e1a] text-left transition-all cursor-pointer">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black military-font text-amber-300 uppercase">1. Reencontro & Cia</span>
+              <span class="px-1.5 py-0.5 bg-amber-500 text-slate-950 text-[9px] font-black rounded uppercase">Recomendado</span>
+            </div>
+            <p class="text-[11px] text-slate-300 mt-1 leading-snug">
+              Convida para ver os soldados da Companhia e cadastrar.
+            </p>
+          </button>
+
+          <button type="button" id="btnModeloMsgAlmoco" onclick="selecionarModeloMsgVeterano('almoco')"
+                  class="p-3 rounded-xl border border-[#244128] bg-[#0c160e] text-left hover:border-amber-500/50 transition-all cursor-pointer">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black military-font text-slate-200 uppercase">2. Almoço 2026</span>
+              <span class="text-amber-400 text-xs"><i class="fa-solid fa-utensils"></i></span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1 leading-snug">
+              Convite para o Almoço de Confraternização com a família.
+            </p>
+          </button>
+
+          <button type="button" id="btnModeloMsgCurta" onclick="selecionarModeloMsgVeterano('curta')"
+                  class="p-3 rounded-xl border border-[#244128] bg-[#0c160e] text-left hover:border-amber-500/50 transition-all cursor-pointer">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black military-font text-slate-200 uppercase">3. Mensagem Curta</span>
+              <span class="text-emerald-400 text-xs"><i class="fa-solid fa-bolt"></i></span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1 leading-snug">
+              Rápida e direta com o link do Batalhão Juarez Távora.
+            </p>
+          </button>
+        </div>
+
+        <!-- PRÉ-VISUALIZAÇÃO DA MENSAGEM -->
+        <div class="space-y-1.5 pt-2">
+          <label class="block text-[11px] font-semibold text-slate-300 uppercase">
+            Texto pronto que será enviado no WhatsApp:
+          </label>
+          <textarea id="textoMensagemCompartilharVeterano" rows="6" readonly
+                    class="w-full p-3.5 bg-[#060c07] border border-[#234027] rounded-xl text-xs sm:text-sm text-slate-200 font-sans leading-relaxed custom-scroll select-all"></textarea>
+        </div>
+
+        <div class="flex flex-wrap gap-2 pt-1">
+          <button type="button" onclick="copiarTextoMensagemCompartilhar()"
+                  class="flex-1 py-2.5 px-4 bg-[#142817] hover:bg-[#1f3f24] text-slate-200 border border-[#2d5232] font-bold rounded-xl text-xs military-font uppercase flex items-center justify-center cursor-pointer">
+            <i class="fa-solid fa-copy mr-1.5 text-amber-400"></i> Copiar Este Texto
+          </button>
+          <button type="button" onclick="dispararCompartilhamentoWhatsAppVeterano()"
+                  class="flex-1 py-2.5 px-4 bg-green-600 hover:bg-green-500 text-slate-950 font-black rounded-xl text-xs military-font uppercase flex items-center justify-center cursor-pointer shadow">
+            <i class="fa-brands fa-whatsapp mr-1.5 text-base"></i> Enviar Este Texto no WhatsApp
+          </button>
+        </div>
+
+      </div>
+
+      <!-- CARTÃO COM QR CODE & PASSO A PASSO -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Bloco QR Code -->
+        <div class="tactical-card rounded-2xl p-6 border border-[#234027] bg-gradient-to-br from-[#0c170e] to-[#070e08] shadow-xl flex flex-col items-center text-center space-y-4">
+          <div class="inline-flex items-center space-x-1.5 px-3 py-0.5 bg-amber-500/10 border border-amber-500/40 rounded-full text-[10px] font-bold text-amber-300 military-font uppercase">
+            <i class="fa-solid fa-qrcode text-amber-400"></i> Para Ler com o Celular
+          </div>
+          <h4 class="text-base sm:text-lg font-bold text-white military-font uppercase">
+            Está com um Amigo ao seu Lado?
+          </h4>
+          <p class="text-xs text-slate-300 max-w-sm leading-relaxed">
+            Peça para o seu colega apontar a câmera do celular dele para o código abaixo. O portal dos veteranos abrirá instantaneamente no aparelho dele!
+          </p>
+
+          <!-- Imagem QR Code Dinâmica -->
+          <div class="p-3 bg-white rounded-2xl shadow-[0_0_20px_rgba(212,175,55,0.3)] border-4 border-amber-400">
+            <img id="imgQrCodePortalVeterano" 
+                 src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fevolucaomilitar.github.io%2Fveteranos_5be%2Freencontro.html" 
+                 alt="QR Code Portal Veteranos 5º BE" 
+                 class="w-44 h-44 object-contain">
+          </div>
+          <span class="text-[10px] font-mono text-amber-400/80 uppercase tracking-widest font-bold">
+            5º BE CMB BLD • Batalhão Juarez Távora
+          </span>
+        </div>
+
+        <!-- Bloco Instruções Passo a Passo para Idosos -->
+        <div class="tactical-card rounded-2xl p-6 border border-[#234027] bg-gradient-to-br from-[#0c170e] to-[#070e08] shadow-xl space-y-4">
+          <div class="inline-flex items-center space-x-1.5 px-3 py-0.5 bg-emerald-500/10 border border-emerald-500/40 rounded-full text-[10px] font-bold text-emerald-300 military-font uppercase">
+            <i class="fa-solid fa-circle-question text-emerald-400"></i> Passo a Passo Simples
+          </div>
+          <h4 class="text-base sm:text-lg font-bold text-white military-font uppercase">
+            Como Compartilhar em 3 Passos:
+          </h4>
+
+          <div class="space-y-3 pt-1">
+            <div class="flex items-start space-x-3 p-3 bg-[#070e08] rounded-xl border border-[#1b3420]">
+              <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center shrink-0 military-font text-sm">
+                1
+              </div>
+              <div class="text-left">
+                <h5 class="text-xs font-bold text-white military-font uppercase">Toque no Botão Verde</h5>
+                <p class="text-[11px] text-slate-300 leading-snug">
+                  Clique no botão verde <strong class="text-green-400">"ENVIAR NO WHATSAPP PARA MEUS AMIGOS"</strong> acima.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-3 p-3 bg-[#070e08] rounded-xl border border-[#1b3420]">
+              <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center shrink-0 military-font text-sm">
+                2
+              </div>
+              <div class="text-left">
+                <h5 class="text-xs font-bold text-white military-font uppercase">Escolha a Conversa ou Grupo</h5>
+                <p class="text-[11px] text-slate-300 leading-snug">
+                  O WhatsApp vai abrir. Selecione a conversa do seu amigo de farda ou o grupo da sua turma de quartel.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-3 p-3 bg-[#070e08] rounded-xl border border-[#1b3420]">
+              <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center shrink-0 military-font text-sm">
+                3
+              </div>
+              <div class="text-left">
+                <h5 class="text-xs font-bold text-white military-font uppercase">Toque na Setinha de Enviar</h5>
+                <p class="text-[11px] text-slate-300 leading-snug">
+                  O texto já vai aparecer todo digitado com o link clicável. Basta tocar na setinha verde de enviar!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 bg-amber-950/40 border border-amber-600/40 rounded-xl text-center">
+            <span class="text-[11px] text-amber-300 font-semibold block">
+              🇧🇷 Brasil Acima de Tudo! Aço e Fogo!
+            </span>
+          </div>
         </div>
 
       </div>
@@ -3540,17 +3826,17 @@
       }
     }
 
-    // Troca de Abas Principais (Com controle de acesso restrito ao Admin)
+    // Troca de Abas Principais (Com controle de acesso restrito ao Admin, exceto 'inscricao' e 'compartilhar')
     function trocarAbaPrincipal(abaId) {
       const isAdmin = verificarAdminLogado();
 
-      // Se não for admin, bloqueia acesso a qualquer aba restrita
-      if (!isAdmin && abaId !== 'inscricao') {
+      // Se não for admin, bloqueia acesso apenas às abas restritas administrativas
+      if (!isAdmin && abaId !== 'inscricao' && abaId !== 'compartilhar') {
         abrirModalAdmin();
         return;
       }
 
-      const abas = ['inscricao', 'integrantes', 'mensagens', 'link', 'exportar'];
+      const abas = ['inscricao', 'compartilhar', 'integrantes', 'mensagens', 'link', 'exportar'];
       abas.forEach(a => {
         const el = document.getElementById(`aba-${a}`);
         const btnAdmin = document.getElementById(`nav-btn-${a}`);
@@ -3570,7 +3856,28 @@
         }
       });
 
-      if (abaId === 'mensagens') {
+      // Atualiza botões públicos de navegação
+      const btnPubInscricao = document.getElementById('nav-pub-btn-inscricao');
+      const btnPubCompartilhar = document.getElementById('nav-pub-btn-compartilhar');
+      if (btnPubInscricao) {
+        if (abaId === 'inscricao') {
+          btnPubInscricao.className = "px-3 sm:px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-emerald-700 text-white shadow flex items-center cursor-pointer";
+        } else {
+          btnPubInscricao.className = "px-3 sm:px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-[#0e1a11] hover:bg-[#162c1b] text-slate-300 hover:text-white border border-[#233f27] flex items-center cursor-pointer";
+        }
+      }
+      if (btnPubCompartilhar) {
+        if (abaId === 'compartilhar') {
+          btnPubCompartilhar.className = "px-3 sm:px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-emerald-700 text-white shadow flex items-center cursor-pointer";
+        } else {
+          btnPubCompartilhar.className = "px-3 sm:px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-[#122616] hover:bg-[#1a3820] text-emerald-300 hover:text-white border border-emerald-500/50 shadow flex items-center cursor-pointer";
+        }
+      }
+
+      if (abaId === 'compartilhar') {
+        atualizarAbaCompartilharVeterano();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (abaId === 'mensagens') {
         atualizarFilaDisparo();
       } else if (abaId === 'exportar') {
         atualizarInfoExportacao();
@@ -3583,6 +3890,179 @@
       // Sincronização automática com a nuvem ao abrir qualquer aba do administrador
       if (isAdmin && window.CloudSync && typeof window.CloudSync.sincronizarTudo === 'function') {
         window.CloudSync.sincronizarTudo({ silencioso: true });
+      }
+    }
+
+    // ========================================================
+    // ABA PÚBLICA DE COMPARTILHAMENTO ENTRE VETERANOS
+    // ========================================================
+    let _modeloMsgVeteranoAtivo = 'reencontro';
+
+    function atualizarAbaCompartilharVeterano() {
+      const urlBase = obterUrlBaseApp();
+      const urlReencontro = urlBase + 'reencontro.html';
+
+      const campoLink = document.getElementById('campoLinkPublicoVeterano');
+      if (campoLink) {
+        campoLink.value = urlReencontro;
+      }
+
+      // QR Code
+      const imgQr = document.getElementById('imgQrCodePortalVeterano');
+      if (imgQr) {
+        imgQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(urlReencontro)}`;
+      }
+
+      // Identificação se o veterano já estiver cadastrado no aparelho
+      const nomeSalvo = localStorage.getItem('veterano_inscrito_nome') || '';
+      const ciaSalva = localStorage.getItem('veterano_inscrito_cia') || '';
+      const guerraSalvo = localStorage.getItem('veterano_inscrito_guerra') || '';
+
+      const badgeRemetente = document.getElementById('badgeIdentificacaoRemetente');
+      const txtRemetente = document.getElementById('txtRemetenteVeterano');
+      if (badgeRemetente && txtRemetente) {
+        if (nomeSalvo) {
+          badgeRemetente.classList.remove('hidden');
+          txtRemetente.innerText = `${guerraSalvo || nomeSalvo} (${ciaSalva ? ciaSalva.split(' ')[0] : '5º BE'})`;
+        } else {
+          badgeRemetente.classList.add('hidden');
+        }
+      }
+
+      selecionarModeloMsgVeterano(_modeloMsgVeteranoAtivo);
+    }
+
+    function selecionarModeloMsgVeterano(modelo) {
+      _modeloMsgVeteranoAtivo = modelo;
+      const urlBase = obterUrlBaseApp();
+      const urlReencontro = urlBase + 'reencontro.html';
+      const urlInicio = urlBase + 'index.html';
+
+      const nomeSalvo = localStorage.getItem('veterano_inscrito_nome') || '';
+      const ciaSalva = localStorage.getItem('veterano_inscrito_cia') || '';
+      const anoSalvo = localStorage.getItem('veterano_inscrito_ano') || '';
+      const guerraSalvo = localStorage.getItem('veterano_inscrito_guerra') || '';
+
+      let assinatura = '';
+      if (nomeSalvo) {
+        const ciaTxt = ciaSalva ? ` • ${ciaSalva}` : '';
+        const anoTxt = anoSalvo ? ` (Turma de ${anoSalvo})` : '';
+        assinatura = `\n\n_Convite enviado pelo seu irmão de farda: ${guerraSalvo || nomeSalvo}${ciaTxt}${anoTxt}_`;
+      }
+
+      let texto = '';
+
+      if (modelo === 'reencontro') {
+        texto = `*🇧🇷 ATENÇÃO VETERANOS DO 5º BE CMB BLD!*
+_Batalhão Juarez Távora - Porto União / SC_
+
+Prezado Irmão de Farda! Acesse o portal oficial abaixo para *VER A LISTA COM OS SOLDADOS DA NOSSA COMPANHIA* e atualizar seu cadastro:
+
+👉 *Acesse o Portal do Reencontro:*
+${urlReencontro}
+
+No portal você escolhe sua Companhia (1ª Cia, 2ª Cia, CEP, CCAp, NPOR ou Estado-Maior) e reencontra seus companheiros de farda e turma de caserna!${assinatura}
+
+Compartilhe no grupo da nossa turma! Brasil Acima de Tudo! 🇧🇷`;
+      } else if (modelo === 'almoco') {
+        texto = `*🍽️ GRANDE REENCONTRO & ALMOÇO DE CONFRATERNIZAÇÃO DOS VETERANOS - 5º BE CMB BLD!*
+_Batalhão Juarez Távora - Porto União / SC_
+
+Prezado Amigo e Companheiro de Farda! Garanta sua presença e da sua família no nosso tradicional Almoço de Confraternização dos Veteranos!
+
+👉 *Confira os participantes e garanta seu almoço aqui:*
+${urlInicio}
+
+Venha reviver as boas lembranças de caserna e rever nossos irmãos de farda!${assinatura}
+
+Aço e Fogo! Brasil Acima de Tudo! 🇧🇷`;
+      } else {
+        // Modelo curta
+        texto = `*🇧🇷 Portal Oficial dos Veteranos do 5º BE Cmb Bld*
+_Batalhão Juarez Távora - Porto União/SC_
+
+Irmão de farda, confira seu nome no efetivo e venha reencontrar nossa turma de caserna:
+
+👉 *Acesse:* ${urlReencontro}${assinatura}
+
+Brasil Acima de Tudo! 🇧🇷`;
+      }
+
+      const txtArea = document.getElementById('textoMensagemCompartilharVeterano');
+      if (txtArea) {
+        txtArea.value = texto;
+      }
+
+      // Estilização dos botões seletores
+      const btnReencontro = document.getElementById('btnModeloMsgReencontro');
+      const btnAlmoco = document.getElementById('btnModeloMsgAlmoco');
+      const btnCurta = document.getElementById('btnModeloMsgCurta');
+
+      const estiloAtivo = "p-3 rounded-xl border-2 border-amber-500 bg-[#162e1a] text-left transition-all cursor-pointer shadow-md";
+      const estiloInativo = "p-3 rounded-xl border border-[#244128] bg-[#0c160e] text-left hover:border-amber-500/50 transition-all cursor-pointer";
+
+      if (btnReencontro) btnReencontro.className = (modelo === 'reencontro' ? estiloAtivo : estiloInativo);
+      if (btnAlmoco) btnAlmoco.className = (modelo === 'almoco' ? estiloAtivo : estiloInativo);
+      if (btnCurta) btnCurta.className = (modelo === 'curta' ? estiloAtivo : estiloInativo);
+    }
+
+    function dispararCompartilhamentoWhatsAppVeterano() {
+      const txtArea = document.getElementById('textoMensagemCompartilharVeterano');
+      const texto = txtArea ? txtArea.value : '';
+      if (!texto) return;
+      const linkWhats = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
+      window.open(linkWhats, '_blank');
+    }
+
+    function copiarTextoMensagemCompartilhar() {
+      const txtArea = document.getElementById('textoMensagemCompartilharVeterano');
+      if (!txtArea) return;
+      txtArea.select();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txtArea.value).then(() => {
+          mostrarNotificaçãoTatica("✅ Mensagem copiada! Agora abra o WhatsApp e cole no grupo dos amigos.");
+        }).catch(() => {
+          document.execCommand('copy');
+          mostrarNotificaçãoTatica("✅ Mensagem copiada!");
+        });
+      } else {
+        document.execCommand('copy');
+        mostrarNotificaçãoTatica("✅ Mensagem copiada!");
+      }
+    }
+
+    function copiarLinkOficialVeterano() {
+      const campo = document.getElementById('campoLinkPublicoVeterano');
+      if (!campo) return;
+      campo.select();
+      const link = campo.value;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(() => {
+          mostrarNotificaçãoTatica("✅ Link copiado para a área de transferência! Cole onde quiser.");
+        }).catch(() => {
+          document.execCommand('copy');
+          mostrarNotificaçãoTatica("✅ Link copiado!");
+        });
+      } else {
+        document.execCommand('copy');
+        mostrarNotificaçãoTatica("✅ Link copiado!");
+      }
+    }
+
+    function abrirMenuCompartilharCelularVeterano() {
+      const urlBase = obterUrlBaseApp();
+      const urlReencontro = urlBase + 'reencontro.html';
+      const txtArea = document.getElementById('textoMensagemCompartilharVeterano');
+      const texto = txtArea ? txtArea.value : '';
+
+      if (navigator.share) {
+        navigator.share({
+          title: 'Portal dos Veteranos 5º BE CMB BLD',
+          text: texto,
+          url: urlReencontro
+        }).catch(() => {});
+      } else {
+        copiarLinkOficialVeterano();
       }
     }
 
