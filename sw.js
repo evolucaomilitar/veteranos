@@ -1,5 +1,5 @@
 // Service Worker - Veteranos 5º BE Cmb Bld (PWA Offline & Instant Load)
-const CACHE_NAME = 'veteranos-5be-v10';
+const CACHE_NAME = 'veteranos-5be-v11';
 
 const STATIC_ASSETS = [
   './',

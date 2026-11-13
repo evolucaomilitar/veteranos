@@ -199,12 +199,12 @@
                 class="px-3 sm:px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-[#122616] hover:bg-[#1a3820] text-emerald-300 hover:text-white border border-emerald-500/50 shadow flex items-center cursor-pointer">
           <i class="fa-brands fa-whatsapp text-green-400 mr-1.5 text-sm sm:text-base"></i> Compartilhar com Amigos
         </button>
-        <button id="nav-btn-participantes-almoco" onclick="abrirModalParticipantesAlmoco()"
-                class="hidden px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-[#172c1c] hover:bg-[#203c27] text-amber-300 hover:text-white border border-amber-500/40 shadow flex items-center cursor-pointer">
+        <button id="nav-btn-participantes-almoco" onclick="abrirModalParticipantesAlmoco()" style="display: none !important;"
+                class="hidden px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold military-font uppercase transition-all bg-[#172c1c] hover:bg-[#203c27] text-amber-300 hover:text-white border border-amber-500/40 shadow items-center cursor-pointer">
           <i class="fa-solid fa-users mr-1.5 text-amber-400"></i> Participantes Almoço
         </button>
-        <button id="nav-btn-adesao-almoco" onclick="abrirModalInscricaoAlmoco()"
-                class="hidden px-3.5 py-2 rounded-lg text-xs sm:text-sm font-black military-font uppercase transition-all bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg flex items-center cursor-pointer">
+        <button id="nav-btn-adesao-almoco" onclick="abrirModalInscricaoAlmoco()" style="display: none !important;"
+                class="hidden px-3.5 py-2 rounded-lg text-xs sm:text-sm font-black military-font uppercase transition-all bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg items-center cursor-pointer">
           <i class="fa-solid fa-utensils mr-1.5"></i> Almoço (Adesão)
         </button>
       </nav>
@@ -277,7 +277,7 @@
               </div>
 
               <!-- Bloco Exibido quando o Almoço ESTÁ LIBERADO pelo Admin -->
-              <div id="heroBlocoAlmoco" class="hidden">
+              <div id="heroBlocoAlmoco" class="hidden" style="display: none !important;">
                 <div class="inline-flex items-center space-x-2 px-2.5 py-0.5 bg-amber-950/70 border border-amber-500/40 rounded-full text-[10px] font-bold text-amber-300 military-font tracking-widest uppercase mb-1">
                   <i class="fa-solid fa-utensils text-amber-400"></i> Grande Reencontro • Batalhão Juarez Távora
                 </div>
@@ -292,7 +292,7 @@
           </div>
 
           <!-- Lado Direito: Ações Rápidas do Almoço (Exibidos apenas quando Liberado pelo Admin) -->
-          <div id="heroAcoesAlmoco" class="hidden flex flex-wrap sm:flex-nowrap items-center gap-2.5 flex-shrink-0 w-full lg:w-auto justify-center">
+          <div id="heroAcoesAlmoco" class="hidden flex-wrap sm:flex-nowrap items-center gap-2.5 flex-shrink-0 w-full lg:w-auto justify-center" style="display: none !important;">
             <button type="button" onclick="abrirModalParticipantesAlmoco()" 
                     class="flex-1 sm:flex-none px-4 py-2.5 bg-[#172c1c] hover:bg-[#22402a] text-amber-300 hover:text-white border border-amber-500/50 font-bold rounded-xl text-xs military-font uppercase flex items-center justify-center shadow transition-all transform active:scale-95">
               <i class="fa-solid fa-users mr-1.5 text-amber-400"></i> Ver Participantes
@@ -595,8 +595,8 @@
                     class="w-full sm:flex-1 py-2 px-3 rounded-lg text-xs font-bold military-font uppercase flex items-center justify-center transition-all bg-emerald-600 text-slate-950 shadow font-black">
               <i class="fa-solid fa-users mr-1.5"></i> 1. Efetivo Cadastrado da Companhia
             </button>
-            <button id="btnModoParticipantesAlmoco" type="button" onclick="alternarModoVisualizacaoMural('almoco')"
-                    class="hidden w-full sm:flex-1 py-2 px-3 rounded-lg text-xs font-bold military-font uppercase flex items-center justify-center transition-all bg-[#122115] text-amber-300 hover:bg-[#1a3320] border border-amber-500/40">
+            <button id="btnModoParticipantesAlmoco" type="button" onclick="alternarModoVisualizacaoMural('almoco')" style="display: none !important;"
+                    class="hidden w-full sm:flex-1 py-2 px-3 rounded-lg text-xs font-bold military-font uppercase items-center justify-center transition-all bg-[#122115] text-amber-300 hover:bg-[#1a3320] border border-amber-500/40">
               <i class="fa-solid fa-utensils mr-1.5 text-amber-400"></i> 2. Participantes do Almoço nesta Cia (<span id="badgeContagemAlmocoCia">0</span>)
             </button>
           </div>
@@ -835,8 +835,8 @@
             </p>
           </button>
 
-          <button type="button" id="btnModeloMsgAlmoco" onclick="selecionarModeloMsgVeterano('almoco')"
-                  class="p-3 rounded-xl border border-[#244128] bg-[#0c160e] text-left hover:border-amber-500/50 transition-all cursor-pointer">
+          <button type="button" id="btnModeloMsgAlmoco" onclick="selecionarModeloMsgVeterano('almoco')" style="display: none !important;"
+                  class="hidden p-3 rounded-xl border border-[#244128] bg-[#0c160e] text-left hover:border-amber-500/50 transition-all cursor-pointer">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black military-font text-slate-200 uppercase">2. Almoço 2026</span>
               <span class="text-amber-400 text-xs"><i class="fa-solid fa-utensils"></i></span>
@@ -3297,16 +3297,29 @@
     // CONTROLE MESTRE: LIBERAÇÃO DO MÓDULO DO ALMOÇO NA HOME
     // ========================================================
     function verificarModuloAlmocoLiberado() {
-      return localStorage.getItem('liberar_modulo_almoco_publico') === 'true';
+      try {
+        const val = localStorage.getItem('liberar_modulo_almoco_publico');
+        return val === 'true';
+      } catch (e) {
+        return false;
+      }
     }
 
     function toggleLiberacaoModuloAlmocoAdmin() {
       const atual = verificarModuloAlmocoLiberado();
       const novo = !atual;
-      localStorage.setItem('liberar_modulo_almoco_publico', novo.toString());
+      try {
+        localStorage.setItem('liberar_modulo_almoco_publico', novo.toString());
+      } catch (e) {}
       atualizarChaveModuloAlmocoAdmin();
       atualizarVisibilidadeModuloAlmoco();
       renderizarMuralPublico();
+
+      // Transmite a nova configuração para a nuvem para que TODOS os aparelhos sincronizem na hora!
+      if (window.CloudSync && typeof window.CloudSync.enviarConfigModuloAlmoco === 'function') {
+        window.CloudSync.enviarConfigModuloAlmoco(novo).catch(() => {});
+      }
+
       mostrarNotificaçãoTatica(novo 
         ? "🍽️ Módulo do Almoço LIBERADO na Página Principal!" 
         : "🔒 Módulo do Almoço OCULTO da Página Principal!");
@@ -3333,50 +3346,94 @@
     function atualizarVisibilidadeModuloAlmoco() {
       const liberado = verificarModuloAlmocoLiberado();
 
-      // Botões da barra de navegação pública
+      // 1. Botões da barra de navegação pública
       const btnNavParticipantes = document.getElementById('nav-btn-participantes-almoco');
       const btnNavAdesao = document.getElementById('nav-btn-adesao-almoco');
       if (btnNavParticipantes) {
-        if (liberado) btnNavParticipantes.classList.remove('hidden');
-        else btnNavParticipantes.classList.add('hidden');
+        if (liberado) {
+          btnNavParticipantes.style.setProperty('display', 'inline-flex', 'important');
+          btnNavParticipantes.classList.remove('hidden');
+          btnNavParticipantes.classList.add('flex');
+        } else {
+          btnNavParticipantes.style.setProperty('display', 'none', 'important');
+          btnNavParticipantes.classList.add('hidden');
+          btnNavParticipantes.classList.remove('flex');
+        }
       }
       if (btnNavAdesao) {
-        if (liberado) btnNavAdesao.classList.remove('hidden');
-        else btnNavAdesao.classList.add('hidden');
+        if (liberado) {
+          btnNavAdesao.style.setProperty('display', 'inline-flex', 'important');
+          btnNavAdesao.classList.remove('hidden');
+          btnNavAdesao.classList.add('flex');
+        } else {
+          btnNavAdesao.style.setProperty('display', 'none', 'important');
+          btnNavAdesao.classList.add('hidden');
+          btnNavAdesao.classList.remove('flex');
+        }
       }
 
-      // Bloco Hero: Institucional (padrão) vs Almoço (quando liberado)
+      // 2. Bloco Hero: Institucional (padrão) vs Almoço (quando liberado)
       const blocoInstitucional = document.getElementById('heroBlocoInstitucional');
       const blocoAlmoco = document.getElementById('heroBlocoAlmoco');
       const acoesAlmoco = document.getElementById('heroAcoesAlmoco');
       if (blocoInstitucional && blocoAlmoco) {
         if (liberado) {
+          blocoInstitucional.style.setProperty('display', 'none', 'important');
           blocoInstitucional.classList.add('hidden');
+          blocoAlmoco.style.setProperty('display', 'block', 'important');
           blocoAlmoco.classList.remove('hidden');
         } else {
+          blocoInstitucional.style.setProperty('display', 'block', 'important');
           blocoInstitucional.classList.remove('hidden');
+          blocoAlmoco.style.setProperty('display', 'none', 'important');
           blocoAlmoco.classList.add('hidden');
         }
       }
       if (acoesAlmoco) {
-        if (liberado) acoesAlmoco.classList.remove('hidden');
-        else acoesAlmoco.classList.add('hidden');
+        if (liberado) {
+          acoesAlmoco.style.setProperty('display', 'flex', 'important');
+          acoesAlmoco.classList.remove('hidden');
+          acoesAlmoco.classList.add('flex');
+        } else {
+          acoesAlmoco.style.setProperty('display', 'none', 'important');
+          acoesAlmoco.classList.add('hidden');
+          acoesAlmoco.classList.remove('flex');
+        }
       }
 
-      // Seletor de Modo no Mural da Companhia: Participantes do Almoço
+      // 3. Seletor de Modo no Mural da Companhia: Participantes do Almoço
       const btnModoAlmoco = document.getElementById('btnModoParticipantesAlmoco');
       if (btnModoAlmoco) {
         if (liberado) {
+          btnModoAlmoco.style.setProperty('display', 'flex', 'important');
           btnModoAlmoco.classList.remove('hidden');
+          btnModoAlmoco.classList.add('flex');
         } else {
+          btnModoAlmoco.style.setProperty('display', 'none', 'important');
           btnModoAlmoco.classList.add('hidden');
+          btnModoAlmoco.classList.remove('flex');
           if (typeof modoVisualizacaoMural !== 'undefined' && modoVisualizacaoMural === 'almoco') {
             alternarModoVisualizacaoMural('efetivo');
           }
         }
       }
 
-      // Descrição de cabeçalho do Mural da Companhia
+      // 4. Seletor de Modelo de Almoço na Aba Compartilhar
+      const btnModeloAlmocoComp = document.getElementById('btnModeloMsgAlmoco');
+      if (btnModeloAlmocoComp) {
+        if (liberado) {
+          btnModeloAlmocoComp.style.setProperty('display', 'block', 'important');
+          btnModeloAlmocoComp.classList.remove('hidden');
+        } else {
+          btnModeloAlmocoComp.style.setProperty('display', 'none', 'important');
+          btnModeloAlmocoComp.classList.add('hidden');
+          if (typeof _modeloMsgVeteranoAtivo !== 'undefined' && _modeloMsgVeteranoAtivo === 'almoco') {
+            selecionarModeloMsgVeterano('reencontro');
+          }
+        }
+      }
+
+      // 5. Descrição de cabeçalho do Mural da Companhia
       const descMural = document.getElementById('descMuralCompanhia');
       if (descMural) {
         if (liberado) {
@@ -6250,6 +6307,10 @@ Compartilhe com os veteranos da sua turma! Brasil Acima de Tudo! 🇧🇷`;
     }
 
     function abrirModalInscricaoAlmoco() {
+      if (!verificarModuloAlmocoLiberado() && !verificarAdminLogado()) {
+        mostrarNotificaçãoTatica("🔒 O Módulo do Almoço ainda não foi liberado pela administração.");
+        return;
+      }
       if (!verificarVeteranoLiberado() && !verificarAdminLogado()) {
         mostrarNotificaçãoTatica("🔒 Por favor, faça sua identificação no formulário da página primeiro!");
         rolarParaFormularioCadastroPub();
@@ -6554,6 +6615,10 @@ Compartilhe com os veteranos da sua turma! Brasil Acima de Tudo! 🇧🇷`;
     let filtroCiaModalAtiva = 'TODAS';
 
     function abrirModalParticipantesAlmoco() {
+      if (!verificarModuloAlmocoLiberado() && !verificarAdminLogado()) {
+        mostrarNotificaçãoTatica("🔒 A lista de participantes do almoço ainda não foi liberada pela administração.");
+        return;
+      }
       if (!verificarVeteranoLiberado() && !verificarAdminLogado()) {
         mostrarNotificaçãoTatica("🔒 Por favor, conclua seu cadastro no formulário da página para liberar a lista de participantes!");
         rolarParaFormularioCadastroPub();

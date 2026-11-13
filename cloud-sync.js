@@ -60,6 +60,8 @@
     try { if (typeof window.renderizarSoldadosCia === 'function') window.renderizarSoldadosCia(); } catch (e) {}
     try { if (typeof window.renderizarTabelaAlmocoAdmin === 'function') window.renderizarTabelaAlmocoAdmin(); } catch (e) {}
     try { if (typeof window.renderizarGridParticipantesModal === 'function') window.renderizarGridParticipantesModal(); } catch (e) {}
+    try { if (typeof window.atualizarVisibilidadeModuloAlmoco === 'function') window.atualizarVisibilidadeModuloAlmoco(); } catch (e) {}
+    try { if (typeof window.atualizarChaveModuloAlmocoAdmin === 'function') window.atualizarChaveModuloAlmocoAdmin(); } catch (e) {}
   }
 
   // Objeto Global CloudSync
@@ -412,6 +414,51 @@
       }
     },
 
+    /**
+     * Transmissão da Liberação/Bloqueio do Módulo do Almoço na Nuvem
+     */
+    enviarConfigModuloAlmoco: async function (liberado) {
+      const topic = this.getTopic();
+      const payload = {
+        tipo: 'CONFIG_MODULO_ALMOCO',
+        liberado: Boolean(liberado),
+        timestamp: Date.now()
+      };
+      const tituloLimpo = toAsciiHeader(`Modulo Almoco: ${liberado ? 'LIBERADO' : 'OCULTO'}`);
+      const idUnico = 'cfg_almoco_' + Date.now();
+
+      this._enfileirarPendente({
+        idUnico: idUnico,
+        titulo: tituloLimpo,
+        tags: liberado ? 'unlock,utensils' : 'lock',
+        prioridade: 'high',
+        payload: payload
+      });
+
+      try {
+        const res = await fetch(`https://ntfy.sh/${topic}`, {
+          method: 'POST',
+          headers: {
+            'Title': tituloLimpo,
+            'Priority': 'high',
+            'Tags': liberado ? 'unlock,utensils' : 'lock',
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          this._removerFilaPendente(idUnico);
+          console.log('[CloudSync] Configuração do almoço transmitida com sucesso:', liberado);
+          return { sucesso: true };
+        } else {
+          return { sucesso: false, erro: 'Status ' + res.status };
+        }
+      } catch (err) {
+        console.warn('[CloudSync] Falha ao enviar config almoço (salvo na fila):', err.message);
+        return { sucesso: false, erro: err.message, pendenteNaFila: true };
+      }
+    },
+
     // ==========================================
     // HISTÓRICO & RECEBIMENTO DE DADOS
     // ==========================================
@@ -698,6 +745,13 @@
         }
       } else if (r.tipo === 'exclusao') {
         notificarTelasDeAtualizacao();
+      } else if (r.tipo === 'config_almoco') {
+        notificarTelasDeAtualizacao();
+        if (typeof window.mostrarNotificaçãoTatica === 'function') {
+          window.mostrarNotificaçãoTatica(payload.liberado
+            ? "🍽️ Módulo do Almoço LIBERADO na Página Principal!"
+            : "🔒 Módulo do Almoço OCULTO da Página Principal!");
+        }
       }
     },
 
@@ -798,6 +852,15 @@
         const listaFiltrada = locais.filter(l => String(l.id) !== String(payload.id));
         try { localStorage.setItem(STORAGE_KEYS.ALMOCO, JSON.stringify(listaFiltrada)); } catch (e) {}
         return { tipo: 'exclusao', alterado: true };
+      }
+
+      // 5. Configuração Remota do Módulo do Almoço (Liberado / Oculto na Home)
+      if (payload.tipo === 'CONFIG_MODULO_ALMOCO') {
+        const liberado = Boolean(payload.liberado);
+        try {
+          localStorage.setItem('liberar_modulo_almoco_publico', liberado ? 'true' : 'false');
+        } catch (e) {}
+        return { tipo: 'config_almoco', alterado: true };
       }
 
       return { isNovo: false, alterado: false };
