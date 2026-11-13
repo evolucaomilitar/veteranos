@@ -3,10 +3,12 @@
  * MOTOR DE SINCRONIZAÇÃO EM NUVEM AUTOMÁTICA EM TEMPO REAL
  * 
  * Baseado na mesma arquitetura do Simulador Biriba:
- * - Tecnologia: ntfy.sh (Pub/Sub mundial via SSE EventSource + HTTP)
- * - 100% Compatível com GitHub Pages e celulares/computadores
- * - Sem dependência de Vercel ou servidores backend proprietários
- * - Notificações sonoras militares harmônicas nativas (Web Audio API)
+ * - Tecnologia: ntfy.sh (Pub/Sub mundial via SSE EventSource + HTTP POST)
+ * - 100% Compatível com GitHub Pages, Celulares (Android/iOS) e Computadores
+ * - Headers estritamente em ASCII (Zero crash ByteString em navegadores mobile)
+ * - Histórico seguro (since=24h com fallback instantâneo para poll=1)
+ * - Fila de reenvio offline persistente (nunca perde cadastro mesmo sem sinal temporário)
+ * - Sinal sonoro militar com Web Audio API nativa
  */
 
 (function (window) {
@@ -20,14 +22,45 @@
     NOVOS_VETERANOS: 'novos_veteranos_5be',
     ALMOCO: 'almoco_veteranos_5be',
     EXCLUIDOS: 'excluidos_veteranos_5be',
-    ULTIMO_SYNC: 'veteranos_5be_ultimo_sync'
+    ULTIMO_SYNC: 'veteranos_5be_ultimo_sync',
+    FILA_PENDENTES: 'veteranos_5be_nuvem_pendentes'
   };
 
   let cloudEventSource = null;
   let cloudHeartbeatInterval = null;
   let _sincronizando = false;
+  let _processandoFila = false;
   let _ultimoStatus = 'conectando'; // 'conectado' | 'conectando' | 'offline'
   let _ultimaMensagem = 'Iniciando nuvem em tempo real...';
+
+  /**
+   * Sanitiza cabeçalhos HTTP para 7-bit ASCII puro.
+   * No padrão WHATWG Fetch (utilizado no Chrome Mobile e Safari iOS), qualquer
+   * caractere > 255 (como emojis 🎖️ 🍽️ ou acentuação rica) dispara TypeError:
+   * "Cannot convert argument to a ByteString".
+   */
+  function toAsciiHeader(str) {
+    if (!str) return 'Notificacao 5 BE';
+    return String(str)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // remove acentos
+      .replace(/[^\x20-\x7E]/g, '')   // apenas ASCII imprimível
+      .trim()
+      .substring(0, 90) || 'Notificacao 5 BE';
+  }
+
+  /**
+   * Dispara atualização visual em qualquer tela do sistema que estiver aberta
+   */
+  function notificarTelasDeAtualizacao() {
+    try { if (typeof window.recarregarEfetivoComNovos === 'function') window.recarregarEfetivoComNovos(); } catch (e) {}
+    try { if (typeof window.carregarEfetivoGeral === 'function') window.carregarEfetivoGeral(); } catch (e) {}
+    try { if (typeof window.renderizarMuralPublico === 'function') window.renderizarMuralPublico(); } catch (e) {}
+    try { if (typeof window.renderizarMural === 'function') window.renderizarMural(); } catch (e) {}
+    try { if (typeof window.renderizarSoldadosCia === 'function') window.renderizarSoldadosCia(); } catch (e) {}
+    try { if (typeof window.renderizarTabelaAlmocoAdmin === 'function') window.renderizarTabelaAlmocoAdmin(); } catch (e) {}
+    try { if (typeof window.renderizarGridParticipantesModal === 'function') window.renderizarGridParticipantesModal(); } catch (e) {}
+  }
 
   // Objeto Global CloudSync
   const CloudSync = {
@@ -37,19 +70,25 @@
      * Obtém o tópico atual da nuvem
      */
     getTopic: function () {
-      const salvo = localStorage.getItem(STORAGE_KEYS.TOPIC);
-      return (salvo && salvo.trim()) ? salvo.trim() : DEFAULT_SYNC_TOPIC;
+      try {
+        const salvo = localStorage.getItem(STORAGE_KEYS.TOPIC);
+        return (salvo && salvo.trim()) ? salvo.trim() : DEFAULT_SYNC_TOPIC;
+      } catch (e) {
+        return DEFAULT_SYNC_TOPIC;
+      }
     },
 
     /**
      * Altera o tópico da nuvem
      */
     setTopic: function (novoTopico) {
-      if (!novoTopico || !novoTopico.trim()) {
-        localStorage.removeItem(STORAGE_KEYS.TOPIC);
-      } else {
-        localStorage.setItem(STORAGE_KEYS.TOPIC, novoTopico.trim());
-      }
+      try {
+        if (!novoTopico || !novoTopico.trim()) {
+          localStorage.removeItem(STORAGE_KEYS.TOPIC);
+        } else {
+          localStorage.setItem(STORAGE_KEYS.TOPIC, novoTopico.trim());
+        }
+      } catch (e) {}
       this.conectar();
       return this.getTopic();
     },
@@ -58,14 +97,16 @@
      * Reseta para o tópico oficial padrão
      */
     resetarTopicoPadrao: function () {
-      localStorage.removeItem(STORAGE_KEYS.TOPIC);
+      try {
+        localStorage.removeItem(STORAGE_KEYS.TOPIC);
+      } catch (e) {}
       this.conectar();
       return DEFAULT_SYNC_TOPIC;
     },
 
     /**
      * Sinal Sonoro Harmonioso Militar com Web Audio API
-     * (Nativo, sem arquivos de áudio externos, funciona em qualquer celular e PC)
+     * (Nativo, sem arquivos de áudio externos, compatível com celular e PC)
      */
     tocarSino: function () {
       try {
@@ -101,9 +142,91 @@
         osc2.start(now + 0.12);
         osc2.stop(now + 0.65);
       } catch (e) {
-        console.warn("[CloudSync] Áudio bloqueado pelo navegador até interação do usuário:", e);
+        // Áudio bloqueado até interação do usuário no navegador mobile
       }
     },
+
+    // ==========================================
+    // FILA DE REENVIO OFFLINE (RESILIENTE)
+    // ==========================================
+
+    _obterFilaPendentes: function () {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.FILA_PENDENTES);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    },
+
+    _salvarFilaPendentes: function (fila) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.FILA_PENDENTES, JSON.stringify(fila || []));
+      } catch (e) {}
+    },
+
+    _enfileirarPendente: function (item) {
+      if (!item || !item.payload) return;
+      const fila = this._obterFilaPendentes();
+      const existe = fila.find(p => p.idUnico === item.idUnico);
+      if (!existe) {
+        fila.push({
+          idUnico: item.idUnico || ('sync_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6)),
+          titulo: item.titulo || 'Notificacao 5 BE',
+          tags: item.tags || 'shield',
+          prioridade: item.prioridade || 'urgent',
+          payload: item.payload,
+          tentativas: 0,
+          adicionadoEm: Date.now()
+        });
+        this._salvarFilaPendentes(fila);
+      }
+    },
+
+    _removerFilaPendente: function (idUnico) {
+      if (!idUnico) return;
+      const fila = this._obterFilaPendentes();
+      const filtrada = fila.filter(p => p.idUnico !== idUnico);
+      this._salvarFilaPendentes(filtrada);
+    },
+
+    _processarFilaPendentes: async function () {
+      if (_processandoFila) return;
+      const fila = this._obterFilaPendentes();
+      if (!fila || fila.length === 0) return;
+
+      _processandoFila = true;
+      const topic = this.getTopic();
+
+      for (let i = 0; i < fila.length; i++) {
+        const item = fila[i];
+        try {
+          const res = await fetch(`https://ntfy.sh/${topic}`, {
+            method: 'POST',
+            headers: {
+              'Title': toAsciiHeader(item.titulo),
+              'Priority': item.prioridade || 'urgent',
+              'Tags': item.tags || 'shield',
+              'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify(item.payload)
+          });
+          if (res.ok) {
+            this._removerFilaPendente(item.idUnico);
+          } else {
+            item.tentativas = (item.tentativas || 0) + 1;
+          }
+        } catch (e) {
+          // Permanece na fila para a próxima tentativa
+          break;
+        }
+      }
+      _processandoFila = false;
+    },
+
+    // ==========================================
+    // TRANSMISSÕES PARA A NUVEM
+    // ==========================================
 
     /**
      * Transmissão para a Nuvem de Novos Cadastros de Veteranos
@@ -115,26 +238,48 @@
       // Salva localmente primeiro
       this._salvarLocalCadastro(militar);
 
+      const payload = {
+        tipo: militar.isAtualizado ? 'ATUALIZACAO_CADASTRO' : 'NOVO_CADASTRO',
+        registro: militar,
+        timestamp: Date.now()
+      };
+
+      const tituloLimpo = toAsciiHeader(`Cadastro 5 BE: ${militar.nome || 'Veterano'} (${militar.cia || '5 BE'})`);
+      const idUnico = 'cad_' + (militar.id || Date.now());
+
+      // Adiciona na fila pendente de segurança
+      this._enfileirarPendente({
+        idUnico: idUnico,
+        titulo: tituloLimpo,
+        tags: 'shield,medal',
+        prioridade: 'urgent',
+        payload: payload
+      });
+
       try {
-        await fetch(`https://ntfy.sh/${topic}`, {
+        const res = await fetch(`https://ntfy.sh/${topic}`, {
           method: 'POST',
           headers: {
-            'Title': `🎖️ Cadastro 5º BE: ${militar.nome} (${militar.cia || 'Veterano'})`,
+            'Title': tituloLimpo,
             'Priority': 'urgent',
-            'Tags': 'shield,medal,military_helmet'
+            'Tags': 'shield,medal',
+            'Content-Type': 'text/plain;charset=utf-8'
           },
-          body: JSON.stringify({
-            tipo: militar.isAtualizado ? 'ATUALIZACAO_CADASTRO' : 'NOVO_CADASTRO',
-            registro: militar,
-            timestamp: Date.now()
-          })
+          body: JSON.stringify(payload)
         });
-        console.log('[CloudSync] Cadastro transmitido para a nuvem:', militar.nome);
-        this.atualizarStatusVisual('conectado', `Transmitido: ${militar.nome}`);
-        return { sucesso: true };
+
+        if (res.ok) {
+          this._removerFilaPendente(idUnico);
+          console.log('[CloudSync] Cadastro transmitido com sucesso:', militar.nome);
+          this.atualizarStatusVisual('conectado', `Transmitido: ${militar.nome}`);
+          return { sucesso: true };
+        } else {
+          console.warn('[CloudSync] Servidor retornou status:', res.status);
+          return { sucesso: false, erro: 'Status ' + res.status };
+        }
       } catch (err) {
-        console.warn('[CloudSync] Falha ao transmitir cadastro imediatamente:', err);
-        return { sucesso: false, erro: err.message };
+        console.warn('[CloudSync] Falha imediata (item salvo na fila para reenvio):', err.message);
+        return { sucesso: false, erro: err.message, pendenteNaFila: true };
       }
     },
 
@@ -148,26 +293,46 @@
       // Salva localmente
       this._salvarLocalAlmoco(itemAlmoco);
 
+      const payload = {
+        tipo: 'NOVO_ALMOCO',
+        item: itemAlmoco,
+        timestamp: Date.now()
+      };
+
+      const tituloLimpo = toAsciiHeader(`Almoco 5 BE: ${itemAlmoco.nome || 'Participante'} (${itemAlmoco.qtd || 1} ref)`);
+      const idUnico = 'alm_' + (itemAlmoco.id || Date.now());
+
+      this._enfileirarPendente({
+        idUnico: idUnico,
+        titulo: tituloLimpo,
+        tags: 'utensils,tada',
+        prioridade: 'urgent',
+        payload: payload
+      });
+
       try {
-        await fetch(`https://ntfy.sh/${topic}`, {
+        const res = await fetch(`https://ntfy.sh/${topic}`, {
           method: 'POST',
           headers: {
-            'Title': `🍽️ Almoço 5º BE: ${itemAlmoco.nome} (${itemAlmoco.qtd} ref)`,
+            'Title': tituloLimpo,
             'Priority': 'urgent',
-            'Tags': 'utensils,tada,dollar'
+            'Tags': 'utensils,tada',
+            'Content-Type': 'text/plain;charset=utf-8'
           },
-          body: JSON.stringify({
-            tipo: 'NOVO_ALMOCO',
-            item: itemAlmoco,
-            timestamp: Date.now()
-          })
+          body: JSON.stringify(payload)
         });
-        console.log('[CloudSync] Adesão ao almoço transmitida para a nuvem:', itemAlmoco.nome);
-        this.atualizarStatusVisual('conectado', `Almoço transmitido: ${itemAlmoco.nome}`);
-        return { sucesso: true };
+
+        if (res.ok) {
+          this._removerFilaPendente(idUnico);
+          console.log('[CloudSync] Adesão ao almoço transmitida:', itemAlmoco.nome);
+          this.atualizarStatusVisual('conectado', `Almoço transmitido: ${itemAlmoco.nome}`);
+          return { sucesso: true };
+        } else {
+          return { sucesso: false, erro: 'Status ' + res.status };
+        }
       } catch (err) {
-        console.warn('[CloudSync] Falha ao transmitir adesão do almoço:', err);
-        return { sucesso: false, erro: err.message };
+        console.warn('[CloudSync] Falha no almoço (salvo na fila):', err.message);
+        return { sucesso: false, erro: err.message, pendenteNaFila: true };
       }
     },
 
@@ -177,22 +342,35 @@
     excluirCadastro: async function (id) {
       if (!id) return;
       const topic = this.getTopic();
+      const payload = { tipo: 'EXCLUIR_CADASTRO', id: id, timestamp: Date.now() };
+      const tituloLimpo = toAsciiHeader(`Exclusao Cadastro: ${id}`);
+      const idUnico = 'del_cad_' + id;
+
+      this._enfileirarPendente({
+        idUnico: idUnico,
+        titulo: tituloLimpo,
+        tags: 'wastebasket',
+        prioridade: 'low',
+        payload: payload
+      });
+
       try {
-        await fetch(`https://ntfy.sh/${topic}`, {
+        const res = await fetch(`https://ntfy.sh/${topic}`, {
           method: 'POST',
           headers: {
+            'Title': tituloLimpo,
             'Priority': 'low',
-            'Tags': 'wastebasket'
+            'Tags': 'wastebasket',
+            'Content-Type': 'text/plain;charset=utf-8'
           },
-          body: JSON.stringify({
-            tipo: 'EXCLUIR_CADASTRO',
-            id: id,
-            timestamp: Date.now()
-          })
+          body: JSON.stringify(payload)
         });
-        console.log('[CloudSync] Exclusão de cadastro sincronizada na nuvem:', id);
+        if (res.ok) {
+          this._removerFilaPendente(idUnico);
+          console.log('[CloudSync] Exclusão sincronizada na nuvem:', id);
+        }
       } catch (err) {
-        console.warn('[CloudSync] Falha ao enviar exclusão para a nuvem:', err);
+        console.warn('[CloudSync] Falha ao excluir cadastro imediatamente:', err.message);
       }
     },
 
@@ -202,35 +380,61 @@
     excluirAlmoco: async function (id) {
       if (!id) return;
       const topic = this.getTopic();
+      const payload = { tipo: 'EXCLUIR_ALMOCO', id: id, timestamp: Date.now() };
+      const tituloLimpo = toAsciiHeader(`Exclusao Almoco: ${id}`);
+      const idUnico = 'del_alm_' + id;
+
+      this._enfileirarPendente({
+        idUnico: idUnico,
+        titulo: tituloLimpo,
+        tags: 'wastebasket',
+        prioridade: 'low',
+        payload: payload
+      });
+
       try {
-        await fetch(`https://ntfy.sh/${topic}`, {
+        const res = await fetch(`https://ntfy.sh/${topic}`, {
           method: 'POST',
           headers: {
+            'Title': tituloLimpo,
             'Priority': 'low',
-            'Tags': 'wastebasket'
+            'Tags': 'wastebasket',
+            'Content-Type': 'text/plain;charset=utf-8'
           },
-          body: JSON.stringify({
-            tipo: 'EXCLUIR_ALMOCO',
-            id: id,
-            timestamp: Date.now()
-          })
+          body: JSON.stringify(payload)
         });
-        console.log('[CloudSync] Exclusão de almoço sincronizada na nuvem:', id);
+        if (res.ok) {
+          this._removerFilaPendente(idUnico);
+          console.log('[CloudSync] Exclusão de almoço sincronizada na nuvem:', id);
+        }
       } catch (err) {
-        console.warn('[CloudSync] Falha ao enviar exclusão de almoço para a nuvem:', err);
+        console.warn('[CloudSync] Falha ao excluir almoço imediatamente:', err.message);
       }
     },
 
+    // ==========================================
+    // HISTÓRICO & RECEBIMENTO DE DADOS
+    // ==========================================
+
     /**
-     * Puxa histórico recente da nuvem (últimos 30 dias de mensagens persistidas)
+     * Puxa histórico recente da nuvem (24h de cache do ntfy público com fallback)
      */
     puxarHistorico: async function (silencioso = false) {
       const topic = this.getTopic();
       if (_sincronizando) return;
       _sincronizando = true;
 
+      // Aproveita para tentar descarregar a fila pendente se houver conexão
+      this._processarFilaPendentes().catch(() => {});
+
       try {
-        const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=30d`);
+        // Tenta buscar as últimas 24h (limite máximo permitido no ntfy.sh público)
+        let res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=24h`);
+        if (!res.ok) {
+          // Se o servidor ntfy rejeitar o parâmetro since, tenta poll padrão
+          res = await fetch(`https://ntfy.sh/${topic}/json?poll=1`);
+        }
+
         if (!res.ok) {
           _sincronizando = false;
           return;
@@ -239,7 +443,7 @@
         const text = await res.text();
         if (!text || !text.trim()) {
           _sincronizando = false;
-          this.atualizarStatusVisual('conectado', 'Nuvem sincronizada (sem pendências)');
+          this.atualizarStatusVisual('conectado', 'Nuvem OK (sem pendências)');
           return;
         }
 
@@ -261,30 +465,19 @@
           } catch (e) {}
         });
 
-        // Atualiza a tela se houve alterações
+        // Se houve novos cadastros ou alterações, notifica as telas
         if (novosCadastros > 0 || alterados > 0 || novosAlmoco > 0) {
-          if (typeof window.recarregarEfetivoComNovos === 'function') {
-            window.recarregarEfetivoComNovos();
-          }
-          if (typeof window.renderizarTabelaAlmocoAdmin === 'function') {
-            window.renderizarTabelaAlmocoAdmin();
-          }
-          if (typeof window.renderizarGridParticipantesModal === 'function') {
-            window.renderizarGridParticipantesModal();
-          }
-          if (typeof window.renderizarMuralPublico === 'function') {
-            window.renderizarMuralPublico();
-          }
+          notificarTelasDeAtualizacao();
 
           if (!silencioso && (novosCadastros > 0 || novosAlmoco > 0)) {
             this.tocarSino();
             if (typeof window.mostrarNotificaçãoTatica === 'function') {
-              window.mostrarNotificaçãoTatica(`🎉 ${novosCadastros} novo(s) veterano(s) sincronizados da nuvem!`);
+              window.mostrarNotificaçãoTatica(`🎉 ${novosCadastros + novosAlmoco} registro(s) sincronizados da nuvem!`);
             }
           }
         }
 
-        localStorage.setItem(STORAGE_KEYS.ULTIMO_SYNC, Date.now().toString());
+        try { localStorage.setItem(STORAGE_KEYS.ULTIMO_SYNC, Date.now().toString()); } catch (e) {}
         this.atualizarStatusVisual('conectado', 'Conectado em Tempo Real');
         _sincronizando = false;
 
@@ -296,33 +489,38 @@
 
       } catch (err) {
         _sincronizando = false;
-        console.warn('[CloudSync] Erro no polling de histórico da nuvem:', err);
+        console.warn('[CloudSync] Histórico offline ou indisponível:', err.message);
         this.atualizarStatusVisual('offline', 'Modo Local (Offline)');
       }
     },
 
     /**
-     * Conecta EventSource em tempo real (SSE) + Polling de segurança
+     * Conecta EventSource em tempo real (SSE) + Heartbeat resiliente
      */
     conectar: function () {
       const topic = this.getTopic();
 
       if (cloudEventSource) {
         try { cloudEventSource.close(); } catch (e) {}
+        cloudEventSource = null;
       }
 
       this.atualizarStatusVisual('conectando', 'Conectando à nuvem em tempo real...');
 
-      // 1. Puxa histórico recente
+      // 1. Tenta descarregar fila pendente
+      this._processarFilaPendentes().catch(() => {});
+
+      // 2. Puxa histórico recente
       this.puxarHistorico(true);
 
-      // 2. Conecta via Server-Sent Events (SSE) nativo
+      // 3. Conecta via Server-Sent Events (SSE) nativo
       if (typeof window !== 'undefined' && window.EventSource) {
         try {
           cloudEventSource = new window.EventSource(`https://ntfy.sh/${topic}/sse`);
 
           cloudEventSource.onopen = () => {
             this.atualizarStatusVisual('conectado', 'Conectado em Tempo Real (Nuvem Ativa)');
+            this._processarFilaPendentes().catch(() => {});
           };
 
           cloudEventSource.onerror = () => {
@@ -339,26 +537,27 @@
             } catch (e) {}
           };
         } catch (err) {
-          console.warn('[CloudSync] EventSource bloqueado ou não suportado:', err);
+          console.warn('[CloudSync] EventSource bloqueado:', err.message);
         }
       }
 
-      // 3. Heartbeat de segurança a cada 8 segundos (igual ao Biriba)
+      // 4. Heartbeat de segurança a cada 8 segundos (igual ao Biriba)
       if (cloudHeartbeatInterval) clearInterval(cloudHeartbeatInterval);
       cloudHeartbeatInterval = setInterval(() => {
         this.puxarHistorico(true);
       }, 8000);
 
-      // 4. Reconexão e busca instantânea quando o usuário foca na aba
+      // 5. Reconexão e busca instantânea quando o usuário foca na aba
       if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
         document.addEventListener('visibilitychange', () => {
           if (!document.hidden) {
             this.puxarHistorico(true);
+            this._processarFilaPendentes().catch(() => {});
           }
         });
       }
 
-      // 5. Reconexão quando a internet volta
+      // 6. Reconexão quando a internet volta
       if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
         window.addEventListener('online', () => {
           this.conectar();
@@ -382,11 +581,35 @@
     },
 
     /**
+     * Diagnóstico e teste de envio da nuvem
+     */
+    testarConexao: async function () {
+      const topic = this.getTopic();
+      try {
+        const res = await fetch(`https://ntfy.sh/${topic}`, {
+          method: 'POST',
+          headers: {
+            'Title': toAsciiHeader('Teste de Conexao 5 BE'),
+            'Priority': 'low',
+            'Tags': 'white_check_mark',
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify({ tipo: 'PING_TESTE', timestamp: Date.now() })
+        });
+        return { ok: res.ok, status: res.status };
+      } catch (e) {
+        return { ok: false, erro: e.message };
+      }
+    },
+
+    /**
      * Atualiza os badges visuais de conexão na interface
      */
     atualizarStatusVisual: function (status, msg) {
       _ultimoStatus = status;
       _ultimaMensagem = msg || '';
+
+      if (typeof document === 'undefined') return;
 
       // Badge no Navbar do Admin
       const iconeNav = document.getElementById('iconeNuvemNav');
@@ -453,15 +676,12 @@
 
     _processarMensagemRealtime: function (payload) {
       if (!payload || !payload.tipo) return;
+      if (payload.tipo === 'PING_TESTE') return;
+
       const r = this._aplicarPayload(payload);
 
       if (r.tipo === 'cadastro') {
-        if (typeof window.recarregarEfetivoComNovos === 'function') {
-          window.recarregarEfetivoComNovos();
-        }
-        if (typeof window.renderizarMuralPublico === 'function') {
-          window.renderizarMuralPublico();
-        }
+        notificarTelasDeAtualizacao();
         if (r.isNovo) {
           this.tocarSino();
           if (typeof window.mostrarNotificaçãoTatica === 'function') {
@@ -469,12 +689,7 @@
           }
         }
       } else if (r.tipo === 'almoco') {
-        if (typeof window.renderizarTabelaAlmocoAdmin === 'function') {
-          window.renderizarTabelaAlmocoAdmin();
-        }
-        if (typeof window.renderizarGridParticipantesModal === 'function') {
-          window.renderizarGridParticipantesModal();
-        }
+        notificarTelasDeAtualizacao();
         if (r.isNovo) {
           this.tocarSino();
           if (typeof window.mostrarNotificaçãoTatica === 'function') {
@@ -482,15 +697,7 @@
           }
         }
       } else if (r.tipo === 'exclusao') {
-        if (typeof window.recarregarEfetivoComNovos === 'function') {
-          window.recarregarEfetivoComNovos();
-        }
-        if (typeof window.renderizarTabelaAlmocoAdmin === 'function') {
-          window.renderizarTabelaAlmocoAdmin();
-        }
-        if (typeof window.renderizarGridParticipantesModal === 'function') {
-          window.renderizarGridParticipantesModal();
-        }
+        notificarTelasDeAtualizacao();
       }
     },
 

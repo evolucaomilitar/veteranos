@@ -1168,7 +1168,7 @@
               <label class="block text-[11px] font-semibold text-slate-300 uppercase mb-1">Link para envio no WhatsApp:</label>
               <div class="flex items-center space-x-2">
                 <input type="text" id="campoLinkReencontro" readonly
-                       value="reencontro.html"
+                       value="https://evolucaomilitar.github.io/veteranos_5be/reencontro.html"
                        class="w-full px-3 py-2 bg-[#080d09] border border-[#243c26] rounded-lg text-xs font-mono text-amber-300 select-all font-bold">
                 <button onclick="copiarLinkReencontro()"
                         class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs military-font uppercase flex-shrink-0">
@@ -4806,7 +4806,7 @@
     // ==========================================
     const MODELOS_MENSAGENS = {
       encontro: `Prezado {posto} {guerra} ({nome}), saudações blindadas!\n\nA Comissão dos Veteranos do 5º BE Cmb Bld convida você e sua família para o nosso tradicional Encontro e Almoço de Confraternização dos Veteranos.\n\n📅 Data: A confirmar\n📍 Local: Porto União - SC\n🏢 Subunidade: {companhia}\n\nContamos com sua presença para reviver as boas lembranças de caserna! Por favor, confirme seu número por aqui.\n\n_Comissão dos Veteranos do 5º BE Cmb Bld_`,
-      cadastro: `Prezado Veterano {posto} {guerra}!\n\nEstamos atualizando os dados cadastrais da nossa gloriosa {companhia} (5º BE Cmb Bld - Batalhão Juarez Távora). Pedimos a gentileza de confirmar ou atualizar suas informações pelo link oficial:\n\n👉 Acesse o formulário: cadastro.html\n\nBrasil Acima de Tudo!`,
+      cadastro: `Prezado Veterano {posto} {guerra}!\n\nEstamos atualizando os dados cadastrais da nossa gloriosa {companhia} (5º BE Cmb Bld - Batalhão Juarez Távora). Pedimos a gentileza de confirmar ou atualizar suas informações pelo link oficial:\n\n👉 Acesse o formulário:\nhttps://evolucaomilitar.github.io/veteranos_5be/reencontro.html\n\nBrasil Acima de Tudo!`,
       aviso: `Atenção Veteranos do 5º BE Cmb Bld!\n\nComunicado Oficial da Comissão dos Veteranos para os integrantes da {companhia}:\n\nInformamos que as novidades e calendários do semestre já estão disponíveis. Favor manter seus contatos atualizados conosco.\n\nUm forte abraço aos veteranos!`,
       festas: `Prezado {posto} {guerra}!\n\nA Comissão dos Veteranos do 5º BE Cmb Bld deseja a você e à sua família um Feliz Natal e um Ano Novo repleto de saúde, vitórias e fraternidade!\n\nFoi uma honra servir ao seu lado na Engenharia Blindada. Selva! 🇧🇷`
     };
@@ -4926,17 +4926,46 @@
       });
     }
 
+    // Determina a URL Base Oficial do Aplicativo (compatível com GitHub Pages e Localhost)
+    function obterUrlBaseApp() {
+      try {
+        if (typeof window !== 'undefined' && window.location) {
+          const loc = window.location;
+          if (loc.origin && loc.origin.startsWith('http')) {
+            let p = loc.pathname;
+            if (p.endsWith('.html')) {
+              p = p.substring(0, p.lastIndexOf('/') + 1);
+            } else if (!p.endsWith('/')) {
+              p += '/';
+            }
+            return loc.origin + p;
+          }
+        }
+      } catch (e) {}
+      return 'https://evolucaomilitar.github.io/veteranos_5be/';
+    }
+
     // Configuração dos Links e Mensagens
     function configurarLinkCadastro() {
+      const urlBase = obterUrlBaseApp();
+      const urlReencontro = urlBase + 'reencontro.html';
+      const urlCadastro = urlBase + 'cadastro.html';
+
+      const campoLink = document.getElementById('campoLinkReencontro');
+      if (campoLink) {
+        campoLink.value = urlReencontro;
+      }
+
       // 1. Mensagem para o Portal do Reencontro & Soldados da Cia (Recomendado)
       const msgReencontro = `*🇧🇷 ATENÇÃO VETERANOS DO 5º BE CMB BLD!*
 _Batalhão Juarez Távora - Porto União/SC_
 
-Prezado Veterano! Acesse o portal abaixo para *VER A LISTA COM OS SOLDADOS DA SUA COMPANHIA* e atualizar seu cadastro oficial:
+Prezado Veterano! Acesse o portal oficial abaixo para *VER A LISTA COM OS SOLDADOS DA SUA COMPANHIA* e atualizar seu cadastro:
 
-👉 *Acesse o Portal:* reencontro.html
+👉 *Acesse o Portal do Reencontro:*
+${urlReencontro}
 
-No portal você escolhe sua Companhia (1ª Cia, 2ª Cia, CEP, CCAp, NPOR ou Estado-Maior) e reencontra seus irmãos de farda e turma de caserna!
+No portal você escolhe sua Companhia (1ª Cia, 2ª Cia, CEP, CCAp, NPOR ou Estado-Maior) e reencontra seus companheiros de farda e turma de caserna!
 
 Compartilhe no grupo da sua turma! Brasil Acima de Tudo! 🇧🇷`;
 
@@ -4951,7 +4980,8 @@ Prezado Veterano!
 
 Estamos atualizando os dados e cadastros dos veteranos de todas as Companhias. Se você já serviu no 5º Batalhão de Engenharia de Combate Blindado, clique no link abaixo para cadastrar ou atualizar seus dados:
 
-👉 *Acesse o formulário:* cadastro.html
+👉 *Acesse o formulário:*
+${urlCadastro}
 
 Compartilhe com os veteranos da sua turma! Brasil Acima de Tudo! 🇧🇷`;
 
@@ -4962,17 +4992,40 @@ Compartilhe com os veteranos da sua turma! Brasil Acima de Tudo! 🇧🇷`;
     // Ações do Link Reencontro
     function copiarLinkReencontro() {
       const campo = document.getElementById('campoLinkReencontro');
-      campo.select();
-      navigator.clipboard.writeText(campo.value).then(() => {
-        mostrarNotificaçãoTatica("Link do Reencontro copiado para a área de transferência!");
-      });
+      if (!campo) return;
+      const texto = campo.value;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(() => {
+          mostrarNotificaçãoTatica("Link do Reencontro copiado para a área de transferência!");
+        }).catch(() => {
+          campo.select();
+          document.execCommand('copy');
+          mostrarNotificaçãoTatica("Link do Reencontro copiado!");
+        });
+      } else {
+        campo.select();
+        document.execCommand('copy');
+        mostrarNotificaçãoTatica("Link do Reencontro copiado!");
+      }
     }
 
     function copiarConviteReencontro() {
-      const texto = document.getElementById('textoConviteReencontro').value;
-      navigator.clipboard.writeText(texto).then(() => {
-        mostrarNotificaçãoTatica("Mensagem do Reencontro copiada! Cole nos grupos de WhatsApp.");
-      });
+      const campo = document.getElementById('textoConviteReencontro');
+      if (!campo) return;
+      const texto = campo.value;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(() => {
+          mostrarNotificaçãoTatica("Mensagem do Reencontro copiada! Cole nos grupos de WhatsApp.");
+        }).catch(() => {
+          campo.select();
+          document.execCommand('copy');
+          mostrarNotificaçãoTatica("Mensagem copiada!");
+        });
+      } else {
+        campo.select();
+        document.execCommand('copy');
+        mostrarNotificaçãoTatica("Mensagem copiada!");
+      }
     }
 
     function compartilharReencontroWhatsApp() {
