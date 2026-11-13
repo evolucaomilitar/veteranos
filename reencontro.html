@@ -24,6 +24,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Banco Oficial de Veteranos -->
   <script src="dados.js"></script>
+  <!-- Sincronização em Nuvem -->
+  <script src="cloud-sync.js"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -1124,6 +1126,11 @@
           registro: registroFinal 
         });
       } catch (e) {}
+
+      // Envia automaticamente para a Nuvem em Tempo Real (Cross-device)
+      if (window.CloudSync && typeof window.CloudSync.enviarCadastro === 'function') {
+        window.CloudSync.enviarCadastro(registroFinal).catch(() => {});
+      }
 
       carregarEfetivoGeral();
 
