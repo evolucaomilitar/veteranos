@@ -18,6 +18,19 @@
   <link rel="icon" type="image/png" href="logo_veteranos.png">
   <script src="pwa.js" defer></script>
 
+  <!-- Metatags Open Graph (Prévia rica com foto e brasão no WhatsApp, Facebook e Redes) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Portal Oficial dos Veteranos • 5º BE CMB BLD">
+  <meta property="og:description" content="5º Batalhão de Engenharia de Combate Blindado • Batalhão Juarez Távora. Consulte seu nome no efetivo histórico, reencontre seus companheiros de farda e atualize seu cadastro!">
+  <meta property="og:image" content="logo_veteranos.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Portal Oficial dos Veteranos • 5º BE CMB BLD">
+  <meta name="twitter:description" content="5º Batalhão de Engenharia de Combate Blindado • Batalhão Juarez Távora. Consulte os soldados da sua Companhia e mantenha seu cadastro oficial ativo!">
+  <meta name="twitter:image" content="logo_veteranos.png">
+
   <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -123,8 +136,9 @@
       </p>
     </div>
 
-    <!-- BANNER DE CONVITE AO ALMOÇO DE CONFRATERNIZAÇÃO -->
-    <div class="tactical-border rounded-xl p-4 sm:p-5 bg-gradient-to-r from-[#142316] via-[#1a2c1d] to-[#142316] border border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+    <!-- BANNER DE CONVITE AO ALMOÇO DE CONFRATERNIZAÇÃO (OCULTO POR PADRÃO, SÓ EXIBE SE O ADMIN LIBERAR) -->
+    <div id="bannerAlmocoCadastro" style="display: none !important;"
+         class="hidden tactical-border rounded-xl p-4 sm:p-5 bg-gradient-to-r from-[#142316] via-[#1a2c1d] to-[#142316] border border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
       <div class="flex items-center space-x-3">
         <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/40">
           <i class="fa-solid fa-utensils"></i>
@@ -1122,6 +1136,27 @@
         const el = document.getElementById('areaMuralCadastro');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }, 300);
+    }
+
+    // Controle de Visibilidade do Módulo do Almoço (Sincronizado)
+    function atualizarVisibilidadeAlmocoCadastro() {
+      const liberado = localStorage.getItem('liberar_modulo_almoco_publico') === 'true';
+      const banner = document.getElementById('bannerAlmocoCadastro');
+      if (banner) {
+        if (liberado) {
+          banner.style.setProperty('display', 'flex', 'important');
+          banner.classList.remove('hidden');
+        } else {
+          banner.style.setProperty('display', 'none', 'important');
+          banner.classList.add('hidden');
+        }
+      }
+    }
+    window.atualizarVisibilidadeModuloAlmoco = atualizarVisibilidadeAlmocoCadastro;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', atualizarVisibilidadeAlmocoCadastro);
+    } else {
+      atualizarVisibilidadeAlmocoCadastro();
     }
   </script>
 </body>

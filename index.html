@@ -20,15 +20,15 @@
 
   <!-- Metatags Open Graph (Prévia rica com foto e brasão no WhatsApp, Facebook e Redes) -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Reencontro & Almoço dos Veteranos 5º BE Cmb Bld">
-  <meta property="og:description" content="Consulte seu nome no efetivo histórico de 658 veteranos, confirme sua presença no almoço por companhia (1ª Cia, 2ª Cia, CCAp, CEP) e garanta sua vaga!">
+  <meta property="og:title" content="Portal Oficial dos Veteranos • 5º BE CMB BLD">
+  <meta property="og:description" content="5º Batalhão de Engenharia de Combate Blindado • Batalhão Juarez Távora. Consulte seu nome no efetivo histórico, reencontre seus companheiros de farda e atualize seu cadastro!">
   <meta property="og:image" content="logo_veteranos.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Reencontro & Almoço dos Veteranos 5º BE Cmb Bld">
-  <meta name="twitter:description" content="Portal oficial de reencontro e almoço de confraternização do Batalhão Juarez Távora.">
+  <meta name="twitter:title" content="Portal Oficial dos Veteranos • 5º BE CMB BLD">
+  <meta name="twitter:description" content="5º Batalhão de Engenharia de Combate Blindado • Batalhão Juarez Távora. Consulte os soldados da sua Companhia e mantenha seu cadastro oficial ativo!">
   <meta name="twitter:image" content="logo_veteranos.png">
 
   <!-- Tailwind CSS & FontAwesome -->
@@ -792,7 +792,7 @@
           </label>
           <div class="flex items-center space-x-2">
             <input type="text" id="campoLinkPublicoVeterano" readonly
-                   value="https://evolucaomilitar.github.io/veteranos_5be/reencontro.html"
+                   value="https://evolucaomilitar.github.io/veteranos_5be/"
                    class="w-full px-3 py-2 bg-[#050805] border border-[#234027] rounded-lg text-xs font-mono text-amber-300 select-all font-bold">
             <button type="button" onclick="copiarLinkOficialVeterano()"
                     class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs military-font uppercase shrink-0">
@@ -898,7 +898,7 @@
           <!-- Imagem QR Code Dinâmica -->
           <div class="p-3 bg-white rounded-2xl shadow-[0_0_20px_rgba(212,175,55,0.3)] border-4 border-amber-400">
             <img id="imgQrCodePortalVeterano" 
-                 src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fevolucaomilitar.github.io%2Fveteranos_5be%2Freencontro.html" 
+                 src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fevolucaomilitar.github.io%2Fveteranos_5be%2F" 
                  alt="QR Code Portal Veteranos 5º BE" 
                  class="w-44 h-44 object-contain">
           </div>
@@ -1443,25 +1443,26 @@
             <div>
               <span class="text-[11px] text-amber-400 uppercase military-font font-bold tracking-wider block">Opção 1 (Interativa com Soldados da Cia)</span>
               <h3 class="text-base font-bold text-white military-font uppercase flex items-center mt-0.5">
-                <i class="fa-solid fa-users text-amber-400 mr-2"></i> Portal do Reencontro & Lista da Companhia
+                <i class="fa-solid fa-users text-amber-400 mr-2"></i> Portal Oficial dos Veteranos & Mural das Companhias
               </h3>
               <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                O veterano acessa pelo celular ou computador, escolhe sua Companhia, <strong class="text-emerald-400">vê todos os soldados da subunidade</strong>, busca pela turma/ano e pode se cadastrar.
+                O veterano acessa pelo celular ou computador, confere o efetivo da sua Companhia, busca sua turma/ano e realiza o cadastro oficial no portal.
               </p>
             </div>
             
             <div>
-              <label class="block text-[11px] font-semibold text-slate-300 uppercase mb-1">Link para envio no WhatsApp:</label>
+              <label class="block text-[11px] font-semibold text-slate-300 uppercase mb-1">Link Oficial para envio no WhatsApp:</label>
               <div class="flex items-center space-x-2">
                 <input type="text" id="campoLinkReencontro" readonly
-                       value="https://evolucaomilitar.github.io/veteranos_5be/reencontro.html"
+                       value="https://evolucaomilitar.github.io/veteranos_5be/"
                        class="w-full px-3 py-2 bg-[#080d09] border border-[#243c26] rounded-lg text-xs font-mono text-amber-300 select-all font-bold">
                 <button onclick="copiarLinkReencontro()"
                         class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs military-font uppercase flex-shrink-0">
                   <i class="fa-solid fa-copy mr-1"></i> Copiar
                 </button>
-                <a href="reencontro.html" target="_blank"
-                   class="px-3.5 py-2 bg-[#1b3420] hover:bg-[#254d2c] text-emerald-300 font-bold rounded-lg text-xs military-font uppercase flex items-center border border-[#2d5632] flex-shrink-0">
+                <a href="index.html" target="_blank"
+                   class="px-3.5 py-2 bg-[#1b3420] hover:bg-[#254d2c] text-emerald-300 font-bold rounded-lg text-xs military-font uppercase flex items-center border border-[#2d5632] flex-shrink-0"
+                   title="Abrir Portal Oficial">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
               </div>
@@ -3955,19 +3956,22 @@
     // ========================================================
     let _modeloMsgVeteranoAtivo = 'reencontro';
 
+    function obterUrlOficialConvite() {
+      return obterUrlBaseApp();
+    }
+
     function atualizarAbaCompartilharVeterano() {
-      const urlBase = obterUrlBaseApp();
-      const urlReencontro = urlBase + 'reencontro.html';
+      const urlOficial = obterUrlOficialConvite();
 
       const campoLink = document.getElementById('campoLinkPublicoVeterano');
       if (campoLink) {
-        campoLink.value = urlReencontro;
+        campoLink.value = urlOficial;
       }
 
-      // QR Code
+      // QR Code com o link oficial padronizado
       const imgQr = document.getElementById('imgQrCodePortalVeterano');
       if (imgQr) {
-        imgQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(urlReencontro)}`;
+        imgQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(urlOficial)}`;
       }
 
       // Identificação se o veterano já estiver cadastrado no aparelho
@@ -3986,14 +3990,20 @@
         }
       }
 
+      // Se o módulo do almoço não estiver liberado, garante o modelo padrão 'reencontro'
+      if (!verificarModuloAlmocoLiberado() && _modeloMsgVeteranoAtivo === 'almoco') {
+        _modeloMsgVeteranoAtivo = 'reencontro';
+      }
+
       selecionarModeloMsgVeterano(_modeloMsgVeteranoAtivo);
     }
 
     function selecionarModeloMsgVeterano(modelo) {
+      if (modelo === 'almoco' && !verificarModuloAlmocoLiberado()) {
+        modelo = 'reencontro';
+      }
       _modeloMsgVeteranoAtivo = modelo;
-      const urlBase = obterUrlBaseApp();
-      const urlReencontro = urlBase + 'reencontro.html';
-      const urlInicio = urlBase + 'index.html';
+      const urlOficial = obterUrlOficialConvite();
 
       const nomeSalvo = localStorage.getItem('veterano_inscrito_nome') || '';
       const ciaSalva = localStorage.getItem('veterano_inscrito_cia') || '';
@@ -4015,20 +4025,20 @@ _Batalhão Juarez Távora - Porto União / SC_
 
 Prezado Irmão de Farda! Acesse o portal oficial abaixo para *VER A LISTA COM OS SOLDADOS DA NOSSA COMPANHIA* e atualizar seu cadastro:
 
-👉 *Acesse o Portal do Reencontro:*
-${urlReencontro}
+👉 *Acesse o Portal Oficial:*
+${urlOficial}
 
 No portal você escolhe sua Companhia (1ª Cia, 2ª Cia, CEP, CCAp, NPOR ou Estado-Maior) e reencontra seus companheiros de farda e turma de caserna!${assinatura}
 
 Compartilhe no grupo da nossa turma! Brasil Acima de Tudo! 🇧🇷`;
-      } else if (modelo === 'almoco') {
+      } else if (modelo === 'almoco' && verificarModuloAlmocoLiberado()) {
         texto = `*🍽️ GRANDE REENCONTRO & ALMOÇO DE CONFRATERNIZAÇÃO DOS VETERANOS - 5º BE CMB BLD!*
 _Batalhão Juarez Távora - Porto União / SC_
 
 Prezado Amigo e Companheiro de Farda! Garanta sua presença e da sua família no nosso tradicional Almoço de Confraternização dos Veteranos!
 
 👉 *Confira os participantes e garanta seu almoço aqui:*
-${urlInicio}
+${urlOficial}
 
 Venha reviver as boas lembranças de caserna e rever nossos irmãos de farda!${assinatura}
 
@@ -4040,7 +4050,7 @@ _Batalhão Juarez Távora - Porto União/SC_
 
 Irmão de farda, confira seu nome no efetivo e venha reencontrar nossa turma de caserna:
 
-👉 *Acesse:* ${urlReencontro}${assinatura}
+👉 *Acesse:* ${urlOficial}${assinatura}
 
 Brasil Acima de Tudo! 🇧🇷`;
       }
@@ -4107,16 +4117,15 @@ Brasil Acima de Tudo! 🇧🇷`;
     }
 
     function abrirMenuCompartilharCelularVeterano() {
-      const urlBase = obterUrlBaseApp();
-      const urlReencontro = urlBase + 'reencontro.html';
+      const urlOficial = obterUrlOficialConvite();
       const txtArea = document.getElementById('textoMensagemCompartilharVeterano');
       const texto = txtArea ? txtArea.value : '';
 
       if (navigator.share) {
         navigator.share({
-          title: 'Portal dos Veteranos 5º BE CMB BLD',
+          title: 'Portal Oficial dos Veteranos 5º BE CMB BLD',
           text: texto,
-          url: urlReencontro
+          url: urlOficial
         }).catch(() => {});
       } else {
         copiarLinkOficialVeterano();
@@ -5482,48 +5491,30 @@ Brasil Acima de Tudo! 🇧🇷`;
       return 'https://evolucaomilitar.github.io/veteranos_5be/';
     }
 
-    // Configuração dos Links e Mensagens
+    // Configuração dos Links e Mensagens Padronizados
     function configurarLinkCadastro() {
-      const urlBase = obterUrlBaseApp();
-      const urlReencontro = urlBase + 'reencontro.html';
-      const urlCadastro = urlBase + 'cadastro.html';
+      const urlOficial = obterUrlOficialConvite();
 
       const campoLink = document.getElementById('campoLinkReencontro');
       if (campoLink) {
-        campoLink.value = urlReencontro;
+        campoLink.value = urlOficial;
       }
 
-      // 1. Mensagem para o Portal do Reencontro & Soldados da Cia (Recomendado)
+      // Mensagem Oficial Padronizada para Envio aos Veteranos
       const msgReencontro = `*🇧🇷 ATENÇÃO VETERANOS DO 5º BE CMB BLD!*
-_Batalhão Juarez Távora - Porto União/SC_
+_Batalhão Juarez Távora - Porto União / SC_
 
-Prezado Veterano! Acesse o portal oficial abaixo para *VER A LISTA COM OS SOLDADOS DA SUA COMPANHIA* e atualizar seu cadastro:
+Prezado Irmão de Farda! Acesse o portal oficial abaixo para *VER A LISTA COM OS SOLDADOS DA NOSSA COMPANHIA* e atualizar seu cadastro:
 
-👉 *Acesse o Portal do Reencontro:*
-${urlReencontro}
+👉 *Acesse o Portal Oficial:*
+${urlOficial}
 
 No portal você escolhe sua Companhia (1ª Cia, 2ª Cia, CEP, CCAp, NPOR ou Estado-Maior) e reencontra seus companheiros de farda e turma de caserna!
 
-Compartilhe no grupo da sua turma! Brasil Acima de Tudo! 🇧🇷`;
+Compartilhe no grupo da nossa turma! Brasil Acima de Tudo! 🇧🇷`;
 
       const elReencontro = document.getElementById('textoConviteReencontro');
       if (elReencontro) elReencontro.value = msgReencontro;
-
-      // 2. Mensagem para a Ficha Cadastral Direta
-      const msgConvite = `*COMISSÃO DOS VETERANOS DO 5º BE CMB BLD*
-_Batalhão Juarez Távora - Porto União / SC_
-
-Prezado Veterano!
-
-Estamos atualizando os dados e cadastros dos veteranos de todas as Companhias. Se você já serviu no 5º Batalhão de Engenharia de Combate Blindado, clique no link abaixo para cadastrar ou atualizar seus dados:
-
-👉 *Acesse o formulário:*
-${urlCadastro}
-
-Compartilhe com os veteranos da sua turma! Brasil Acima de Tudo! 🇧🇷`;
-
-      const elCadastro = document.getElementById('textoConviteCadastro');
-      if (elCadastro) elCadastro.value = msgConvite;
     }
 
     // Ações do Link Reencontro
