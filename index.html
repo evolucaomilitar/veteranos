@@ -792,7 +792,7 @@
           </label>
           <div class="flex items-center space-x-2">
             <input type="text" id="campoLinkPublicoVeterano" readonly
-                   value="https://evolucaomilitar.github.io/veteranos_5be/"
+                   value="https://evolucaomilitar.github.io/veteranos_5be/reencontro.html"
                    class="w-full px-3 py-2 bg-[#050805] border border-[#234027] rounded-lg text-xs font-mono text-amber-300 select-all font-bold">
             <button type="button" onclick="copiarLinkOficialVeterano()"
                     class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs military-font uppercase shrink-0">
@@ -898,7 +898,7 @@
           <!-- Imagem QR Code Dinâmica -->
           <div class="p-3 bg-white rounded-2xl shadow-[0_0_20px_rgba(212,175,55,0.3)] border-4 border-amber-400">
             <img id="imgQrCodePortalVeterano" 
-                 src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fevolucaomilitar.github.io%2Fveteranos_5be%2F" 
+                 src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fevolucaomilitar.github.io%2Fveteranos_5be%2Freencontro.html" 
                  alt="QR Code Portal Veteranos 5º BE" 
                  class="w-44 h-44 object-contain">
           </div>
@@ -1454,15 +1454,15 @@
               <label class="block text-[11px] font-semibold text-slate-300 uppercase mb-1">Link Oficial para envio no WhatsApp:</label>
               <div class="flex items-center space-x-2">
                 <input type="text" id="campoLinkReencontro" readonly
-                       value="https://evolucaomilitar.github.io/veteranos_5be/"
+                       value="https://evolucaomilitar.github.io/veteranos_5be/reencontro.html"
                        class="w-full px-3 py-2 bg-[#080d09] border border-[#243c26] rounded-lg text-xs font-mono text-amber-300 select-all font-bold">
                 <button onclick="copiarLinkReencontro()"
                         class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs military-font uppercase flex-shrink-0">
                   <i class="fa-solid fa-copy mr-1"></i> Copiar
                 </button>
-                <a href="index.html" target="_blank"
+                <a href="reencontro.html" target="_blank"
                    class="px-3.5 py-2 bg-[#1b3420] hover:bg-[#254d2c] text-emerald-300 font-bold rounded-lg text-xs military-font uppercase flex items-center border border-[#2d5632] flex-shrink-0"
-                   title="Abrir Portal Oficial">
+                   title="Abrir Página do Veterano">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
               </div>
@@ -3957,7 +3957,8 @@
     let _modeloMsgVeteranoAtivo = 'reencontro';
 
     function obterUrlOficialConvite() {
-      return obterUrlBaseApp();
+      const urlBase = obterUrlBaseApp();
+      return urlBase + 'reencontro.html';
     }
 
     function atualizarAbaCompartilharVeterano() {
